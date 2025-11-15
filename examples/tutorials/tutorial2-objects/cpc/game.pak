@@ -1,0 +1,82 @@
+# Tutorial 2: Objects
+
+language("en")
+font("font-thekey.png", 
+     " ¡!¿$&'()?,-.",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^")
+built-in-texts("I can't pick that up!",
+               "I can't use that!",
+               "I don't know what to say!",
+               "I already have it!",
+               "I can't reach from here!")
+action-names("Examine ", "Pick up ", "Use ", "Talk to ", "Exit through ", " with ")
+
+text-area(1, 0, 14, 5)
+game-area(2, 6, 12, 11)
+gui(1, 18, "gui-14.png")
+inventory(10, 2)
+pointers("pointers.png")
+
+
+# Items: ----------------
+item(item-half-key1, "half key", "The top half of a key."):
+  image("items.png", 0, 0, 8, 12)
+
+item(item-half-key2, "half key", "The bottom half of a key."):
+  image("items.png", 8, 0, 16, 12)
+
+item(item-full-key, "key", "A key."):
+  image("items.png", 16, 0, 24, 12)
+
+
+use-item-with-item-symmetric(true)
+itemRules:
+    rule use-item-with-item(item-half-key1, item-half-key2):
+        message("Both halves of the key make for a whole key!")
+        lose-item(item-half-key1)
+        lose-item(item-half-key2)
+        gain-item(item-full-key)
+
+
+# Objects: ----------------
+object("half-key1", "half key", "The top half of a key."):
+    state("idle", "front"):
+        image("objects/half-key1.png")
+        selection(box)
+
+object("half-key2", "half key", "The bottom half of a key."):
+    state("idle", "front"):
+        image("objects/half-key2.png")
+        selection(box)
+
+object("door", "door", "A wooden door."):
+    state("open", "front"):
+        animation(10,  0,0,1,2,2,1):
+            image("objects/door-closed.png")
+            image("objects/door-midway.png")
+            image("objects/door-open.png")
+
+    state("closed", "front"):
+        image("objects/door-closed.png")
+
+
+
+# Rooms: ----------------
+room("tutorial", "room12.tmx", 0, 0):
+    rule pickup-object(32):
+        gain-item(item-half-key1)
+        remove-object(32)
+
+    rule pickup-object(33):
+        gain-item(item-half-key2)
+        remove-object(33)
+
+    rule use-item-with-object(item-full-key,34):
+        lose-item(item-full-key)
+        change-object-state(34, "open")
+        message("The key opened the door!")

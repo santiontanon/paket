@@ -1,0 +1,367 @@
+Main		
+		
+instruments-with-speed:		
+instrument3	3	1,2,3,4,5,6,7,8,9,10,11,12,12,12,12,12,11,10,9,8,7,6,5,4,3,2,1,1,-2
+instrument1	5	11,9,5,7,4,1,0,2,1
+instrument2	2	10,11,11,11,10,10,10,9,9,8,8,7,6,5,4
+
+sfx:
+sfx_drum_shorter_c	"sfx_drum_shorter_c.asm"
+sfx_drum_shorter_g	"sfx_drum_shorter_g.asm"
+sfx_drum_shorter_g_sharp	"sfx_drum_shorter_g_sharp.asm"
+sfx_drum_shorter_f_sharp	"sfx_drum_shorter_f_sharp.asm"
+sfx_short_hihat	"sfx_short_hihat.asm"
+		
+song:		
+-	-	volume(12),instrument3,C3
+		
+		
+		
+		
+		
+		
+		
+		G2
+		
+		
+		
+		
+		
+		
+		
+		C3
+		
+		
+		
+		
+		
+		
+		
+		G2
+		
+		
+		
+		
+		
+		
+		
+volume(12),instrument1,C4		C3
+D#4		
+D4		
+D#4		
+C4		
+D#4		
+D4		
+D#4		
+volume(13),B3		G2
+volume(10),D#4		
+D4		
+D#4		
+D4		
+D#4		
+D4		
+D#4		
+volume(12),C4		C3
+D#4		
+D4		
+D#4		
+C4		
+D#4		
+D4		
+D#4		
+volume(13),B3		G3
+volume(10),D#4		
+D4		
+D#4		
+D4		
+D#4		
+D4		
+D#4		
+volume(12),C4	instrument2,C4	C3
+D#4		
+D4		
+D#4	D4	
+C4	D#4	
+D#4		
+D4	C4	
+D#4		
+volume(13),B3	B3	G2
+volume(10),D#4	C4	
+D4	D4	
+D#4		
+D4		
+D#4		
+D4		
+D#4		
+volume(12),C4	C4	C3
+D#4		
+D4		
+D#4	D4	
+C4	D#4	
+D#4		
+D4	C4	
+D#4		
+volume(13),B3	B3	G3
+volume(10),D#4	C4	
+D4	D4	
+D#4		
+D4	G4	
+D#4		
+D4		
+D#4		
+volume(12),C4	C4	C3
+D#4		
+D4		
+D#4	D4	
+C4	D#4	
+D#4		
+D4	C4	
+D#4		
+volume(13),B3	B3	G2
+volume(10),D#4	C4	
+D4	D4	
+D#4		
+volume(13),B3		
+D4		
+volume(10),C#4		
+D4		
+volume(12),F3	G#4	volume(10),G#2
+G#3		
+G3		
+G#3	G4	
+F3	F4	
+G#3		
+G3	G4	
+G#3	G#4	
+volume(13),D#3	G4	G2
+volume(10),G3		
+F3		
+volume(13),G3	F4	
+volume(10),D#3	D#4	
+volume(13),G3		
+F3		
+G3		
+D3	C#4	volume(9),F#2
+volume(10),F3		
+D#3		
+volume(13),F3	D4	
+G3	F4	
+volume(10),G#3		
+volume(12),D#3	G#4	
+volume(10),G3		
+C4	G4	volume(10),G2
+G3		
+D#3		
+G3		
+C3	G3	
+		
+		
+		
+volume(12),instrument1,C4	instrument2,C4	volume(15),instrument1,sfx(sfx_drum_shorter_c)
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4	D4	C2
+C4	D#4	C2
+D#4		sfx(sfx_short_hihat)
+D4	C4	sfx(sfx_short_hihat)
+D#4		C2
+volume(13),B3	B3	sfx(sfx_drum_shorter_g)
+volume(10),D#4	C4	sfx(sfx_short_hihat)
+D4	D4	sfx(sfx_short_hihat)
+D#4		G1
+D4		G1
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4		G1
+volume(12),C4	C4	sfx(sfx_drum_shorter_c)
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4	D4	C2
+C4	D#4	C2
+D#4		sfx(sfx_short_hihat)
+D4	C4	sfx(sfx_short_hihat)
+D#4		C2
+volume(13),B3	B3	sfx(sfx_drum_shorter_g)
+volume(10),D#4	C4	sfx(sfx_short_hihat)
+D4	D4	sfx(sfx_short_hihat)
+D#4		G1
+D4	G4	G1
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4		G1
+volume(12),C4	C4	sfx(sfx_drum_shorter_c)
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4	D4	C2
+C4	D#4	C2
+D#4		sfx(sfx_short_hihat)
+D4	C4	sfx(sfx_short_hihat)
+D#4		C2
+volume(13),B3	B3	sfx(sfx_drum_shorter_g)
+volume(10),D#4	C4	sfx(sfx_short_hihat)
+D4	D4	sfx(sfx_short_hihat)
+D#4		G1
+volume(13),B3		G1
+D4		sfx(sfx_short_hihat)
+volume(10),C#4		sfx(sfx_short_hihat)
+D4		G1
+volume(12),F3	G#4	sfx(sfx_drum_shorter_g_sharp)
+G#3		sfx(sfx_short_hihat)
+G3		sfx(sfx_short_hihat)
+G#3	G4	G#1
+F3	F4	G#1
+G#3		sfx(sfx_short_hihat)
+G3	G4	sfx(sfx_short_hihat)
+G#3	G#4	G#1
+volume(13),D#3	G4	sfx(sfx_drum_shorter_g)
+volume(10),G3		sfx(sfx_short_hihat)
+F3		sfx(sfx_short_hihat)
+volume(13),G3	F4	G1
+volume(10),D#3	D#4	G1
+volume(13),G3		sfx(sfx_short_hihat)
+F3		sfx(sfx_short_hihat)
+G3		G1
+D3	C#4	sfx(sfx_drum_shorter_f_sharp)
+volume(10),F3		sfx(sfx_short_hihat)
+D#3		sfx(sfx_short_hihat)
+volume(13),F3	D4	F#1
+G3	F4	F#1
+volume(10),G#3		sfx(sfx_short_hihat)
+volume(12),D#3	G#4	sfx(sfx_short_hihat)
+volume(10),G3		F#1
+C4	G4	sfx(sfx_drum_shorter_g)
+G3		sfx(sfx_short_hihat)
+D#3		sfx(sfx_short_hihat)
+G3		G1
+C3	G3	G1
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1
+volume(12),instrument1,C3	volume(12),instrument3,C2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+G3		sfx(sfx_short_hihat)
+		
+Ab3	G2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+G5		sfx(sfx_short_hihat)
+		
+-		sfx(sfx_short_hihat)
+		
+C3	C2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+Eb3		sfx(sfx_short_hihat)
+		
+D3	G2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+G5		sfx(sfx_short_hihat)
+		
+-		sfx(sfx_short_hihat)
+		
+C3	C2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+G3		sfx(sfx_short_hihat)
+		
+Ab3	G2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+G5		sfx(sfx_short_hihat)
+		
+-		sfx(sfx_short_hihat)
+		
+C3	C2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+Eb3		sfx(sfx_short_hihat)
+		
+D3	G2	sfx(sfx_short_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+G5		sfx(sfx_short_hihat)
+		
+-		sfx(sfx_short_hihat)
+		
+volume(12),instrument1,C4	instrument2	volume(15),instrument1,sfx(sfx_drum_shorter_c)
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4		C2
+C4		C2
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4		C2
+C4		sfx(sfx_drum_shorter_g)
+G3		sfx(sfx_short_hihat)
+G3		sfx(sfx_short_hihat)
+G3		G1
+G3		G1
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1
+volume(12),instrument1,C4		sfx(sfx_drum_shorter_c)
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4		C2
+C4		C2
+D#4		sfx(sfx_short_hihat)
+D4		sfx(sfx_short_hihat)
+D#4		C2
+C4		sfx(sfx_drum_shorter_g)
+G4		sfx(sfx_short_hihat)
+G4		sfx(sfx_short_hihat)
+G4		G1
+G4		G1
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1
+Ab4		sfx(sfx_drum_shorter_g_sharp)
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+G4		G#1
+F4		F1
+		sfx(sfx_short_hihat)
+G4		sfx(sfx_short_hihat)
+Ab4		G#1
+G4		sfx(sfx_drum_shorter_g)
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1
+C4		G1
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1
+D4		sfx(sfx_drum_shorter_f_sharp)
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		F#1
+F4		F#1
+		sfx(sfx_short_hihat)
+Gb4		sfx(sfx_short_hihat)
+		F#1
+G4		sfx(sfx_drum_shorter_g)
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1
+		G1
+		sfx(sfx_short_hihat)
+		sfx(sfx_short_hihat)
+		G1

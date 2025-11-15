@@ -1,0 +1,58 @@
+# Rooms: ----------------
+room("tutorial", "room16.tmx", 0, 0):
+    on-room-load-rule variable-eq(intro-custcenes-played, 0):
+        call-script("my-cutscene-script")
+        play-tsv-song("sound/music.tsv", 16)
+        # play-wyz-song("sound/external.mus")
+        custom-assembler-room-draw("my_assembler_function2")
+
+    on-room-start-rule variable-eq(intro-custcenes-played, 0):
+        call-script("my-cutscene-script-2")
+        set-variable(intro-custcenes-played, 1)
+
+    repeating-rule use-object(4) && variable-eq(desk-state, 0):
+        change-object-state(4, "open")
+        message("You open the drawer.")
+        set-variable(desk-state, 1)
+        play-sfx("sound/door-open.afx")
+
+    repeating-rule use-object(4) && variable-eq(desk-state, 1):
+        change-object-state(4, "closed")
+        message("You close the drawer.")
+        set-variable(desk-state, 0)
+        play-sfx("sound/door-close.afx")
+
+    # rule examine-object(4) && variable-eq(desk-state, 1) && variable-eq(key-found, 0):
+    #     gain-item(item-key)
+    #     message("You found a key!")
+    #     set-variable(key-found, 1)
+
+    rule examine-object(4) && variable-eq(desk-state, 1):
+        go-to-room("drawer")
+
+    rule use-item-with-object(item-key, 5):
+        change-object-state(5, "exit")
+        message("The key opened the door!")
+        lose-item(item-key)
+
+    rule exit-through-object(5):
+        call-script("game-over-script")
+
+    repeating-rule talk-to-object(7):
+        start-dialogue("dialogue-dog")
+
+    on-room-load-rule variable-eq(desk-state, 1):
+        change-object-state(4, "open")
+
+
+room("drawer", "room16-drawer.tmx", 4, 1, subroom):
+    persistent-rule pickup-object(4):
+         gain-item(item-key)
+         message("You found a key!")
+    persistent-rule-effect:
+        remove-object(4)    
+
+    rule click-outside-room-area():
+        go-to-room("tutorial", 40, 70)
+    
+

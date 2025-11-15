@@ -1,0 +1,32 @@
+# Tutorial 1: Hello world!
+
+language("en")
+font("font-thekey.png", 
+     " ¡!¿$&'()?,-.",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^")
+action-names(
+     "Examine ",
+     "Pick up ",
+     "Use ",
+     "Talk to ",
+     "Exit through ",
+     " with ")     
+built-in-texts(
+     "I can't pick that up!",
+     "I can't use that!",
+     "I don't know what to say!",
+     "I already have it!",
+     "I can't reach from here!")
+
+text-area(2, 0, 28, 5)
+game-area(4, 6, 24, 11)
+gui(2, 18, "gui-28.png")
+inventory(10, 1)
+pointers("pointers.png")
+
+room("tutorial", "room24.tmx", 0, 0):

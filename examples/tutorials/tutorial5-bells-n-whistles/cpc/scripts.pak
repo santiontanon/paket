@@ -1,0 +1,64 @@
+# Cutscenes: ----------------
+cutscene-image("my-cutscene-img", "cutscene1.tmx", self-contained-tileset, cpc-mode0)
+
+script("my-cutscene-script"):
+    clear-screen(cpc-mode0)
+    draw-cutscene-image-rectangle(6, 8, "my-cutscene-img", 0, 0, 4, 3)
+    call-assembler("my_assembler_function1")
+    wait-for-space()
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(80,80,3,"Tutorial 5: Bells & Whistles")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-split-mode1-mode0)
+    set-palette("room_tutorial")
+
+script("text-fade-in"):
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,26)
+
+script("text-fade-out"):
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,0)
+
+
+script("my-cutscene-script-2"):
+    message("Oh no! I need to go to work, but where are my keys?!")
+    skippable-pause-redrawing(100)
+    clear-text-area()
+    walk-to(48, 80)
+    message("I don't see them anywhere!")
+    skippable-pause-redrawing(50)
+    clear-text-area()
+    walk-to(64, 80)
+
+
+script("game-over-script"):
+    clear-screen(cpc-mode1)
+    set-palette(0,0,26)
+    print(90,80,3,"Game Over")
+    wait-for-space()
+    call-assembler("game_start")  # restart the game
+    
+
+dialogue("dialogue-dog"):
+    state 1:
+        add-dialogue-option(2, "Good boy!")
+        add-dialogue-option(3, "Hello there!")
+    state 2:
+        scrolling-message-pause("Woof!!")
+        clear-text-area()
+        add-dialogue-option(exit, "Bye now!")
+    state 3:
+        scrolling-message-pause("Woof, woof!!")
+        clear-text-area()
+        add-dialogue-option(exit, "Bye bye now!")
+

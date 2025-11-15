@@ -1,0 +1,21 @@
+script("my-save-game-script"):
+    start-dialogue("load-save-game")
+
+dialogue("load-save-game"):
+    state 1:
+        add-dialogue-option(exit, "- Cancel")
+        add-dialogue-option(2, "- Save game")
+        add-dialogue-option(3, "- Load game")
+    state 2:
+        clear-text-area()
+        save-game()
+        goto-dialogue-state(exit)
+    state 3:
+        clear-text-area()
+        load-game()
+        # If we are here, is that there was an error:
+        # However, in the password system, "error" just means the user canceled,
+        # So, do not display any error message.
+        # scrolling-message-pause("IO error.")        
+        goto-dialogue-state(exit)
+

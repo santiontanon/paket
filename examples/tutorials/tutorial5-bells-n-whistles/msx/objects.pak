@@ -1,0 +1,64 @@
+# Objects: ----------------
+object("player", "me", "Look at me!"):
+    state("idle", "down"):
+        image("player-16x16.png", 0, 0, 16, 16)
+    state("idle", "up"):
+        image("player-16x16.png", 0, 16, 16, 32)
+    state("idle", "left"):
+        image("player-16x16.png", 0, 32, 16, 48)
+    state("idle", "right"):
+        image("player-16x16.png", 0, 48, 16, 64)
+    state("walking-1", "down"):
+        image("player-16x16.png", 16, 0, 32, 16)
+    state("walking-2", "down"):
+        image("player-16x16.png", 32, 0, 48, 16)
+    state("walking-1", "up"):
+        image("player-16x16.png", 16, 16, 32, 32)
+    state("walking-2", "up"):
+        image("player-16x16.png", 32, 16, 48, 32)
+    state("walking-1", "left"):
+        image("player-16x16.png", 0, 32, 16, 48)
+    state("walking-2", "left"):
+        image("player-16x16.png", 16, 32, 32, 48)
+    state("walking-3", "left"):
+        image("player-16x16.png", 32, 32, 48, 48)
+    state("walking-4", "left"):
+        image("player-16x16.png", 48, 32, 64, 48)
+    state("walking-1", "right"):
+        image("player-16x16.png", 0, 48, 16, 64)
+    state("walking-2", "right"):
+        image("player-16x16.png", 16, 48, 32, 64)
+    state("walking-3", "right"):
+        image("player-16x16.png", 32, 48, 48, 64)
+    state("walking-4", "right"):
+        image("player-16x16.png", 48, 48, 64, 64)
+
+object("door", "door", "A wooden door."):
+    state("closed", "down"):
+        image("objects.png", 0, 16, 24, 40)
+    state("exit", "down"):
+        image("objects.png", 24, 16, 48, 40)
+
+object("desk", "desk", "A wooden desk with a drawer."):
+    state("closed", "down"):
+        image("objects.png", 16, 0, 48, 12)
+        collisionmask("00000000", "00000000", "11111111")
+    state("open", "down"):
+        image("objects.png", 48, 0, 80, 12)
+        collisionmask("00000000", "00000000", "11111111")
+
+object("chair", "chair", "A nice-looking chair."):
+    state("idle", "left"):
+        image("objects.png", 0, 0, 16, 16)
+        collisionmask("0000", "0000", "0000", "1111")
+
+object("dog", "dog", "A big but cute dog, looking a bit too eager to please."):
+    state("idle", "left"):
+        animation(10,  0, 1):
+            image("objects.png", 48, 24, 64, 40)
+            image("objects.png", 64, 24, 80, 40)
+            collisionmask("0000", "0000", "0000", "1111")
+
+object("key", "key", "A key."):
+    state("idle", "front"):
+        image("objects.png", 80, 0, 96, 16)

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="11" height="6" tilewidth="8" tileheight="8" nextobjectid="12">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="32">
+  <image source="bg-tiles.png" width="256" height="8"/>
+ </tileset>
+ <tileset firstgid="33" name="bg-collision-masks" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="11" height="6">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,1,
+1,11,11,11,11,11,11,11,11,11,1,
+1,12,16,16,16,16,16,16,16,13,1,
+1,12,16,16,16,16,16,16,16,13,1,
+1,14,14,14,14,15,14,14,14,14,1,
+1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="11" name="key" x="32" y="16" width="16" height="16">
+   <properties>
+    <property name="depth" value="68"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

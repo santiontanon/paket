@@ -1,0 +1,61 @@
+# Cutscenes: ----------------
+cutscene-image("my-cutscene-img", "cutscene1.tmx", self-contained-tileset)
+
+script("my-cutscene-script"):
+    clear-screen()
+    draw-cutscene-image-rectangle(14, 8, "my-cutscene-img", 0, 0, 4, 3)
+    call-assembler("my_assembler_function1")
+    wait-for-space()
+    clear-screen()
+
+    # Fade in:
+    # MSX does not support palette changes, so, we fake a fade-in, like this:
+    # Do not abuse of this trick, as it wastes lots of bytes. But for a couple of 
+    # important messages, it can get the job done.
+    print(80,80,4,"Tutorial 5: Bells & Whistles")
+    pause(5)
+    print(80,80,14,"Tutorial 5: Bells & Whistles")
+    pause(5)
+    print(80,80,15,"Tutorial 5: Bells & Whistles")
+
+    wait-for-space()
+
+    # Fade out:
+    print(80,80,14,"Tutorial 5: Bells & Whistles")
+    pause(5)
+    print(80,80,4,"Tutorial 5: Bells & Whistles")
+    pause(5)
+    clear-screen()
+
+
+script("my-cutscene-script-2"):
+    message("Oh no! I need to go to work, but where are my keys?!")
+    skippable-pause-redrawing(100)
+    clear-text-area()
+    walk-to(112,80)
+    message("I don't see them anywhere!")
+    skippable-pause-redrawing(50)
+    clear-text-area()
+    walk-to(144,80)
+
+
+script("game-over-script"):
+    clear-screen()
+    print(90,80,15,"Game Over")
+    wait-for-space()
+    call-assembler("game_start")  # restart the game
+    
+
+dialogue("dialogue-dog"):
+    state 1:
+        add-dialogue-option(2, "Good boy!")
+        add-dialogue-option(3, "Hello there!")
+    state 2:
+        scrolling-message-pause("Woof!!")
+        clear-text-area()
+        add-dialogue-option(exit, "Bye now!")
+    state 3:
+        scrolling-message-pause("Woof, woof!!")
+        clear-text-area()
+        add-dialogue-option(exit, "Bye bye now!")
+

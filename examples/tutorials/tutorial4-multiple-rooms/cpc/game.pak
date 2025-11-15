@@ -1,0 +1,32 @@
+# Tutorial 4: multiple rooms!
+
+language("en")
+font("font-thekey.png", 
+     " ¡!¿$&'()?,-.",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^")
+built-in-texts("I can't pick that up!",
+               "I can't use that!",
+               "I don't know what to say!",
+               "I already have it!",
+               "I can't reach from here!")
+action-names("Examine ", "Pick up ", "Use ", "Talk to ", "Exit through ", " with ")
+
+text-area(0, 0, 16, 5)
+game-area(0, 6, 16, 11)
+gui(0, 18, "gui-16.png")
+inventory(10, 2)
+pointers("pointers.png")
+pathfinding(on-click, stop-early)
+double-click-on-exit(true)
+load-save-game-script("my-save-game-script")
+
+
+include("items.pak")
+include("objects.pak")
+include("rooms.pak")
+include("scripts.pak")

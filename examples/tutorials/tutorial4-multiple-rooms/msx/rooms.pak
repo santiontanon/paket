@@ -1,0 +1,41 @@
+# Rooms: ----------------
+room("bigroom", "room1.tmx", 0, 0):
+    repeating-rule use-object(4) && variable-eq(desk-state, 0):
+        change-object-state(4, "open")
+        message("You open the drawer.")
+        set-variable(desk-state, 1)
+
+    repeating-rule use-object(4) && variable-eq(desk-state, 1):
+        change-object-state(4, "closed")
+        message("You close the drawer.")
+        set-variable(desk-state, 0)
+
+    rule examine-object(4) && variable-eq(desk-state, 1) && variable-eq(key-found, 0):
+        gain-item(item-key)
+        message("You found a key!")
+        inc-variable(key-found)  # Note: here, 'set-variable(key-found, 0)' would be easier, but
+                                 #       we use 'inc-variable', just so that we can illustrate the
+                                 #       use of 'variable-range' in this tutorial.
+
+    persistent-rule use-item-with-object(item-key, 1):
+        message("The key opened the door!")
+        lose-item(item-key)
+    persistent-rule-effect:
+        change-object-state(1, "exit")
+
+    rule exit-through-object(1):
+        go-to-room("smallroom", 88, 68)
+
+    on-room-load-rule variable-eq(desk-state, 1):
+        change-object-state(4, "open")
+
+
+room("smallroom", "room2.tmx", 2, 1):
+    rule exit-through-object(1):
+        go-to-room("bigroom", 120, 68)
+
+    persistent-rule pickup-object(2):
+        gain-item(item-ruby)
+    persistent-rule-effect:
+        remove-object(2)
+

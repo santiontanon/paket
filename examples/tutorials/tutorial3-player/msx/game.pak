@@ -1,0 +1,109 @@
+# Tutorial 3: the Player!
+
+language("en")
+font("font-thekey.png", 
+     " ¡!¿$&'()?,-.",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^")
+built-in-texts("I can't pick that up!",
+               "I can't use that!",
+               "I don't know what to say!",
+               "I already have it!",
+               "I can't reach from here!")
+action-names("Examine ", "Pick up ", "Use ", "Talk to ", "Exit through ", " with ")
+
+text-area(0, 0, 32, 5)
+game-area(0, 6, 32, 11)
+gui(0, 18, "gui-32.png")
+inventory(10, 1)
+pointers("pointers.png")
+pathfinding(on-click, stop-early)
+player-scaling-thresholds(66, 75, 84)
+
+
+# Items: ----------------
+item(item-key, "key", "A key."):
+  image("items.png", 0, 0, 16, 16)
+  default-use-message("It does not fit here.")
+
+
+# Objects: ----------------
+object("player", "me", "Look at me!"):
+    state("idle", "down"):
+        image("player-16x16.png", 0, 0, 16, 16)
+    state("idle", "up"):
+        image("player-16x16.png", 0, 16, 16, 32)
+    state("idle", "left"):
+        image("player-16x16.png", 0, 32, 16, 48)
+    state("idle", "right"):
+        image("player-16x16.png", 0, 48, 16, 64)
+    state("walking-1", "down"):
+        image("player-16x16.png", 16, 0, 32, 16)
+    state("walking-2", "down"):
+        image("player-16x16.png", 32, 0, 48, 16)
+    state("walking-1", "up"):
+        image("player-16x16.png", 16, 16, 32, 32)
+    state("walking-2", "up"):
+        image("player-16x16.png", 32, 16, 48, 32)
+    state("walking-1", "left"):
+        image("player-16x16.png", 0, 32, 16, 48)
+    state("walking-2", "left"):
+        image("player-16x16.png", 16, 32, 32, 48)
+    state("walking-3", "left"):
+        image("player-16x16.png", 32, 32, 48, 48)
+    state("walking-4", "left"):
+        image("player-16x16.png", 48, 32, 64, 48)
+    state("walking-1", "right"):
+        image("player-16x16.png", 0, 48, 16, 64)
+    state("walking-2", "right"):
+        image("player-16x16.png", 16, 48, 32, 64)
+    state("walking-3", "right"):
+        image("player-16x16.png", 32, 48, 48, 64)
+    state("walking-4", "right"):
+        image("player-16x16.png", 48, 48, 64, 64)
+
+object("door", "door", "A wooden door."):
+    state("closed", "down"):
+        image("objects.png", 0, 16, 24, 40)
+    state("open", "down"):
+        image("objects.png", 32, 16, 56, 40)
+
+object("desk", "desk", "A wooden desk with a drawer."):
+    state("closed", "down"):
+        image("objects.png", 16, 0, 48, 12)
+        collisionmask("00000000", "00000000", "11111111")
+    state("open", "down"):
+        image("objects.png", 48, 0, 80, 12)
+        collisionmask("00000000", "00000000", "11111111")
+
+object("chair", "chair", "A nice-looking chair."):
+    state("idle", "left"):
+        image("objects.png", 0, 0, 16, 16)
+        collisionmask("0000", "0000", "0000", "1111")
+
+
+# Rooms: ----------------
+room("tutorial", "room32.tmx", 0, 0):
+    repeating-rule use-object(4) && variable-eq(desk-state, 0):
+        change-object-state(4, "open")
+        message("You open the drawer.")
+        set-variable(desk-state, 1)
+
+    repeating-rule use-object(4) && variable-eq(desk-state, 1):
+        change-object-state(4, "closed")
+        message("You close the drawer.")
+        set-variable(desk-state, 0)
+
+    rule examine-object(4) && variable-eq(desk-state, 1) && variable-eq(key-found, 0):
+        gain-item(item-key)
+        message("You found a key!")
+        set-variable(key-found, 1)
+
+    rule use-item-with-object(item-key, 1):
+        change-object-state(1, "open")
+        message("The key opened the door!")
+        lose-item(item-key)

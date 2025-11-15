@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="11" tilewidth="8" tileheight="8" nextobjectid="8">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-tiles.png" width="128" height="8"/>
+ </tileset>
+ <tileset firstgid="17" name="bg-collision-masks" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="16" height="11">
+  <data encoding="csv">
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,4,9,4,4,4,4,4,4,4,4,10,4,4,4,
+4,4,7,3,3,3,3,3,3,3,3,3,3,6,4,4,
+4,7,8,2,2,2,2,2,2,2,2,2,2,5,6,4,
+7,8,2,2,2,2,2,2,2,2,2,2,2,2,5,6,
+8,2,2,2,2,2,2,2,2,2,2,2,2,2,2,5
+</data>
+ </layer>
+ <layer name="collision" width="16" height="11" visible="0">
+  <data encoding="csv">
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,18,
+18,18,23,17,17,17,17,17,17,17,17,17,17,24,18,18,
+18,23,17,17,17,17,17,17,17,17,17,17,17,17,24,18,
+23,17,17,17,17,17,17,17,17,17,17,17,17,17,17,24
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="63" name="player" x="64" y="64" width="8" height="16">
+   <properties>
+    <property name="depth" value="80"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="2" name="chair" x="80" y="56" width="8" height="16">
+   <properties>
+    <property name="depth" value="72"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="4" name="desk" x="32" y="56" width="16" height="12">
+   <properties>
+    <property name="depth" value="68"/>
+    <property name="direction" value="down"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="5" name="door" x="56" y="40" width="12" height="24">
+   <properties>
+    <property name="depth" value="64"/>
+    <property name="direction" value="down"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="6" name="chair" x="88" y="64" width="8" height="16">
+   <properties>
+    <property name="depth" value="80"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="7" name="dog" x="104" y="64" width="8" height="16">
+   <properties>
+    <property name="depth" value="80"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

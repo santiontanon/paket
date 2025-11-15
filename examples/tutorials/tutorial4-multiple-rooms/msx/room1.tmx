@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="11" tilewidth="8" tileheight="8" nextobjectid="10">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="32">
+  <image source="bg-tiles.png" width="256" height="8"/>
+ </tileset>
+ <tileset firstgid="33" name="bg-collision-masks" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="32" height="11">
+  <data encoding="csv">
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,10,8,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,9,10,10,10,
+10,10,6,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,5,10,10,
+10,6,7,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,5,10,
+6,7,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4,5,
+7,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,4
+</data>
+ </layer>
+ <layer name="collision" width="32" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,39,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,40,34,34,
+34,39,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,40,34,
+39,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,40
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="63" name="player" x="144" y="64" width="16" height="16">
+   <properties>
+    <property name="depth" value="80"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="1" name="door" x="112" y="40" width="24" height="24">
+   <properties>
+    <property name="depth" value="64"/>
+    <property name="direction" value="down"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="4" name="desk" x="64" y="56" width="32" height="12">
+   <properties>
+    <property name="depth" value="68"/>
+    <property name="direction" value="down"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="5" name="chair" x="176" y="64" width="16" height="16">
+   <properties>
+    <property name="depth" value="80"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="9" name="chair" x="192" y="72" width="16" height="16">
+   <properties>
+    <property name="depth" value="88"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

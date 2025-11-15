@@ -1,0 +1,39 @@
+# Tutorial 5: bells and whistles
+
+language("en")
+font("font-thekey.png", 
+     " ¡!¿$&'()?,-.",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^")
+built-in-texts("I can't pick that up!",
+               "I can't use that!",
+               "I don't know what to say!",
+               "I already have it!",
+               "I can't reach from here!")
+action-names("Examine ", "Pick up ", "Use ", "Talk to ", "Exit through ", " with ")
+
+text-area(0, 0, 16, 5)
+game-area(0, 6, 16, 11)
+gui(0, 18, "gui-16.png")
+inventory(10, 2)
+pointers("pointers.png")
+pathfinding(on-click, stop-early)
+player-scaling-thresholds(66, 75, 84)
+loading-screen("loading-screen.png", cpc-mode0)
+
+additional-assembler-file("custom-assembler.asm")
+
+# Items: ----------------
+item(item-key, "key", "A key."):
+  image("items.png", 0, 0, 8, 12)
+  default-use-message("It does not fit here.")
+
+
+# Other project files: ----------------
+include("objects.pak")
+include("rooms.pak")
+include("scripts.pak")

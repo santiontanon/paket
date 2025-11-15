@@ -1,0 +1,8 @@
+# Items: ----------------
+item(item-key, "key", "A key."):
+    image("items.png", 0, 0, 8, 12)
+    default-use-message("It does not fit here.")
+
+item(item-ruby, "ruby", "Wow! Look at this ruby!"):
+    image("items.png", 8, 0, 16, 12)
+

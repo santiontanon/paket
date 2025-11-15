@@ -1,0 +1,26 @@
+script("my-save-game-script"):
+    start-dialogue("load-save-game")
+
+dialogue("load-save-game"):
+    state 1:
+        add-dialogue-option(exit, "- Cancel")
+        add-dialogue-option(2, "- Save game")
+        add-dialogue-option(3, "- Load game")
+    state 2:
+        scrolling-message-pause("Insert a non-write protected disk, and press space.")
+        clear-text-area()
+        save-game()
+        if variable-eq(io-error,0):
+            scrolling-message-pause("Game saved.")
+        else:
+            scrolling-message-pause("IO error.")
+        endif
+        goto-dialogue-state(exit)
+    state 3:
+        scrolling-message-pause("Insert save game disk, and press space.")
+        clear-text-area()
+        load-game()
+        # If we are here, is that there was an error:
+        scrolling-message-pause("IO error.")
+        goto-dialogue-state(exit)
+
