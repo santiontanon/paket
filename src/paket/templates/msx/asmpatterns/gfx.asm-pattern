@@ -1,0 +1,583 @@
+;-----------------------------------------------
+; Clears the screen with a simple effect
+; clear_screen_pretty:
+;    ; clear the sprites
+;    ld hl, SPRATR2
+;    ld bc, 4 * (2 + N_PLAYER_SPRITES)
+;    xor a
+;    call FILVRM
+;
+;    ; clear the screen:
+;    ld a, 32
+;    ld hl, CLRTBL2
+;clear_screen_pretty_loop:
+;    halt
+;    push af
+;    push hl
+;        ld a, 42
+;clear_screen_pretty_loop2:
+;        push af
+;        push hl
+;            ld bc, 8
+;            xor a
+;            call FILVRM
+;        pop hl        
+;        pop af
+;        ld bc, 32 * 8
+;        add hl, bc
+;        dec a
+;        jr nz, clear_screen_pretty_loop2    
+;    pop hl
+;    pop af
+;    ld bc, 8
+;    add hl, bc
+;    dec a
+;    jr nz, clear_screen_pretty_loop
+;    ret
+
+
+;-----------------------------------------------
+; Fills the whole screen with the pattern 0
+clear_name_table:
+    xor a
+    ld bc, 768
+    ld hl, NAMTBL2
+    jp FILVRM
+
+
+;-----------------------------------------------
+; a: byte
+; hl: target address in the VDP
+writeByteToVDP:
+    push af
+        call SETWRT
+        ld a, (VDP.DW)
+        ld c, a
+    pop af
+    out (c), a
+    ret
+    
+
+;-----------------------------------------------
+; hl: source data
+; de: target address in the VDP
+; bc: amount to copy
+fast_LDIRVM:
+    ex de, hl
+    push de
+    push bc
+        call SETWRT
+    pop bc
+    pop hl
+    ; jp copy_to_VDP
+
+
+;-----------------------------------------------
+; This is like LDIRVM, but faster, and assumes we have already called "SETWRT" with the right address
+; input: 
+; - hl: address to copy from
+; - bc: amount fo copy
+copy_to_VDP:
+    ; get the VDP write register:
+    ld e, b
+    ld a, c
+    or a
+    jr z, copy_to_VDP_lsb_0
+    inc e
+copy_to_VDP_lsb_0:
+    ld b, c
+    ld a, (VDP.DW)
+    ld c, a
+    ld a, e
+copy_to_VDP_loop2:
+copy_to_VDP_loop:
+    outi
+    jp nz, copy_to_VDP_loop
+    dec a
+    jp nz, copy_to_VDP_loop2
+    ret
+
+
+;-----------------------------------------------
+; hl: source data
+; de: target address in the VDP
+; b: amount to copy
+fast_LDIRVM_small_macro: macro
+    ex de, hl
+    call SETWRT
+    ex de, hl
+    ld a, (VDP.DW)
+    ld c, a
+fast_LDIRVM_small_loop:
+    outi
+    jp nz, fast_LDIRVM_small_loop
+endm
+
+
+;-----------------------------------------------
+; Initializes the name, pattern and attribute tables ready for game start
+setup_VDP_tables_for_game:
+    ; pattern tables to all 0s:
+    xor a
+    ld hl, CHRTBL2
+    ld bc, 256 * 8 * 3
+    call FILVRM
+
+    ; attribute tables on the text rows to white over black:
+    ld a, 0 + COLOR_WHITE * 16
+    ld hl, CLRTBL2
+    ld bc, 32 * FIRST_SCREEN_ROOM_ROW * 8
+    call FILVRM
+
+    ; attribute tables in the rest of the space to 0:
+    xor a
+    ld hl, CLRTBL2 + 32 * FIRST_SCREEN_ROOM_ROW * 8
+    ld bc, 256 * 3 * 8 - 32 * FIRST_SCREEN_ROOM_ROW * 8
+    call FILVRM
+
+    ; name tables to bitmap mode:
+    ld hl, NAMTBL2
+    call SETWRT
+    ld a, (VDP.DW)
+    ld c, a
+    xor a
+setup_VDP_tables_for_game_loop1:
+    out (c), a
+    inc a
+    jr nz, setup_VDP_tables_for_game_loop1
+setup_VDP_tables_for_game_loop2:
+    out (c), a
+    inc a
+    jr nz, setup_VDP_tables_for_game_loop2
+setup_VDP_tables_for_game_loop3:
+    out (c), a
+    inc a
+    jr nz, setup_VDP_tables_for_game_loop3
+
+    ; clear the gui area:
+    ld hl, NAMTBL2 + 256 * 2 + FIRST_GUI_VDP_TILE
+    ld bc, 256 - FIRST_GUI_VDP_TILE
+    ld a, FIRST_GUI_VDP_TILE
+    jp FILVRM
+
+
+;-----------------------------------------------
+; Clears the color table of the game area.
+clear_game_area:
+    ; attribute tables in the game area to 0:
+    xor a
+    ld hl, CLRTBL2 + 32 * FIRST_SCREEN_ROOM_ROW * 8
+    ld bc, ((GUI_VDP_PTR - NAMTBL2) - (FIRST_SCREEN_ROOM_ROW * 32)) * 8
+    jp FILVRM
+
+
+;-----------------------------------------------
+; Clears the color table of the game & gui areas.
+clear_pattern_attribute_tables_and_sprites:
+    ; attribute tables:
+    xor a
+    ld hl, CLRTBL2
+    ld bc, 24*32*8
+    call FILVRM
+
+    ; pattern tables:
+    xor a
+    ld hl, CHRTBL2
+    ld bc, 24*32*8
+    call FILVRM
+
+    ld a, 200  ; some high y value
+    ld hl, SPRATR2
+    ld bc, 32 * 8
+    jp FILVRM
+
+
+;-----------------------------------------------
+; decompresses the necessary tiles for the current room
+decompress_room_tiles:
+IF IS_MEGAROM == 1
+    SETMEGAROMPAGE_8000 TILES_MEGAROM_PAGE
+ENDIF
+
+    ; we clear the buffer of already loaded tiles:
+    ld hl, general_buffer
+    ld bc, MAX_TILES_PER_ROOM
+    ld a, #ff
+    call clear_memory_to_a
+
+    ld a, 0
+    ld (next_tile_idx), a
+    ld a, #ff  ; some number that does not match any bank
+    ld (currently_decompressed_tile_bank), a
+
+    ld hl, room_buffer + ROOM_STRUCT_BACKGROUND
+    ld a, (room_buffer + ROOM_STRUCT_WIDTH)
+decompress_room_tiles_x_loop:
+    push af
+        ld a, (room_buffer + ROOM_STRUCT_HEIGHT)
+decompress_room_tiles_y_loop:
+        push af
+            ld a, (hl)
+            push hl
+                ; see if we already have it loaded:
+                ld hl, general_buffer
+                ld b, MAX_TILES_PER_ROOM
+                ld c, 0
+decompress_room_tiles_y_loop_check_if_tile_loaded_loop:
+                cp (hl)
+                jp z, decompress_room_tiles_y_loop_tile_already_loaded
+                inc c
+                inc hl
+                djnz decompress_room_tiles_y_loop_check_if_tile_loaded_loop
+                ; we need to load the tile:
+                ; load the appropriate tile bank:
+                push af
+                    and #7f  ; remove the "flipped tile" bit
+                    srl a
+                    srl a
+                    srl a
+                    srl a   ; the bank is a/16
+                    ld hl, currently_decompressed_tile_bank
+                    cp (hl)
+                    jr z, decompress_room_tiles_y_loop_tile_bank_decompressed
+                    ld (hl), a   ; mark which is the currently decompressed tile bank
+                    ; decompressed the appropriate tile bank:
+IF {N_TILE_BANKSETS} > 1
+                    push af
+                        ld a, (room_buffer + ROOM_STRUCT_BANKSET)
+                        ld hl, tileBankSetsPointers
+                        ld b, 0
+                        ld c, a
+                        add hl, bc
+                        add hl, bc
+                        ld e, (hl)
+                        inc hl
+                        ld d, (hl)
+                        ex de, hl
+                    pop af
+ELSE
+                    ld hl, tileBanksPointers_0
+ENDIF
+                    ld b, 0
+                    ld c, a
+                    add hl, bc
+                    add hl, bc
+                    ld e, (hl)
+                    inc hl
+                    ld d, (hl)
+                    ex de, hl
+                    ld de, general_buffer + MAX_TILES_PER_ROOM
+                    call PAKET_UNPACK
+
+decompress_room_tiles_y_loop_tile_bank_decompressed:
+                pop af
+                ; copy the appropriate tile:
+                push af
+                    ld iyl, a  ; save the tile number, so that we can recover later whether this is a flipped tile or not
+                    and #0f
+                    add a, a
+                    add a, a
+                    add a, a
+                    add a, a
+                    ld h, 0
+                    ld l, a  ; hl = tile # * 16
+IF MSX_TILES_PER_ENGINE_TILE == 2
+                    add hl, hl   ; hl = tile # * 32
+ENDIF
+                    ld bc, general_buffer + MAX_TILES_PER_ROOM
+                    add hl, bc   ; hl = pointer to the tile we want
+
+                    ld a, (next_tile_idx)
+                    push af
+                        add a, a
+                        add a, a
+                        exx
+                            ld h, 0
+                            ld l, a
+                            add hl, hl
+                            add hl, hl  ; * 16
+IF MSX_TILES_PER_ENGINE_TILE == 2
+                            add hl, hl  ; * 32
+ENDIF
+                            ld bc, (tile_buffer_ptr)
+                            add hl, bc   
+                            push hl
+                        exx
+                        pop de  ; de = pointer to the place where we want to copy the new tile
+                        
+                        ld a, iyl
+                        and #80  ; see if the tile is flipped
+                        jr z, decompress_room_tiles_no_flip
+                        copy_tile_flipping_it  ; this is a MACRO
+                        jr decompress_room_tiles_copied
+decompress_room_tiles_no_flip:
+                        ld bc, MSX_TILES_PER_ENGINE_TILE * 8 * 2
+                        ldir  ; we copy the tile
+decompress_room_tiles_copied:
+                    pop af  ; this recovers the the index of the tile where we copied the tile we want
+                    ld hl, general_buffer
+                    ld b, 0
+                    ld c, a
+                    add hl, bc
+                    inc a
+                    ld (next_tile_idx), a  ; update what is the next tile
+                pop af
+                ld (hl), a ; we save the fact that we have already loaded this tile
+decompress_room_tiles_y_loop_tile_already_loaded:
+            ; the idx of the tile is in "c"
+            pop hl
+            ld (hl), c
+            inc hl
+        pop af
+        dec a
+        jp nz, decompress_room_tiles_y_loop    
+    pop af
+    dec a
+    jp nz, decompress_room_tiles_x_loop
+    ret
+
+
+; ------------------------------------------------
+; copy tile from "hl" to "de", flipping it horizontally
+copy_tile_flipping_it: MACRO
+IF MSX_TILES_PER_ENGINE_TILE == 1
+    ld b, 8
+copy_tile_flipping_it_loop1:
+    ld c, (hl)
+    call flip_sprite_byte
+    ld (de), a
+    inc hl
+    inc de
+    djnz copy_tile_flipping_it_loop1
+    ld bc, 8
+    ldir
+ENDIF
+IF MSX_TILES_PER_ENGINE_TILE == 2
+    ; - first 8 bytes: flip and copy to 'de + 8'
+    ; - next 8 bytes: flip and copy to 'de'
+    ; - next 8 bytes: copy to 'de + 24'
+    ; - final 8 bytes: copy to 'de + 16'
+    ld bc, 8
+    add hl, bc
+    ld b, c
+copy_tile_flipping_it_loop1:
+    ld c, (hl)
+    call flip_sprite_byte
+    ld (de), a
+    inc hl
+    inc de
+    djnz copy_tile_flipping_it_loop1
+    ld bc, -16
+    add hl, bc
+    ld b, 8
+copy_tile_flipping_it_loop2:
+    ld c, (hl)
+    call flip_sprite_byte
+    ld (de), a
+    inc hl
+    inc de
+    djnz copy_tile_flipping_it_loop2
+    ld bc, 16
+    add hl, bc
+    ld c, 8
+    ldir
+    ld bc, -16
+    add hl, bc
+    ld bc, 8
+    ldir
+ENDIF
+ENDM
+
+
+; ------------------------------------------------
+; input:
+; - c: byte to flip
+; output:
+; - a: flipped byte
+flip_sprite_byte:
+REPT 8
+    rl c
+    rr a
+ENDR
+    ret
+
+
+; ------------------------------------------------
+; draws an alternating pattern of black dots over the game area
+draw_fog_over_game_area:
+    ld hl, CLRTBL2 + FIRST_SCREEN_ROOM_ROW * 32 * 8
+    ld a, MAX_ROOM_HEIGHT
+draw_fog_over_game_area_loop_y:
+    push af
+        push hl
+            ld de, general_buffer
+            ld bc, 32 * 8
+            call LDIRMV
+            ld hl, general_buffer
+            ld bc, 32 * 8
+draw_fog_over_game_area_loop_byte:
+            ld e, 0
+            ld a, (hl)
+            and #0f
+            jr z, draw_fog_over_game_area_loop_byte_zero1
+            ld e, COLOR_DARK_BLUE
+draw_fog_over_game_area_loop_byte_zero1:
+            ld a, (hl)
+            and #f0
+            jr z, draw_fog_over_game_area_loop_byte_zero2
+            ld a, e
+            add a, COLOR_DARK_BLUE * 16
+            ld e, a
+draw_fog_over_game_area_loop_byte_zero2:
+            ld (hl), e
+            inc hl
+            dec bc
+            ld a, b
+            or c
+            jr nz, draw_fog_over_game_area_loop_byte
+        pop de
+        push de
+            ld hl, general_buffer
+            ld bc, 32 * 8
+            call fast_LDIRVM
+        pop hl
+        ld bc, 32 * 8
+        add hl, bc
+    pop af
+    dec a
+    jr nz, draw_fog_over_game_area_loop_y
+    ret
+
+
+; ------------------------------------------------
+; draws a grey frame around the current room
+draw_frame_around_room:
+    ld ix, room_buffer
+
+    ld a, (room_buffer + ROOM_STRUCT_VIDEO_MEM_START_Y)
+    dec a
+    ; add a, N_REGULAR_TEXT_ROWS + 2 - 1
+    ld d, a
+    ld e, 0
+    ld h, 0
+    ld a, (room_buffer + ROOM_STRUCT_VIDEO_MEM_START_X)
+    dec a
+    ld l, a
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    add hl, de   
+    ld de, CHRTBL2
+    add hl, de   ; video mem address to start drawing
+
+    ; top line:
+    push hl
+        ld bc, 6
+        add hl, bc
+        ld b, (ix + ROOM_STRUCT_WIDTH)
+        inc b
+IF {MSX_TILES_PER_ENGINE_TILE} == 2
+        sla b
+ELSE
+        inc b
+ENDIF
+        call draw_frame_around_room_draw_line
+    pop hl
+
+    ; bottom line:
+    push hl
+        ld d, (ix + ROOM_STRUCT_HEIGHT)
+        inc d
+        ld e, 0
+        add hl, de
+        ld b, (ix + ROOM_STRUCT_WIDTH)
+        inc b
+IF {MSX_TILES_PER_ENGINE_TILE} == 2
+        sla b
+ELSE
+        inc b
+ENDIF
+        call draw_frame_around_room_draw_line
+    pop hl
+
+    ; left line:
+    ld bc, 32 * 8
+    add hl, bc
+    ld b, (ix + ROOM_STRUCT_HEIGHT)
+    call draw_frame_around_room_draw_vertical_line
+    
+    ; right line:
+    ex de, hl
+    ld h, 0
+    ld l, (ix + ROOM_STRUCT_WIDTH)
+IF {MSX_TILES_PER_ENGINE_TILE} == 2
+    add hl, hl
+ENDIF
+    inc l
+    add hl, hl
+    add hl, hl
+    add hl, hl
+    add hl, de
+    ld b,(ix + ROOM_STRUCT_HEIGHT)
+    jp draw_frame_around_room_draw_vertical_line
+
+
+draw_frame_around_room_draw_line:
+    push hl
+        push bc
+            ld a, #1f
+            call draw_frame_around_room_draw_line_segment
+        pop bc
+        dec b
+        dec b
+draw_frame_around_room_draw_line_loop:
+        push bc
+            ld a, #ff
+            call draw_frame_around_room_draw_line_segment
+        pop bc
+        djnz draw_frame_around_room_draw_line_loop
+        ld a, #f8
+        call draw_frame_around_room_draw_line_segment
+    pop hl
+    ret  
+
+
+draw_frame_around_room_draw_line_segment:  
+    ld bc, 2
+    push hl
+        call FILVRM
+    pop hl
+    ld bc, CLRTBL2 - CHRTBL2
+    add hl, bc
+    ld a, #e0
+    ld bc, 2
+    push hl
+        call FILVRM
+    pop hl
+    ld bc, 8 + CHRTBL2 - CLRTBL2
+    add hl, bc
+    ret
+
+draw_frame_around_room_draw_vertical_line:
+    push hl
+draw_frame_around_room_draw_vertical_line_loop:
+        push bc
+            ld a, #18
+            ld bc, 8
+            push hl
+                call FILVRM
+            pop hl
+            ld bc, CLRTBL2 - CHRTBL2
+            add hl, bc
+            ld a, #e0
+            ld bc, 8
+            push hl
+                call FILVRM
+            pop hl
+            ld bc, 32 * 8 + CHRTBL2 - CLRTBL2
+            add hl, bc
+        pop bc
+        djnz draw_frame_around_room_draw_vertical_line_loop
+    pop hl
+    ret
+

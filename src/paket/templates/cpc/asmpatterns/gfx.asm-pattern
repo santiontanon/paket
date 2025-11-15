@@ -1,0 +1,573 @@
+;-----------------------------------------------
+; decompresses the necessary tiles for the current room
+decompress_room_tiles:
+IF IS_6128 == 1
+    SET_128K_PAGE_4000 TILES_PAGE
+ENDIF
+    ; we clear the buffer of already loaded tiles:
+    ld hl, general_buffer
+    ld bc, MAX_TILES_PER_ROOM
+    ld a, #ff
+    call clear_memory_to_a
+
+    ; clear the first tile, which is the empty tile:
+    ; ld hl, (tile_buffer_ptr)
+    ; ld bc, 32
+    ; call clear_memory
+
+    ld a, 0
+    ld (next_tile_idx), a
+    ld a, #ff  ; some number that does not match any bank
+    ld (currently_decompressed_tile_bank),a
+
+    ld hl, room_buffer + ROOM_STRUCT_BACKGROUND
+    ld a, (room_buffer + ROOM_STRUCT_WIDTH)
+decompress_room_tiles_x_loop:
+    push af
+        ld a, (room_buffer + ROOM_STRUCT_HEIGHT)
+decompress_room_tiles_y_loop:
+        push af
+            ld a, (hl)
+            push hl
+                push af
+                    ; see if we already have it loaded:
+                    ld hl, general_buffer
+                    ld b, MAX_TILES_PER_ROOM
+                    ld c, 0
+decompress_room_tiles_y_loop_check_if_tile_loaded_loop:
+                    cp (hl)
+                    jp z, decompress_room_tiles_y_loop_tile_already_loaded_pop
+                    inc c
+                    inc hl
+                    djnz decompress_room_tiles_y_loop_check_if_tile_loaded_loop
+                    ; we need to load the tile:
+                    ; load the appropriate tile bank:
+                    and #7f  ; remove the "flipped tile" bit
+                    push af
+                        srl a
+                        srl a
+                        srl a
+                        srl a   ; the bank is a/16
+                        ld hl, currently_decompressed_tile_bank
+                        cp (hl)
+                        jr z, decompress_room_tiles_y_loop_tile_bank_decompressed
+                        ld (hl), a   ; mark which is the currently decompressed tile bank
+                        ; decompress the appropriate tile bank:
+IF {N_TILE_BANKSETS} > 1
+                        push af
+                            ld a, (room_buffer + ROOM_STRUCT_BANKSET)
+                            ld hl, tileBankSetsPointers
+                            ld b, 0
+                            ld c, a
+                            add hl, bc
+                            add hl, bc
+                            ld e, (hl)
+                            inc hl
+                            ld d, (hl)
+                            ex de, hl
+                        pop af
+ELSE
+                        ld hl, tileBanksPointers_0
+ENDIF
+                        ld b, 0
+                        ld c, a
+                        add hl, bc
+                        add hl, bc
+                        ld e, (hl)
+                        inc hl
+                        ld d, (hl)
+                        ex de, hl
+                        ld de, general_buffer+MAX_TILES_PER_ROOM
+                        call PAKET_UNPACK
+
+decompress_room_tiles_y_loop_tile_bank_decompressed:
+                    pop af
+                    ; copy the appropriate tile:
+                    and #0f
+                    add a, a
+                    add a, a
+                    add a, a
+                    add a, a
+                    ld h, 0
+                    ld l, a
+                    add hl, hl   ; hl = tile # * 32
+                    ld bc, general_buffer+MAX_TILES_PER_ROOM
+                    add hl, bc   ; hl = pointer to the tile we want
+
+                    ld a, (next_tile_idx)
+                    exx
+                        ld h, 0
+                        ld l, a
+                        add hl, hl
+                        add hl, hl
+                        add hl, hl
+                        add hl, hl
+                        add hl, hl
+                        ld bc, (tile_buffer_ptr)
+                        add hl, bc   
+                        push hl
+                    exx
+                    pop de  ; de = pointer to the place where we want to copy the new tile
+
+                pop af
+                ld iyl, a
+                and #80  ; see if the tile is flipped
+                jr z, decompress_room_tiles_no_flip
+decompress_room_tiles_flip:
+                copy_tile_flipping_it  ; this is a MACRO
+                jr decompress_room_tiles_copied
+decompress_room_tiles_no_flip:
+                ld bc, 32
+                ldir  ; we copy the tile
+decompress_room_tiles_copied:
+
+                ld hl, next_tile_idx
+                ld a, (hl)
+                inc (hl)  ; update what is the next tile
+                ld hl, general_buffer
+                ld b, 0
+                ld c, a
+                add hl, bc
+                ld a, iyl
+                ld (hl), a ; we save the fact that we have already loaded this tile
+                jr decompress_room_tiles_y_loop_tile_already_loaded
+decompress_room_tiles_y_loop_tile_already_loaded_pop:
+                pop af
+decompress_room_tiles_y_loop_tile_already_loaded:
+            ; the idx of the tile is in "c"
+            pop hl
+            ld (hl), c
+            inc hl
+        pop af
+        dec a
+        jp nz, decompress_room_tiles_y_loop    
+    pop af
+    dec a
+    jp nz, decompress_room_tiles_x_loop
+
+    ret
+
+
+; ------------------------------------------------
+; copy tile from "hl" to "de", flipping it horizontally
+copy_tile_flipping_it: MACRO
+    ld bc, 24
+    add hl, bc
+    ld b, 4
+copy_tile_flipping_it_loop_x:
+    push bc
+        ld b, 8
+copy_tile_flipping_it_loop_y:
+        ; flip colors in one byte:
+        ld a, (hl)
+        and #55
+        sla a
+        ld c, a
+        ld a, (hl)
+        and #aa
+        srl a
+        or c
+        ld (de), a
+        inc hl
+        inc de
+        djnz copy_tile_flipping_it_loop_y
+        ld bc, -16
+        add hl, bc
+    pop bc
+    djnz copy_tile_flipping_it_loop_x
+ENDM
+
+
+IF {SCRIPT_DRAW_CUTSCENE_IMAGE_USED} == 1
+; ------------------------------------------------
+; copy tile from "hl" to "de", flipping it horizontally
+copy_tile_flipping_it_row_storage:
+    ld bc, 3
+    add hl, bc
+    ld b, 8
+copy_tile_flipping_it_row_storage_loop_y:
+    push bc
+        ld b, 4
+copy_tile_flipping_it_row_storage_loop_x:
+        ; flip colors in one byte:
+        ld a, (hl)
+        and #55
+        sla a
+        ld c, a
+        ld a, (hl)
+        and #aa
+        srl a
+        or c
+        ld (de), a
+        dec hl
+        inc de
+        djnz copy_tile_flipping_it_row_storage_loop_x
+        ld bc, 8
+        add hl, bc
+    pop bc
+    djnz copy_tile_flipping_it_row_storage_loop_y
+    ret
+ENDIF
+
+
+; ------------------------------------------------
+; Changes the color palette for MODE 0 (and writes the current palette to 
+; 'current_palette_ptr').
+; hl: palette pointer (16 colors)
+; iyl: palette size
+set_palette_16_setting_current:
+    ld (current_palette_ptr),hl
+
+
+; ------------------------------------------------
+; Changes the color palette for MODE 0
+; hl: palette pointer (16 colors)
+; iyl: palette size
+set_palette_16:
+    ld iyl,16
+set_palette_disabling_interrupts:
+    di
+        call set_palette_without_disabling_interrupts
+    ei
+    ret
+    
+
+set_palette_4_colors_without_disabling_interrupts:
+    ld iyl,4
+set_palette_without_disabling_interrupts:
+    xor a
+set_palette_colors_loop:
+    push af
+        ; set pen "a" to hardware color "palette[a]":
+        ld bc, #7f00   ; Gate Array port
+        out (c), a     ; Send pen number
+        ld a, (hl)     ; Pen colour (and Gate Array function)
+        out (c), a     ; Send it
+    pop af
+    inc hl
+    inc a
+    cp iyl
+    jr nz, set_palette_colors_loop
+    ret
+
+
+;-----------------------------------------------
+; Clears the screen with a simple effect
+; - iyl: number of halts per step
+clear_screen_pretty:
+    ld iyl, 18
+clear_screen_pretty_variable_speed:
+    ld hl, VIDEO_MEMORY
+    ld de, VIDEO_MEMORY+1
+    ld bc, SCREEN_WIDTH_IN_BYTES*SCREEN_VERTICAL_DISPLAYED
+    ld a, 8
+clear_screen_pretty_loop:
+    push af
+        push bc
+            push hl
+                push de
+                    xor a
+                    ld (hl), a
+                    ldir
+
+                    ld a, iyl
+                    or a
+                    ld b, 0
+                    ld c, a
+                    call nz, wait_bc_halts  ; if b != 0, wait
+                pop hl
+                ld bc, #800
+                add hl, bc
+                ex de, hl
+            pop hl
+            add hl, bc
+        pop bc
+    pop af
+    dec a
+    jr nz, clear_screen_pretty_loop
+    ret
+
+
+; ------------------------------------------------
+; Draws a sprite/tile to video memory (mode 0)
+; Arguments:
+; - hl: sprite to paint
+; - de: video memory address of the top-left pixel (assuming only even x coordinate positions)
+; - c: width (in bytes)
+; - b: height
+draw_sprite_variable_size_to_screen:
+draw_sprite_variable_size_to_screen_loop_y:
+    push bc
+        push de
+draw_sprite_variable_size_to_screen_loop_x:
+            ld a,(hl)
+            or a
+            jr z,draw_sprite_variable_size_to_screen_skip_pixel
+            ld b,a
+            and #55 ; check if the first pixel is transparent
+            ld a,b
+            jr nz,draw_sprite_variable_size_to_screen_first_pixel_not_transparent
+            ; a = (de)&#55 + a&#aa
+            and #aa
+            ld b,a
+            ld a,(de)
+            and #55
+            add a,b
+            ; if the first pixel is transparent, the second cannot be!
+            jr draw_sprite_variable_size_to_screen_second_pixel_not_transparent
+draw_sprite_variable_size_to_screen_first_pixel_not_transparent:
+            and #aa ; check if the second pixel is transparent:
+            ld a,b  ; b still contains the original pixel
+            jr nz,draw_sprite_variable_size_to_screen_second_pixel_not_transparent
+            ; a = (de)&#aa + b&#55
+            and #55
+            ld b,a
+            ld a,(de)
+            and #aa
+            add a,b
+draw_sprite_variable_size_to_screen_second_pixel_not_transparent:
+            ld (de),a
+draw_sprite_variable_size_to_screen_skip_pixel:
+            inc hl
+            inc de
+            dec c
+            jr nz, draw_sprite_variable_size_to_screen_loop_x
+        pop de
+        ld a,d
+        add a,#08
+        ld d,a
+        sub #C0
+        jr nc, draw_sprite_variable_size_to_screen_loop_next_line
+        ld bc, #c000 + SCREEN_WIDTH_IN_BYTES
+        ex de,hl
+        add hl,bc
+        ex de,hl
+draw_sprite_variable_size_to_screen_loop_next_line:
+    pop bc
+    djnz draw_sprite_variable_size_to_screen_loop_y
+    ret
+
+
+; ------------------------------------------------
+; Draws a sprite/tile to video memory (mode 0)
+; Arguments:
+; - hl: sprite to paint
+; - de: video memory address of the top-left pixel (assuming only even x coordinate positions)
+; - c: width (in bytes)
+; - b: height
+draw_sprite_variable_size_to_screen_no_transparency:
+draw_sprite_variable_size_to_screen_no_transparency_loop_y:
+    push bc
+        ld b,0
+        push de
+            ldir
+        pop de
+        ld a, d
+        add a, #08
+        ld d, a
+        sub #c0
+        jr nc, draw_sprite_variable_size_to_screen_no_transparency_loop_next_line
+        ld bc, #c000 + SCREEN_WIDTH_IN_BYTES
+        ex de, hl
+        add hl, bc
+        ex de, hl
+draw_sprite_variable_size_to_screen_no_transparency_loop_next_line:
+    pop bc
+    djnz draw_sprite_variable_size_to_screen_no_transparency_loop_y
+    ret
+
+
+; ------------------------------------------------
+; Save a sprite/tile from video memory (mode 0)
+; Arguments:
+; - hl: sprite to paint
+; - de: video memory address of the top-left pixel (assuming only even x coordinate positions)
+; - c: width (in bytes)
+; - b: height
+save_sprite_variable_size_to_screen_no_transparency:
+    ex de,hl
+save_sprite_variable_size_to_screen_no_transparency_loop_y:
+    push bc
+        ld b,0
+        push hl
+            ldir
+        pop hl
+        ld a,h
+        add a,#08
+        ld h,a
+        sub #C0
+        jr nc, save_sprite_variable_size_to_screen_no_transparency_loop_next_line
+        ld bc, #c000 + SCREEN_WIDTH_IN_BYTES
+        add hl,bc
+save_sprite_variable_size_to_screen_no_transparency_loop_next_line:
+    pop bc
+    djnz save_sprite_variable_size_to_screen_no_transparency_loop_y
+    ret
+
+
+; ------------------------------------------------
+; draws an alternating pattern of black dots over the game area
+draw_fog_over_game_area:
+    ld iyl, #55
+    jr clear_game_area_entry_point
+clear_game_area:
+    ld iyl, #00
+clear_game_area_entry_point:
+    ld hl, VIDEO_MEMORY+FIRST_SCREEN_ROOM_ROW*SCREEN_WIDTH_IN_BYTES
+    ld a, 8
+draw_fog_over_game_area_y_loop:
+    push af
+    push hl
+        ld c, GAME_AREA_HEIGHT_IN_TILES
+draw_fog_over_game_area_x_loop2:
+        ld b, SCREEN_WIDTH_IN_BYTES
+draw_fog_over_game_area_x_loop:
+        ld a, (hl)
+        and iyl
+        ld (hl), a
+        inc hl
+        djnz draw_fog_over_game_area_x_loop
+        dec c
+        jr nz, draw_fog_over_game_area_x_loop2
+
+        ld a, iyl
+        rlca
+        ld iyl, a
+    pop hl
+    pop af
+    ld de, #800
+    add hl, de
+    dec a
+    jr nz, draw_fog_over_game_area_y_loop
+    ret
+
+
+IF FRAME_AROUND_SUBROOMS == 1
+
+; ------------------------------------------------
+; draws a grey frame around the current room
+draw_frame_around_room:
+    ld ix,room_buffer
+
+    ld a, (room_buffer + ROOM_STRUCT_VIDEO_MEM_START_Y)
+    ld de, SCREEN_WIDTH_IN_BYTES
+    call mul8
+    ld d, 0
+    ld a, (room_buffer + ROOM_STRUCT_VIDEO_MEM_START_X)
+    ld e, a
+    add hl, de   
+    ld de, VIDEO_MEMORY
+    add hl, de   ; video mem address to start drawing
+
+    push hl
+        ld bc,#800*6 - SCREEN_WIDTH_IN_BYTES
+        add hl,bc   ; two lines OVER the current room, otherwise, it'll be removed with the redraw
+        dec hl
+        ; top line
+        ld b,(ix+ROOM_STRUCT_WIDTH)
+        sla b
+        sla b
+        inc b
+        inc b
+        call draw_frame_around_room_draw_line
+        ld de,#800
+        add hl,de
+        call draw_frame_around_room_draw_line
+        push af
+        push bc
+            ld a,(ix+ROOM_STRUCT_HEIGHT)
+            ld de,SCREEN_WIDTH_IN_BYTES
+            call mul8
+        pop bc
+        pop af
+    pop de
+    push de
+        add hl,de
+        dec hl
+        ; bottom line:
+        call draw_frame_around_room_draw_line
+        ld de,#800
+        add hl,de
+        call draw_frame_around_room_draw_line
+    pop hl
+    ; side lines:
+    push hl
+        dec hl
+        ld a,(ix+ROOM_STRUCT_HEIGHT)
+        call draw_frame_around_room_draw_vertical_line
+    pop hl
+    ld b,0
+    ld c,(ix+ROOM_STRUCT_WIDTH)
+    sla c
+    sla c
+    add hl,bc
+    ld a,(ix+ROOM_STRUCT_HEIGHT)
+    call draw_frame_around_room_draw_vertical_line
+    ret
+
+draw_frame_around_room_draw_line:
+    push hl
+    push bc
+    ld a,#41+(#41*2)  ; grey
+draw_frame_around_room_x_loop:
+        ld (hl),a
+        inc hl
+        djnz draw_frame_around_room_x_loop
+    pop bc
+    pop hl
+    ret    
+
+draw_frame_around_room_draw_vertical_line:
+draw_frame_around_room_y_loop1:
+    ex af,af'
+        ld bc,#0808 ; b = 8 for doing 8 iterations of the loop, and c = 8 as the increment we need to do to the MSB of the video mem pointer
+draw_frame_around_room_y_loop2:
+        ld (hl),#41+(#41*2)  ; grey
+        ld a,c
+        add a,h
+        ld h,a
+        djnz draw_frame_around_room_y_loop2
+        ld bc, #c000 + SCREEN_WIDTH_IN_BYTES
+        add hl,bc
+    ex af,af'
+    dec a
+    jr nz,draw_frame_around_room_y_loop1    
+    ret
+
+ENDIF
+
+
+;-----------------------------------------------
+switch_to_mode0_safe:
+    ; This version waits until we are sure we are in a mode 0 area (if we are in
+    ; a split mode 1 / mode 0 mode)
+    ld a, (interrupt_count)
+    cp SCREEN_MODE0_INTERRUPT_COUNT + 1
+    jr nz, switch_to_mode0_safe
+switch_to_mode0:
+    ld a, #8c  ; Mode and ROM selection + set mode 0
+switch_to_mode0_entry_point:
+    di
+        ; switch to mode 0:
+        ld bc, #7f00  ; Gate array port
+        out (c), a  ; Send it
+
+        ld hl, interrupt_callback_mode0  ; this is the same as interrupt_callback_mode1
+        ld (#0039), hl
+    ei
+    ret
+
+
+;-----------------------------------------------
+switch_to_mode1:
+    ld a, #8d  ; Mode and ROM selection + set screen 1
+    jr switch_to_mode0_entry_point
+
+
+;-----------------------------------------------
+switch_to_split_mode1_mode0:
+    di
+        ld hl, interrupt_callback_split_mode1_mode0
+        ld (#0039), hl
+    ei
+    ret

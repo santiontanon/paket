@@ -1,0 +1,271 @@
+IS_6128:  equ {IS_6128}
+PKT_IS_MULTIPAGE: equ IS_6128
+STACK_ADDRESS:                  equ {STACK_ADDRESS}
+
+SAVEGAME_SIZE: equ (data_for_savegame_end - data_for_savegame_start) + 4
+
+; ------------------------------------------------
+; Screen configuration:
+VIDEO_MEMORY:                   equ #c000
+SCREEN_VERTICAL_SYNC:           equ {SCREEN_VERTICAL_SYNC}
+SCREEN_VERTICAL_DISPLAYED:      equ {SCREEN_VERTICAL_DISPLAYED}
+SCREEN_MODE0_INTERRUPT_COUNT:   equ {SCREEN_MODE0_INTERRUPT_COUNT}
+SCREEN_MODE0_HORIZONTAL_SYNC:   equ {SCREEN_MODE0_HORIZONTAL_SYNC}
+SCREEN_MODE0_WIDTH:             equ {SCREEN_MODE0_WIDTH}
+SCREEN_WIDTH_IN_BYTES:          equ {SCREEN_WIDTH_IN_BYTES}
+FIRST_SCREEN_ROOM_ROW:          equ {FIRST_SCREEN_ROOM_ROW}
+FIRST_SCREEN_ROOM_COLUMN:    equ {FIRST_SCREEN_ROOM_COLUMN}
+
+FRAME_AROUND_SUBROOMS:          equ {FRAME_AROUND_SUBROOMS}
+
+;FADE_IN_OUT_SPEED:             equ 20
+;FADE_IN_OUT_SPEED:             equ 1
+
+; ------------------------------------------------
+PAKET_UNPACK:                   equ {DECOMPRESSOR_FUNCTION_NAME}
+GENERAL_BUFFER_SIZE:            equ {GENERAL_BUFFER_SIZE}    ; this is used to temporarily decompress stuff, prerender, etc.
+TEXT_BANK_MAX_SIZE:             equ {TEXT_BANK_MAX_SIZE}
+
+USE_PATH_FINDING:               equ {USE_PATH_FINDING}
+STOP_EARLY_WHEN_WALKING:        equ {STOP_EARLY_WHEN_WALKING}
+DOUBLE_CLICK_ON_EXIT:           equ {DOUBLE_CLICK_ON_EXIT}
+ALLOW_SAVING_GAME:              equ {ALLOW_SAVING_GAME}
+LOAD_SAVE_GAME_SCRIPT:          equ {LOAD_SAVE_GAME_SCRIPT}
+
+ROOMS_PER_BANK:                 equ {ROOMS_PER_BANK}
+
+NUM_ITEMS_IN_GAME:              equ {NUM_ITEMS_IN_GAME}        ; how many different items are in the game in total
+N_GAME_STATE_VARIABLES:         equ {N_GAME_STATE_VARIABLES}
+
+PLAYER_SCALING:                 equ {PLAYER_SCALING}
+PLAYER_SCALING_THRESHOLD_75_0:  equ {PLAYER_SCALING_THRESHOLD_75_0}
+PLAYER_SCALING_THRESHOLD_87_5:  equ {PLAYER_SCALING_THRESHOLD_87_5}
+PLAYER_SCALING_THRESHOLD_112_5: equ {PLAYER_SCALING_THRESHOLD_112_5}
+
+MAX_ROOM_WIDTH:                 equ {MAX_ROOM_WIDTH}
+MAX_ROOM_HEIGHT:                equ {MAX_ROOM_HEIGHT}
+MAX_OBJECTS_PER_ROOM:           equ {MAX_OBJECTS_PER_ROOM}
+COLUMN_DRAW_BUFFER_SIZE:        equ {COLUMN_DRAW_BUFFER_SIZE}
+MAX_OBJECT_TYPES_PER_ROOM:      equ {MAX_OBJECT_TYPES_PER_ROOM}
+MAX_TILES_PER_ROOM:             equ {MAX_TILES_PER_ROOM}
+MAX_DIALOGUE_OPTIONS:           equ 5
+MAX_DIALOGUE_SIZE:              equ {MAX_DIALOGUE_SIZE}
+INVENTORY_SIZE:                 equ {INVENTORY_SIZE}
+INVENTORY_NAME_BUFFER_SIZE:     equ {INVENTORY_NAME_BUFFER_SIZE}
+INVENTORY_ITEMS_PER_LINE:       equ {INVENTORY_ITEMS_PER_LINE}
+INVENTORY_SPRITE_HEIGHT:        equ 12
+INVENTORY_START_X:              equ {INVENTORY_START_X}
+INVENTORY_START_Y:              equ {INVENTORY_START_Y}
+INVENTORY_ROWS:                 equ {INVENTORY_ROWS}
+GUI_START_X:                    equ {GUI_START_X}
+GUI_START_Y:                    equ {GUI_START_Y}
+GAME_AREA_HEIGHT_IN_TILES:      equ {GAME_AREA_HEIGHT_IN_TILES}
+IF STOP_EARLY_WHEN_WALKING == 1
+PLAYER_MOVE_TO_OBJECT_SLACK:    equ 5  ; player will stop this many pixels before reaching an object's center X position
+ENDIF
+CAN_TURN_GUI_ON_OFF:            equ {SCRIPT_GUI_OFF_USED}
+SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED: equ {SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED}
+SCRIPT_SAVE_GAME_USED: equ {SCRIPT_SAVE_GAME_USED}
+SCRIPT_LOAD_GAME_USED: equ {SCRIPT_LOAD_GAME_USED}
+SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED: equ {SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED}
+SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED: equ {SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED}
+
+ACTION_PREVIEW_TEXT_ROW:        equ 0
+REGULAR_TEXT_FIRST_ROW:         equ ACTION_PREVIEW_TEXT_ROW+1
+N_REGULAR_TEXT_ROWS:            equ 4
+
+SPACE_CHARACTER:                equ {SPACE_CHARACTER}
+TAKE_FROM_INVENTORY_ERROR_MESSAGE_IDX:    equ {TAKE_FROM_INVENTORY_ERROR_MESSAGE_IDX}
+UNTAKEABLE_ERROR_MESSAGE_IDX:   equ {UNTAKEABLE_ERROR_MESSAGE_IDX}
+CANNOT_REACH_ERROR_MESSAGE_IDX: equ {CANNOT_REACH_ERROR_MESSAGE_IDX}
+UNUSEABLE_ERROR_MESSAGE_IDX:    equ {UNUSEABLE_ERROR_MESSAGE_IDX}
+UNTALKABLE_ERROR_MESSAGE_IDX:   equ {UNTALKABLE_ERROR_MESSAGE_IDX}
+
+ROOM_TILES_OBJECT_COMBINED_BUFFER_SIZE: equ {ROOM_TILES_OBJECT_COMBINED_BUFFER_SIZE}
+MAX_ROOM_RULES_SIZE:            equ {MAX_ROOM_RULES_SIZE}
+ROOM_BUFFER_SIZE:               equ ROOM_STRUCT_OBJECT_DATA+MAX_OBJECTS_PER_ROOM*OBJECT_STRUCT_SIZE
+ROOM_OBJECTS_NAME_BUFFER_SIZE:  equ {ROOM_OBJECTS_NAME_BUFFER_SIZE}
+ROOM_LOAD_BUFFER_ALLOCATED_SPACE: equ MAX_OBJECT_TYPES_PER_ROOM*5  ; Cache of already loaded object type pointers
+
+ROOM_FLAG_ISSUBROOM:            equ 1
+ROOM_FLAG_DEFAULT_VERB_USE:     equ 2
+
+; room struct offsets:
+ROOM_STRUCT_VIDEO_MEM_START_X:  equ 0
+ROOM_STRUCT_VIDEO_MEM_START_Y:  equ 1
+ROOM_STRUCT_ROOM_FLAGS:         equ 2   ; 0: "is subroom", 1: "default verb is use", 234: "player scaling (if enabled)".
+ROOM_STRUCT_START_X:            equ 3    ; this is ROOM_STRUCT_VIDEO_MEM_START_X*2
+ROOM_STRUCT_START_Y:            equ 4    ; this is ROOM_STRUCT_VIDEO_MEM_START_Y*8
+ROOM_STRUCT_WIDTH:              equ 5
+ROOM_STRUCT_HEIGHT:             equ 6
+ROOM_STRUCT_PALETTE_ID:         equ 7
+ROOM_STRUCT_N_OBJECTS:          equ 8
+IF {N_TILE_BANKSETS} > 1
+ROOM_STRUCT_BANKSET:            equ 9    ; which bank set does this room use
+ROOM_STRUCT_BACKGROUND:         equ 10    ; background: one byte per tile
+ELSE
+ROOM_STRUCT_BACKGROUND:         equ 9    ; background: one byte per tile
+ENDIF
+ROOM_STRUCT_COLLISION_MASK:     equ ROOM_STRUCT_BACKGROUND+MAX_ROOM_WIDTH*MAX_ROOM_HEIGHT
+                                  ; collision mask is one byte per tile, with one bit per each
+                                  ; 4x2 block. It's stored by columns.
+ROOM_STRUCT_RULES:              equ ROOM_STRUCT_COLLISION_MASK+MAX_ROOM_WIDTH*MAX_ROOM_HEIGHT
+ROOM_STRUCT_OBJECT_DATA:        equ ROOM_STRUCT_RULES+MAX_ROOM_RULES_SIZE
+
+; object struct offsets:
+OBJECT_STRUCT_SIZE:             equ 15
+OBJECT_STRUCT_X2:               equ 0    ; they are in this order to get some optimizations when drawing
+OBJECT_STRUCT_X:                equ 1
+OBJECT_STRUCT_Y:                equ 2
+OBJECT_STRUCT_Y2:               equ 3
+OBJECT_STRUCT_ID:               equ 4
+OBJECT_STRUCT_TYPE_PTR:         equ 5
+OBJECT_STRUCT_NAME_PTR:         equ 7
+OBJECT_STRUCT_DEPTH:            equ 9
+OBJECT_STRUCT_STATE_DIRECTION:  equ 10  ; state + direction*16
+OBJECT_STRUCT_ANIMATION_STEP:   equ 11  ; this is step * 2, so that it's an offset into the animation frame pointers
+OBJECT_STRUCT_ANIMATION_TIMER:  equ 12
+OBJECT_STRUCT_DESCRIPTION_IDX:  equ 13    ; 2 bytes
+
+; GUI:
+GUI_WIDTH:                      equ {GUI_WIDTH}
+GUI_HEIGHT:                     equ {GUI_HEIGHT}
+GUI_VIDEO_MEM_START:            equ {GUI_VIDEO_MEM_START}
+INVENTORY_VIDEO_MEM_START:      equ {INVENTORY_VIDEO_MEM_START}
+INVENTORY_VIDEO_MEM_START_LINE2:    equ {INVENTORY_VIDEO_MEM_START_LINE2}
+MIN_POINTER_X:                  equ {MIN_POINTER_X}
+MAX_POINTER_X:                  equ {MAX_POINTER_X}
+MIN_POINTER_Y:                  equ {MIN_POINTER_Y}
+MAX_POINTER_Y:                  equ {MAX_POINTER_Y}
+POINTER_WIDTH_IN_BYTES:         equ 4
+POINTER_HEIGHT:                 equ 12
+DOUBLE_CLICK_INTERVAL:          equ 16
+
+; verbs:
+VERB_NONE:                      equ 0
+VERB_EXAMINE:                   equ 1
+VERB_PICK_UP:                   equ 2
+VERB_USE:                       equ 3
+VERB_TALK:                      equ 4
+VERB_EXIT:                      equ 5
+VERB_LOAD_SAVE:                 equ 6  ; although this is not really a verb
+
+; object directions:
+OBJECT_DIRECTION_UP:            equ 0
+OBJECT_DIRECTION_RIGHT:         equ 1
+OBJECT_DIRECTION_DOWN:          equ 2
+OBJECT_DIRECTION_LEFT:          equ 3
+
+; object states:
+OBJECT_STATE_WALKING_1:         equ 0
+OBJECT_STATE_WALKING_2:         equ 1
+OBJECT_STATE_WALKING_3:         equ 2
+OBJECT_STATE_WALKING_4:         equ 3
+OBJECT_STATE_IDLE:              equ 4
+OBJECT_STATE_OPEN:              equ 5
+OBJECT_STATE_CLOSED:            equ 6
+OBJECT_STATE_EXIT:              equ 7
+OBJECT_STATE_NUMBER:            equ 8
+OBJECT_STATE_HIDDEN:            equ 9
+
+; player actions:
+PLAYER_HEIGHT:                  equ {PLAYER_HEIGHT}
+PLAYER_WIDTH:                   equ {PLAYER_WIDTH}
+PLAYER_COLLISION_WIDTH:         equ {PLAYER_COLLISION_WIDTH}
+PLAYER_OBJECT_ID:               equ {PLAYER_OBJECT_ID}
+PLAYER_ACTION_IDLE:             equ 0
+PLAYER_ACTION_WALKING:          equ 1
+PLAYER_ACTION_NOT_ON_ROOM:      equ 10    ; this should just be a higher number than the other actions
+
+PLAYER_WALK_LEFT_N_FRAMES:      equ {PLAYER_WALK_LEFT_N_FRAMES}
+PLAYER_WALK_RIGHT_N_FRAMES:     equ {PLAYER_WALK_RIGHT_N_FRAMES}
+PLAYER_WALK_UP_N_FRAMES:        equ {PLAYER_WALK_UP_N_FRAMES}
+PLAYER_WALK_DOWN_N_FRAMES:      equ {PLAYER_WALK_DOWN_N_FRAMES}
+
+PLAYER_ACTION_DISTANCE_THRESHOLD:    equ 10    ; If the distance from the player to an object is larger than this, 
+                                            ; the player will refuse interacting with it.
+RESET_PLAYER_DIRECTION_ON_IDLE: equ {RESET_PLAYER_DIRECTION_ON_IDLE}
+PLAYER_DIRECTION_ON_IDLE:       equ {PLAYER_DIRECTION_ON_IDLE}  ; If RESET_PLAYER_DIRECTION_ON_IDLE == 1, player state/direction is reset to this when stopping.
+
+{RULE_CONSTANTS}
+
+
+; ------------------------------------------------
+PATH_FINDING_MAX_LENGTH:        equ {PATH_FINDING_MAX_LENGTH}
+
+PATH_FINDING_OPEN_LIST_SIZE:    equ 128
+PATH_FINDING_WALK_TILE_WIDTH:   equ 4 
+PATH_FINDING_WALK_TILE_HEIGHT:  equ 4
+
+PATH_FINDING_MAP_WIDTH:         equ MAX_ROOM_WIDTH * (8 / PATH_FINDING_WALK_TILE_WIDTH)
+PATH_FINDING_MAP_HEIGHT:        equ MAX_ROOM_HEIGHT * (8 / PATH_FINDING_WALK_TILE_HEIGHT)
+
+
+; ------------------------------------------------
+{SOUND_CONSTANTS_INCLUDE}
+MUSIC_TYPE_TSV: equ {MUSIC_TYPE_TSV}
+MUSIC_TYPE_WYZ: equ {MUSIC_TYPE_WYZ}
+
+
+; ------------------------------------------------
+; Platform-specific constants, to allow the same code to work for multiple platforms
+PLATFORM_KEYBOARD_LINE_UP: equ 0
+PLATFORM_KEYBOARD_LINE_DOWN: equ 0
+PLATFORM_KEYBOARD_LINE_SPACE: equ 4
+PLATFORM_KEYBOARD_BIT_UP: equ 0
+PLATFORM_KEYBOARD_BIT_DOWN: equ 2
+PLATFORM_KEYBOARD_BIT_SPACE: equ 7
+
+TEXT_COLOR_WHITE: equ #88
+
+PLATFORM_STORE_LAST_ACTION_LENGTH: equ 1
+PLATFORM_PTR_TO_FIRST_DIALOGUE_OPTION_COLOR: equ VIDEO_MEMORY
+
+;-----------------------------------------------
+; - This macro changes which page is mapped to #4000 - 7fff
+SET_128K_PAGE_4000:    MACRO ?p1
+    push bc
+    push af
+        ld bc, #7f00
+        ld a, ?p1
+        ld (current_4000_page), a
+        out (c), a
+    pop af
+    pop bc
+    ENDM
+
+SET_128K_PAGE_4000_A:    MACRO
+    push bc
+        ld bc, #7f00
+        ld (current_4000_page), a
+        out (c), a
+    pop bc
+    ENDM
+
+PKT_SET_PAGE: MACRO ?p1
+    SET_128K_PAGE_4000 p1
+    ENDM
+
+SET_128K_PAGE_4000_PUSHING_PREVIOUS:    MACRO ?p1
+    push hl
+    push bc
+    push af
+        ld a, (current_4000_page)
+        ld h, a
+        ld bc, #7f00
+        ld a, ?p1
+        ld (current_4000_page), a
+        out (c), a
+    pop af
+    pop bc
+    ex (sp), hl
+    ENDM
+
+SET_128K_PAGE_4000_FROM_POP:    MACRO
+    pop af
+    push bc
+        ld bc, #7f00
+        ld (current_4000_page), a
+        out (c), a
+    pop bc
+    ENDM

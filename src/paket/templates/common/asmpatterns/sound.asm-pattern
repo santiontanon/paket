@@ -1,0 +1,709 @@
+start_of_sound_code:
+
+;-----------------------------------------------
+Instrument_profiles:
+{MUSIC_INSTRUMENT_PROFILES}
+
+; Note table with just the notes used in the game songs:
+note_period_table:
+{NOTE_PERIOD_TABLE}
+
+
+;-----------------------------------------------
+; starts playing a song 
+; arguments: 
+; - hl: song to play (if songs are compressed, this methods will decompress the
+;       song into the music_buffer).
+; - a: MUSIC_tempo
+play_song:
+    ld (MUSIC_tempo), a
+IF {COMPRESS_SONGS} == 1
+    push hl
+        call StopPlayingMusic
+    pop hl
+play_song_no_stop:
+IF PKT_IS_MULTIPAGE == 1
+    PKT_SET_PAGE SONG_DATA_PAGE
+ENDIF
+    ld de, music_buffer
+    call PAKET_UNPACK
+    di
+    ld hl, music_buffer
+ELSE:
+play_song_no_stop:
+    di
+ENDIF
+    ld (MUSIC_pointer), hl
+    ld (MUSIC_start_pointer), hl
+    ld hl, MUSIC_repeat_stack
+    ld (MUSIC_repeat_stack_ptr), hl
+    ld hl, 0
+    ld (load_new_song_request), hl
+    ei
+    ret
+
+
+;-----------------------------------------------
+sound_update_MUSIC_END:
+StopPlayingMusic:
+    di
+    ld hl, beginning_of_sound_variables_except_tempo
+    ld bc, end_of_sound_variables - beginning_of_sound_variables_except_tempo
+    call clear_memory
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld a, 1
+    ld hl, MUSIC_instrument_speed
+    ld (hl), a
+    inc hl
+    ld (hl), a
+    inc hl
+    ld (hl), a
+ENDIF
+    call clear_PSG_volume
+    ei
+    ret
+
+
+;-----------------------------------------------
+; silences all 3 channels of the PSG
+clear_PSG_volume:
+    xor a
+    ld c, 8
+    call WRTPSG_PKT
+    ld c, 9
+    call WRTPSG_PKT
+    ld c, 10
+    jp WRTPSG_PKT
+
+
+;-----------------------------------------------
+; Music player update routine
+sound_update:  ; This routine should be called 50 / 60 times per sec
+    push af
+        ld a, (MUSIC_current_song)
+        or a
+        jr z, sound_update_no_music_no_pop_bc_de
+IF {COMPRESS_SONGS} == 0 && PKT_IS_MULTIPAGE == 1
+        ; If songs are not compressed, we need to be on the song page to play them:
+        PKT_SET_PAGE SONG_DATA_PAGE
+ENDIF
+        push de
+        push bc
+            call sound_update_handle_instruments
+
+            ld bc, (load_new_song_request)  ; if we wanted a new song loaded, and it has not happened, wait!
+            ld a, b
+            or c
+            jr nz, sound_update_internal_finished_post_pop
+
+            ld a, (MUSIC_tempo_counter)
+            or a
+            jr nz, sound_update_skip
+            push ix
+            push hl
+                ld ix, (MUSIC_repeat_stack_ptr)
+                ;  xor a  ; unnecessary, a must be 0 here
+                ld (MUSIC_time_step_required), a
+                ld hl, (MUSIC_pointer)
+                call sound_update_internal
+                ld (MUSIC_pointer), hl
+                ld (MUSIC_repeat_stack_ptr), ix
+sound_update_internal_finished:  ; when a "play_song" command is executed, we jump here
+            pop hl
+            pop ix
+sound_update_internal_finished_post_pop:
+            ld a, (MUSIC_tempo)
+            ld (MUSIC_tempo_counter), a
+            jr sound_update_music_done
+sound_update_skip:
+            dec a
+            ld (MUSIC_tempo_counter), a
+
+sound_update_music_done:
+        pop bc
+        pop de
+sound_update_no_music_no_pop_bc_de:
+        push bc
+            ld a, (SFX_priority)
+            or a
+            jr z, sound_update_no_SFX_pop_BC
+            push hl
+            push de
+                xor a
+                ld (MUSIC_time_step_required), a
+IF PKT_IS_MULTIPAGE == 1
+                PKT_SET_PAGE SFX_DATA_PAGE
+ENDIF
+IF {SFX_PLAYER_TO_USE} = 0
+                ld hl,(SFX_pointer)
+                call sound_update_internal
+                ld (SFX_pointer),hl
+ELSE
+                call play_ayfx
+ENDIF
+            pop de
+            pop hl
+
+sound_update_no_SFX_pop_BC:
+        pop bc
+    pop af
+    ret
+
+
+;-----------------------------------------------
+; Starts playing an SFX
+; arguments: 
+; - a: SFX priority
+; - hl: pointer to the SFX to play
+play_SFX_with_high_priority:
+    ld a, SFX_PRIORITY_HIGH
+play_SFX_with_priority:
+    push hl
+        ld hl, SFX_priority
+        cp (hl)
+    pop hl
+    ret m
+    ld (SFX_pointer), hl
+    ld (SFX_priority), a
+    xor a
+    ld (MUSIC_instruments + 2), a  ; reset the instrument in channel 3 to Square wave, so it does not interfere with the SFX
+    ret
+
+
+;-----------------------------------------------
+; handle the different curves of the music instruments
+sound_update_handle_instruments:
+    ld a, (MUSIC_instruments)
+    or a  ; MUSIC_INSTRUMENT_SQUARE_WAVE
+    jr z, sound_update_handle_instruments_CH2
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld de, MUSIC_instrument_speed_counter
+    ld a, (de)
+    dec a
+    ld (de), a
+    jr nz, sound_update_handle_instruments_CH2  ; no need to change volume yet
+    ld a, (MUSIC_instrument_speed)
+    ld (de), a
+ENDIF
+    ld de, (MUSIC_instrument_envelope_ptr)
+    ld a, (de)
+    ; instrument looping:
+    or a
+    jp p, sound_update_handle_instruments_CH1_continue
+    ld c, a
+    ld b, #ff
+    ex de, hl
+        add hl, bc
+    ex de, hl
+    ld a, (de)
+    dec de
+sound_update_handle_instruments_CH1_continue:
+    inc de
+    ld (MUSIC_instrument_envelope_ptr), de
+IF MUSIC_USE_SET_VOLUME = 1
+    ; a -= (MUSIC_volumes)
+    ex de, hl
+        ld hl, MUSIC_volumes
+        sub (hl)
+    ex de, hl
+    jr nc, sound_update_handle_instruments_CH1_continue2
+    xor a
+sound_update_handle_instruments_CH1_continue2:
+ENDIF
+    ld c, 8
+    call WRTPSG_PKT
+sound_update_handle_instruments_CH2:
+    ld a, (MUSIC_instruments + 1)
+    or a  ; MUSIC_INSTRUMENT_SQUARE_WAVE
+    jr z, sound_update_handle_instruments_CH3
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld de, MUSIC_instrument_speed_counter + 1
+    ld a, (de)
+    dec a
+    ld (de), a
+    jr nz, sound_update_handle_instruments_CH3  ; no need to change volume yet
+    ld a, (MUSIC_instrument_speed + 1)
+    ld (de), a
+ENDIF
+    ld de, (MUSIC_instrument_envelope_ptr + 2)
+    ld a, (de)
+    ; instrument looping:
+    or a
+    jp p, sound_update_handle_instruments_CH2_continue
+    ld c, a
+    ld b, #ff
+    ex de, hl
+        add hl, bc
+    ex de, hl
+    ld a, (de)
+    dec de
+sound_update_handle_instruments_CH2_continue:
+    inc de
+    ld (MUSIC_instrument_envelope_ptr + 2),de
+    ld c, 9
+IF MUSIC_USE_SET_VOLUME = 1
+    ; a -= (MUSIC_volumes + 1)
+    ex de, hl
+        ld hl, MUSIC_volumes + 1
+        sub (hl)
+    ex de, hl
+    jr nc, sound_update_handle_instruments_CH2_continue2
+    xor a
+sound_update_handle_instruments_CH2_continue2:
+ENDIF
+    call WRTPSG_PKT
+sound_update_handle_instruments_CH3:
+    ld a, (SFX_priority)
+    or a
+    ret nz  ; if there is an SFX playing, then do not update the instruments in channel 3!
+    ld a, (MUSIC_instruments + 2)
+    or a  ; MUSIC_INSTRUMENT_SQUARE_WAVE 
+    ret z
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld de, MUSIC_instrument_speed_counter + 2
+    ld a, (de)
+    dec a
+    ld (de), a
+    ret nz
+    ld a, (MUSIC_instrument_speed + 2)
+    ld (de), a
+ENDIF
+    ld de, (MUSIC_instrument_envelope_ptr + 4)
+    ld a, (de)
+    ; instrument looping:
+    or a
+    jp p, sound_update_handle_instruments_CH3_continue
+    ld c, a
+    ld b, #ff
+    ex de, hl
+        add hl, bc
+    ex de, hl
+    ld a, (de)
+    dec de
+sound_update_handle_instruments_CH3_continue:
+    inc de
+    ld (MUSIC_instrument_envelope_ptr + 4),de
+IF MUSIC_USE_SET_VOLUME = 1
+    ; a -= (MUSIC_volumes + 2)
+    ex de, hl
+        ld hl, MUSIC_volumes + 2
+        sub (hl)
+    ex de, hl
+    jr nc, sound_update_handle_instruments_CH3_continue2
+    xor a
+sound_update_handle_instruments_CH3_continue2:
+ENDIF
+    ld c, 10
+    jp WRTPSG_PKT
+
+
+sound_update_WRTPSG:
+    and #0f ; clear all the flags that the command might have
+    ld c, a
+    ld a, (hl)
+    inc hl
+    call WRTPSG_PKT  ; send command to PSG
+    jr sound_update_internal_loop     
+
+
+sound_update_SET_INSTRUMENT:
+    ld d, (hl)  ; instrument
+    inc hl
+    ld a, (hl)  ; channel
+    inc hl
+    push hl
+        cp 2
+        jr nz, sound_update_SET_INSTRUMENT_not_third_channel
+        ld hl, MUSIC_channel3_instrument_buffer
+        ld (hl), d
+sound_update_SET_INSTRUMENT_not_third_channel:
+        ld hl, MUSIC_instruments
+        ADD_HL_A
+        ld (hl), d
+    pop hl
+    jr sound_update_internal_loop
+
+
+sound_update_GOTO:
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    ld hl,(MUSIC_start_pointer)
+    add hl, de
+    ; clear PSG volumes of channels 1 and 2, to prevent lingering sounds:
+    xor a
+    ld c, 8
+    call WRTPSG_PKT
+    ld c, 9
+    call WRTPSG_PKT
+    ld (MUSIC_instruments), a
+    ld (MUSIC_instruments + 1), a
+    jr sound_update_internal_loop
+
+
+sound_update_REPEAT:
+    ld a, (hl)
+    inc hl
+    ld (ix), a
+    ld (ix+1), l
+    ld (ix+2), h
+    inc ix
+    inc ix
+    inc ix
+    jr sound_update_internal_loop
+
+
+sound_update_END_REPEAT:
+    ;; decrease the top value of the repeat stack
+    ;; if it is 0, pop
+    ;; if it is not 0, goto the repeat point
+    ld a, (ix-3)
+    dec a
+    jr z, sound_update_END_REPEAT_POP
+    ld (ix-3), a
+    ld l, (ix-2)
+    ld h, (ix-1)
+    jr sound_update_internal_loop
+sound_update_END_REPEAT_POP:
+    dec ix
+    dec ix
+    dec ix
+    jr sound_update_internal_loop
+
+
+sound_update_command_time_step:
+    push af
+    ld a, 1
+    ld (MUSIC_time_step_required), a
+    pop af
+    ret
+
+
+sound_update_internal_loop:
+    ; check if there is a time step required on the last command
+    ld a, (MUSIC_time_step_required)
+    or a
+    ret nz
+sound_update_internal:
+    ld a, (hl)
+    inc hl 
+    ; check if it's a special command:
+    bit 6, a
+    call nz, sound_update_command_time_step
+    bit 7, a
+    jp z, sound_update_WRTPSG
+    and #3f ; clear all the flags the command might have
+    ret z   ; MUSIC_CMD_SKIP command
+    dec a   ; MUSIC_CMD_SET_INSTRUMENT
+    jr z, sound_update_SET_INSTRUMENT
+    dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH1
+    jp z, sound_update_PLAY_INSTRUMENT_CH1
+    dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH2
+    jp z, sound_update_PLAY_INSTRUMENT_CH2
+    dec a   ; MUSIC_CMD_PLAY_INSTRUMENT_CH3
+    jp z, sound_update_PLAY_INSTRUMENT_CH3
+    dec a   ; MUSIC_CMD_GOTO
+    jr z, sound_update_GOTO
+    dec a   ; MUSIC_CMD_REPEAT
+    jr z, sound_update_REPEAT
+    dec a   ; MUSIC_CMD_END_REPEAT
+    jr z, sound_update_END_REPEAT
+    dec a  ; MUSIC_CMD_END
+    jp z, sound_update_MUSIC_END       ;; if the SFX sound is over, we are done
+    dec a  ; SFX_CMD_END
+    jr z, sound_update_SFX_END       ;; if the SFX sound is over, we are done
+    dec a  ; SFX_CMD_PLAY_SONG
+    jp z, sound_update_play_song
+;    dec a   ; MUSIC_CMD_TRANSPOSE_UP
+;    jr z, sound_update_TRANSPOSE_UP
+;    dec a   ; MUSIC_CMD_CLEAR_TRANSPOSE
+;    jr z, sound_update_CLEAR_TRANSPOSE
+IF {MUSIC_USE_INSTRUMENT_SPEED} = 1
+    dec a  ; MUSIC_CMD_INSTRUMENT_SPEED1
+    jr z, sound_update_set_instrument_speed1
+    dec a  ; MUSIC_CMD_INSTRUMENT_SPEED2
+    jr z, sound_update_set_instrument_speed2
+    dec a  ; MUSIC_CMD_INSTRUMENT_SPEED3
+    jr z, sound_update_set_instrument_speed3
+ENDIF
+IF {MUSIC_USE_SET_VOLUME} = 1
+    dec a  ; MUSIC_CMD_SET_VOLUME1
+    jr z, sound_update_set_volume1
+    dec a  ; MUSIC_CMD_SET_VOLUME2
+    jr z, sound_update_set_volume2
+    dec a  ; MUSIC_CMD_SET_VOLUME3
+    jr z, sound_update_set_volume3
+ENDIF
+{MUSIC_SFX_COMMAND_JUMPS}
+
+
+sound_update_SFX_END:
+    xor a
+    ld (SFX_priority), a
+    ld c, 7
+    ld a, #38  ; SFX should reset all channels to tone
+    jp WRTPSG_PKT
+
+    {MUSIC_SFX_COMMANDS}
+
+IF {MUSIC_USE_INSTRUMENT_SPEED} = 1
+sound_update_set_instrument_speed1:
+    ld a, (hl)  ; new speed
+    ld (MUSIC_instrument_speed), a
+    inc hl
+    jp sound_update_internal_loop
+sound_update_set_instrument_speed2:
+    ld a, (hl)  ; new speed
+    ld (MUSIC_instrument_speed + 1), a
+    inc hl
+    jp sound_update_internal_loop
+sound_update_set_instrument_speed3:
+    ld a, (hl)  ; new speed
+    ld (MUSIC_instrument_speed + 2), a
+    inc hl
+    jp sound_update_internal_loop
+ENDIF
+
+IF {MUSIC_USE_SET_VOLUME} = 1
+sound_update_set_volume1:
+    ld a, (hl)  ; new speed
+    ld (MUSIC_volumes), a
+    inc hl
+    jp sound_update_internal_loop
+sound_update_set_volume2:
+    ld a, (hl)  ; new speed
+    ld (MUSIC_volumes + 1), a
+    inc hl
+    jp sound_update_internal_loop
+sound_update_set_volume3:
+    ld a, (hl)  ; new speed
+    ld (MUSIC_volumes + 2), a
+    inc hl
+    jp sound_update_internal_loop
+ENDIF
+
+
+sound_update_play_song:
+    ; mark that we want to load a new song (and we expect it to be loaded
+    ; before sound update is called again):
+    ld a, (hl)
+    inc hl
+    or a
+    jr z, sound_update_play_song_tempo_set
+    ld (MUSIC_tempo), a
+sound_update_play_song_tempo_set:
+    ld c, (hl)
+    ld b, 0
+IF PKT_IS_MULTIPAGE == 1
+    PKT_SET_PAGE SONG_DATA_PAGE
+ENDIF
+    ld hl, song_pointers
+    add hl, bc
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    ld (load_new_song_request), de
+    pop af  ; simulate "ret"
+    jp sound_update_internal_finished
+
+
+; sound_update_TRANSPOSE_UP:
+;     ld a, (MUSIC_transpose)
+;     inc a
+; sound_update_TRANSPOSE_UP_entry:
+;     ld (MUSIC_transpose), a
+;     jp sound_update_internal_loop
+
+
+; sound_update_CLEAR_TRANSPOSE:
+;     xor a
+;     jr sound_update_TRANSPOSE_UP_entry
+
+
+sound_update_PLAY_INSTRUMENT_CH1:
+    ld c, 1
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld de, MUSIC_instrument_speed
+ENDIF
+    jr sound_update_PLAY_INSTRUMENT
+sound_update_PLAY_INSTRUMENT_CH2:
+    ld c, 3
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld de, MUSIC_instrument_speed + 1
+ENDIF
+    jr sound_update_PLAY_INSTRUMENT
+sound_update_PLAY_INSTRUMENT_CH3:
+    ld a, (SFX_priority)
+    cp SFX_PRIORITY_LOW
+    jp p, sound_update_PLAY_INSTRUMENT_IGNORE
+    ld a, (MUSIC_channel3_instrument_buffer)
+    ld (MUSIC_instruments + 2), a
+    ld c, 5
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld de, MUSIC_instrument_speed + 2
+ENDIF
+sound_update_PLAY_INSTRUMENT:
+IF MUSIC_USE_INSTRUMENT_SPEED = 1
+    ld a, (de)  ; copy from 'MUSIC_instrument_speed' to 'MUSIC_instrument_speed_counter'
+    inc de
+    inc de
+    inc de
+    ld (de), a
+ENDIF
+    ld b, 0  ; for later use
+    ld a, (hl)  ; note to play
+    push hl
+        ; ld hl,MUSIC_transpose
+        ; add a, (hl)
+        push bc
+            ld hl, note_period_table
+            ld c, a
+            add hl, bc
+            add hl, bc
+        pop bc
+        ld a, (hl)  ; MSB of the period    
+        inc hl
+        push bc
+            call WRTPSG_PKT
+        pop bc
+        ld a, (hl)  ; LSB of the period    
+        dec c
+        push bc
+            call WRTPSG_PKT
+        pop bc
+
+        ld hl, MUSIC_instruments
+        ld a, c  ; here  c == 0, 2 or 4 depending on which channel we are playing
+        srl a  ; divide by 2
+        ADD_HL_A  ; HL = MUSIC_instruments + channel
+        ld a, (hl)  ; we get the instrument
+        ld de, Instrument_profiles
+        ADD_DE_A  ; we calculate pointer to the instrument envelope
+        ld hl, MUSIC_instrument_envelope_ptr
+        add hl, bc  ; b should still be 0 here, so, we are just adding c
+        ld (hl), e
+        inc hl
+        ld (hl), d
+
+        sra c  ; calculate the volume port: (c/2)+8
+        ld a, c
+IF MUSIC_USE_SET_VOLUME = 1
+        ld hl, MUSIC_volumes
+        add hl, bc
+        ld b, (hl)  ; b = current channel volume
+ENDIF
+    pop hl
+    add a, 8
+    ld c, a
+    ld a, (de)
+IF MUSIC_USE_SET_VOLUME = 1
+    sub a, b
+    jr nc, sound_update_PLAY_INSTRUMENT_continue
+    xor a
+sound_update_PLAY_INSTRUMENT_continue:
+ENDIF
+    call WRTPSG_PKT 
+sound_update_PLAY_INSTRUMENT_IGNORE:
+    inc hl
+    jp sound_update_internal_loop
+
+
+IF {SFX_PLAYER_TO_USE} = 1
+;-----------------------------------------------
+; SFX format (taken form the ayfxedit documentation):
+; Every frame encoded with a flag byte and a number of bytes, 
+; which is vary depending from value change flags.
+; - bit0..3  Volume
+; - bit4     Disable T
+; - bit5     Change Tone
+; - bit6     Change Noise
+; - bit7     Disable N
+; When the bit5 set, two bytes with tone period will follow; when the bit6 set, 
+; a single byte with noise period will follow; when both bits are set, first two 
+; bytes of tone period, then single byte with noise period will follow. When none 
+; of the bits are set, next flags byte will follow.
+; End of the effect is marked with byte sequence #D0, #20. Player should detect it 
+; before outputting it to the AY registers, by checking noise period value to be equal #20.
+;-----------------------------------------------
+; Plays a sound effect on PSG channel B
+; hl: sfx pointer
+play_ayfx:
+    ld hl, (SFX_pointer)
+    ld a, {SFX_REG7_INIT_VALUE}
+    ld d, a  ; d will maintain the value to be written in R7
+    ld a, (hl)
+    inc hl
+    cp #d0
+    jr z, play_ayfx_end_check
+play_ayfx_continue1:
+    ; volume:
+    push af
+        and #0f
+        ld c, 8 + {SFX_CHANNEL}
+        call WRTPSG_PKT  ; SFX channel volume
+    pop af
+    bit 4, a
+    jr z, play_ayfx_continue2
+play_ayfx_disable_tone:
+    set {SFX_CHANNEL}, d  ; 0: channel A, 1: channel B, 2: channel C
+play_ayfx_continue2:
+    bit 7, a
+    jr z, play_ayfx_continue3
+play_ayfx_disable_noise:
+    set 3 + {SFX_CHANNEL}, d  ; 3: channel A, 4: channel B, 5: channel C
+play_ayfx_continue3:
+    bit 5, a
+    jr z, play_ayfx_continue4
+    push af
+        ; since there is tone volume, we activate the tone in the SFX channel
+        res 1, d  ; 0: channel A, 1: channel B, 2: channel C
+        ld a, (hl)
+        inc hl
+        ld c, {SFX_CHANNEL}*2
+        call WRTPSG_PKT  ; (channel period LSB)
+        ld a, (hl)
+        inc hl
+        ld c, {SFX_CHANNEL}*2 + 1
+        call WRTPSG_PKT  ; (channel period MSB)
+    pop af
+play_ayfx_continue4:
+    bit 6, a
+    jr z, play_ayfx_continue5
+    push af
+        ; since there is noise frequency, we activate the noise in the SFX channel
+        res 4, d  ; 3: channel A, 4: channel B, 5: channel C
+        ld a, (hl)
+        inc hl
+        ld c, 6
+        call WRTPSG_PKT  ; register 6 (noise tone)
+    pop af
+play_ayfx_continue5:
+    ; write register 7:
+    ld a, d
+    ld c, 7
+    call WRTPSG_PKT  ; register 7 (which channels are active)
+    ld (SFX_pointer),hl
+    ret
+play_ayfx_end_check:
+    ld a, (hl)
+    cp #20
+    jr z, play_ayfx_end
+    dec hl
+    ld a, (hl)
+    inc hl
+    jr play_ayfx_continue1
+
+play_ayfx_end:
+    ld a, {SFX_REG7_END_VALUE} 
+    ld c, 7
+    call WRTPSG_PKT  ; register 7 (which channels are active)
+    xor a
+    ld c, 8 + {SFX_CHANNEL}
+    call WRTPSG_PKT  ; SFX channel volume
+    xor a
+    ld (SFX_priority), a
+    ret
+ENDIF
+
+
+end_of_sound_code:

@@ -1,0 +1,176 @@
+;; Adapted from: http://www.cpcwiki.eu/index.php/Programming:An_example_loader
+
+scr_set_mode:      equ #bc0e
+scr_set_border:    equ #bc38
+scr_set_ink:       equ #bc32    
+cas_in_open:       equ #bc77
+cas_in_direct:     equ #bc83
+cas_in_close:      equ #bc7a
+mc_start_program:  equ #bd16
+kl_rom_walk:       equ #bccb
+
+;;---------------------------------------------------------------------------
+    org #a400
+
+;;------------------------------------------------------------------------
+;; store the drive number the loader was run from
+    ld hl, (#be7d)
+    ld a, (hl)
+    ld (drive + 1), a
+
+;;------------------------------------------------------------------------
+    ld c, #ff                   ;; disable all roms
+    ld hl, start                ;; execution address for program
+    call mc_start_program       ;; start it
+
+;;------------------------------------------------------------------------
+
+start:
+    call kl_rom_walk            ;; enable all roms 
+
+
+;;------------------------------------------------------------------------
+;; when AMSDOS is enabled, the drive reverts back to drive 0!
+;; This will restore the drive number to the drive the loader was run from
+drive:
+    ld a, 0
+    push af
+        ld hl, (#be7d)
+        ld (hl), a
+
+        xor a
+        call scr_set_mode
+
+
+;;--------------------------------------------------------------------
+;; load block
+{DSK_LOADING_SCREEN_CODE}
+
+{DSK_LOADING_PAGES_CODE}
+
+    pop af  ; recover the drive number, so that the game has it.
+    di
+    jp #0040  ; run the game!!!
+
+
+;;------------------------------------------------------------------------
+;; B = length of filename
+;; HL = address of filename
+load_block:
+    ld de, #c000
+    call cas_in_open  ; #bc77
+    ex de, hl  ; load file to location stored in the file header
+    call cas_in_direct  ; #bc83
+    call cas_in_close  ; #bc7a
+    ret
+
+
+;;------------------------------------------------------------------------
+;; setup colors
+;;
+;; HL = address of palette
+;; 
+;; order: pen 0, pen 1,...,pen15,border
+setup_colors_mode0:
+    ld b, 16                  ;; 16 colors
+    xor a              ;; start with pen 0
+
+do_colors:
+    push bc
+    push af
+        ld c,(hl)          ;; color value
+        inc hl
+        ld b,c                ;; B=C so colors will not flash
+        push hl
+            ;; A = pen number
+            ;; B,C = color
+            call scr_set_ink          ;; set color for pen
+        pop hl
+    pop af
+    pop bc
+    ;; increment pen number
+    inc a
+    djnz do_colors
+
+    ;; set border color
+    xor a
+    ld c,a
+    ld b,a
+    call scr_set_border    
+
+    ret
+
+
+setup_colors_mode1:
+    ld b, 4                  ;; 4 colors
+    xor a              ;; start with pen 0
+    jr do_colors
+
+
+;-----------------------------------------------
+; waits a given number of "halts"
+; bc - number of halts
+wait_bc_halts:
+    halt
+    dec bc
+    xor a
+    or b
+    or c
+    jr nz, wait_bc_halts
+    ret
+
+
+;-----------------------------------------------
+; Reads a keyboard row
+; code from: http://www.cpcwiki.eu/index.php/Programming:Keyboard_scanning
+; input:
+; - a: keyboard line
+; read_keyboard_line:
+;     di
+;     ld d, 0
+;     ld bc, #f782  ; PPI port A out / C out 
+;     out (c), c 
+;     ld bc, #f40e  ; Select Ay reg 14 on ppi port A 
+;     out (c), c 
+;     ld bc, #f6c0  ; This value is an AY index (R14) 
+;     out (c), c 
+;     out (c), d  ; Validate!! out (c),0
+;     ld bc, #f792  ; PPI port A in / C out 
+;     out (c), c 
+;     dec b 
+;     out (c), a  ; Send KbdLine on reg 14 AY through ppi port A
+;     ld b, #f4  ; Read ppi port A 
+;     in a, (c)  ; e.g. AY R14 (AY port A) 
+;     ld bc, #f782  ; PPI port A out / C out 
+;     out (c), c 
+;     dec b  ; Reset PPI Write 
+;     out (c), d  ; out (c),0
+;     ei
+;     ret
+
+
+;-----------------------------------------------
+; Waits until the player presses space
+; wait_for_space:
+;     ld a, #45
+;     call read_keyboard_line
+;     bit 7, a
+;     ret z
+;     halt
+;     jr wait_for_space
+
+
+;;------------------------------------------------------------------------
+{DSK_LOADER_COLOR_PALETTES_INDEXES}
+
+IF {N_LOADING_SCREENS} > 0
+color_palette_0s:
+    db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+ENDIF
+
+
+;;------------------------------------------------------------------------
+{DSK_LOADING_SCREEN_FILENAMES}
+
+{DSK_LOADING_PAGE_FILENAMES}
+

@@ -1,0 +1,322 @@
+; ------------------------------------------------
+; BIOS calls:
+DCOMPR: equ #0020
+ENASLT: equ #0024
+WRTVDP: equ #0047
+WRTVRM: equ #004d
+SETWRT: equ #0053
+FILVRM: equ #0056
+LDIRMV: equ #0059
+LDIRVM: equ #005c
+CHGMOD: equ #005f
+CHGCLR: equ #0062
+GICINI: equ #0090   
+WRTPSG: equ #0093 
+RDPSG:  equ #0096
+CHSNS:  equ #009c
+CHGET:  equ #009f
+CHPUT:  equ #00a2
+GTSTCK: equ #00d5
+GTTRIG: equ #00d8
+SNSMAT: equ #0141
+RSLREG: equ #0138
+RDVDP:  equ #013e
+KILBUF: equ #0156
+CHGCPU:    equ #0180
+
+
+;-----------------------------------------------
+; System variables
+VDP.DR:    equ #0006
+VDP.DW:    equ #0007
+VDP_REGISTER_0: equ #f3df
+VDP_REGISTER_1: equ #f3e0
+CLIKSW: equ #f3db       ; keyboard sound
+FORCLR: equ #f3e9
+BAKCLR: equ #f3ea
+BDRCLR: equ #f3eb
+PUTPNT: equ #f3f8
+GETPNT: equ #f3fa
+MODE:   equ #fafc    
+KEYS:   equ #fbe5    
+KEYBUF: equ #fbf0
+EXPTBL: equ #fcc1
+TIMI:   equ #fd9f       ; timer interrupt hook
+HKEY:   equ #fd9a       ; hkey interrupt hook
+
+;-----------------------------------------------
+; Assembler opcodes:    
+JPCODE:         equ  #C3
+
+;-----------------------------------------------
+; VRAM map in Screen 1 (only 1 table of patterns, color table has 1 byte per each 8 patterns)
+CHRTBL1:  equ     #0000   ; pattern table address
+NAMTBL1:  equ     #1800   ; name table address 
+CLRTBL1:  equ     #2000   ; color table address             
+SPRTBL1:  equ     #0800   ; sprite pattern address  
+SPRATR1:  equ     #1b00   ; sprite attribute address
+; VRAM map in Screen 2 (3 tables of patterns, color table has 8 bytes per pattern)
+CHRTBL2:  equ     #0000   ; pattern table address
+NAMTBL2:  equ     #1800   ; name table address 
+CLRTBL2:  equ     #2000   ; color table address             
+SPRTBL2:  equ     #3800   ; sprite pattern address  
+SPRATR2:  equ     #1b00   ; sprite attribute address
+
+;-----------------------------------------------
+; MSX1 colors:
+COLOR_TRANSPARENT:    equ 0
+COLOR_BLACK:        equ 1
+COLOR_GREEN:        equ 2
+COLOR_LIGHT_GREEN:    equ 3
+COLOR_DARK_BLUE:    equ 4
+COLOR_BLUE:            equ 5
+COLOR_DARK_RED:        equ 6
+COLOR_LIGHT_BLUE:    equ 7
+COLOR_RED:            equ 8
+COLOR_LIGHT_RED:    equ 9
+COLOR_DARK_YELLOW:    equ 10
+COLOR_YELLOW:        equ 11
+COLOR_DARK_GREEN:    equ 12
+COLOR_PURPLE:        equ 13
+COLOR_GREY:            equ 14
+COLOR_WHITE:        equ 15
+
+; ------------------------------------------------
+STACK_START:                    equ #F380
+
+; ------------------------------------------------
+PAKET_UNPACK:                   equ {DECOMPRESSOR_FUNCTION_NAME}
+GENERAL_BUFFER_SIZE:            equ {GENERAL_BUFFER_SIZE}    ; this is used to temporarily decompress stuff, prerender, etc.
+TEXT_BANK_MAX_SIZE:             equ {TEXT_BANK_MAX_SIZE}
+ROOM_SPECIFIC_ON_LOAD_RULES_BUFFER_SIZE:  equ {ROOM_SPECIFIC_ON_LOAD_RULES_BUFFER_SIZE}
+
+USE_PATH_FINDING:               equ {USE_PATH_FINDING}
+STOP_EARLY_WHEN_WALKING:        equ {STOP_EARLY_WHEN_WALKING}
+DOUBLE_CLICK_ON_EXIT:           equ {DOUBLE_CLICK_ON_EXIT}
+ALLOW_SAVING_GAME:              equ {ALLOW_SAVING_GAME}
+LOAD_SAVE_GAME_SCRIPT:          equ {LOAD_SAVE_GAME_SCRIPT}
+
+ROOMS_PER_BANK:                 equ {ROOMS_PER_BANK}
+
+NUM_ITEMS_IN_GAME:                equ {NUM_ITEMS_IN_GAME}        ; how many different items are in the game in total
+N_GAME_STATE_VARIABLES:            equ {N_GAME_STATE_VARIABLES}
+
+PLAYER_SCALING:                 equ {PLAYER_SCALING}
+PLAYER_SCALING_THRESHOLD_75_0:  equ {PLAYER_SCALING_THRESHOLD_75_0}
+PLAYER_SCALING_THRESHOLD_87_5:  equ {PLAYER_SCALING_THRESHOLD_87_5}
+PLAYER_SCALING_THRESHOLD_112_5:  equ {PLAYER_SCALING_THRESHOLD_112_5}
+
+MSX_TILES_PER_ENGINE_TILE:      equ {MSX_TILES_PER_ENGINE_TILE}
+SCREEN_WIDTH_IN_TILES:          equ {SCREEN_WIDTH_IN_TILES}
+MAX_ROOM_WIDTH:                    equ {MAX_ROOM_WIDTH}
+MAX_ROOM_HEIGHT:                equ {MAX_ROOM_HEIGHT}
+MAX_ROOM_COLLISION_WIDTH:       equ ({MAX_ROOM_WIDTH} * MSX_TILES_PER_ENGINE_TILE) / 2
+MAX_TILES_PER_ROOM:                equ {MAX_TILES_PER_ROOM}
+MAX_OBJECTS_PER_ROOM:             equ {MAX_OBJECTS_PER_ROOM}
+MAX_OBJECT_TYPES_PER_ROOM:        equ {MAX_OBJECT_TYPES_PER_ROOM}
+OBJECT_TYPES_PER_BANK:                  equ {OBJECT_TYPES_PER_BANK}
+MAX_DIALOGUE_OPTIONS:            equ 4
+MAX_DIALOGUE_SIZE:              equ {MAX_DIALOGUE_SIZE}
+INVENTORY_SIZE:                    equ {INVENTORY_SIZE}
+INVENTORY_NAME_BUFFER_SIZE:        equ {INVENTORY_NAME_BUFFER_SIZE}
+INVENTORY_ITEMS_PER_LINE:        equ 8
+INVENTORY_START_X:                equ {INVENTORY_START_X}
+INVENTORY_START_Y:                equ {INVENTORY_START_Y}
+INVENTORY_ROWS:                    equ {INVENTORY_ROWS}
+GUI_START_PIXEL_X:                equ {GUI_START_PIXEL_X}
+GUI_START_PIXEL_Y:                equ {GUI_START_PIXEL_Y}
+GUI_VDP_PTR:                    equ {GUI_VDP_PTR}
+FIRST_GUI_VDP_TILE:                 equ {FIRST_GUI_VDP_TILE}
+GAME_AREA_HEIGHT_IN_TILES:        equ {GAME_AREA_HEIGHT_IN_TILES}
+IF STOP_EARLY_WHEN_WALKING == 1
+PLAYER_MOVE_TO_OBJECT_SLACK:    equ 5  ; player will stop this many pixels before reaching an object's center X position
+ENDIF
+CAN_TURN_GUI_ON_OFF:            equ {SCRIPT_GUI_OFF_USED}
+SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED: equ {SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED}
+SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED: equ {SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED}
+SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED: equ {SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED}
+
+ACTION_PREVIEW_TEXT_ROW:        equ 0
+REGULAR_TEXT_FIRST_ROW:            equ ACTION_PREVIEW_TEXT_ROW+1
+N_REGULAR_TEXT_ROWS:            equ 4
+FIRST_SCREEN_ROOM_ROW:                  equ {FIRST_SCREEN_ROOM_ROW}
+
+SPACE_CHARACTER:                equ {SPACE_CHARACTER}
+TAKE_FROM_INVENTORY_ERROR_MESSAGE_IDX:    equ {TAKE_FROM_INVENTORY_ERROR_MESSAGE_IDX}
+UNTAKEABLE_ERROR_MESSAGE_IDX:    equ {UNTAKEABLE_ERROR_MESSAGE_IDX}
+CANNOT_REACH_ERROR_MESSAGE_IDX: equ {CANNOT_REACH_ERROR_MESSAGE_IDX}
+UNUSEABLE_ERROR_MESSAGE_IDX:    equ {UNUSEABLE_ERROR_MESSAGE_IDX}
+UNTALKABLE_ERROR_MESSAGE_IDX:    equ {UNTALKABLE_ERROR_MESSAGE_IDX}
+
+ROOM_TILES_OBJECT_COMBINED_BUFFER_SIZE: equ {ROOM_TILES_OBJECT_COMBINED_BUFFER_SIZE}
+MAX_ROOM_RULES_SIZE:            equ {MAX_ROOM_RULES_SIZE}
+ROOM_BUFFER_SIZE:                equ ROOM_STRUCT_COLLISION_MASK+(MAX_ROOM_WIDTH*MAX_ROOM_HEIGHT)+(MAX_ROOM_COLLISION_WIDTH*MAX_ROOM_HEIGHT)+MAX_ROOM_RULES_SIZE+MAX_OBJECTS_PER_ROOM*OBJECT_STRUCT_SIZE
+ROOM_OBJECTS_NAME_BUFFER_SIZE:    equ {ROOM_OBJECTS_NAME_BUFFER_SIZE}
+
+ROOM_FLAG_ISSUBROOM:            equ 1
+ROOM_FLAG_DEFAULT_VERB_USE:        equ 2
+
+; room struct offsets:
+ROOM_STRUCT_VIDEO_MEM_START_X:    equ 0
+ROOM_STRUCT_VIDEO_MEM_START_Y:    equ 1
+ROOM_STRUCT_ROOM_FLAGS:            equ 2  ; 0: "is subroom", 1: "default verb is use", 234: "player scaling (if enabled)".
+ROOM_STRUCT_START_X:            equ 3    ; this is ROOM_STRUCT_VIDEO_MEM_START_X*8*2
+ROOM_STRUCT_START_Y:            equ 4    ; this is ROOM_STRUCT_VIDEO_MEM_START_Y*8
+ROOM_STRUCT_WIDTH:                equ 5
+ROOM_STRUCT_HEIGHT:                equ 6
+ROOM_STRUCT_N_OBJECTS:            equ 7
+ROOM_STRUCT_BACKGROUND:            equ 8    ; background
+ROOM_STRUCT_COLLISION_MASK:        equ ROOM_STRUCT_BACKGROUND + MAX_ROOM_WIDTH*MAX_ROOM_HEIGHT
+ROOM_STRUCT_RULES:                equ ROOM_STRUCT_COLLISION_MASK + MAX_ROOM_COLLISION_WIDTH*MAX_ROOM_HEIGHT
+ROOM_STRUCT_OBJECT_DATA:        equ ROOM_STRUCT_RULES + MAX_ROOM_RULES_SIZE
+
+; object struct offsets:        (if this changes, remember to update OBJECT_STRUCT_SIZE)
+OBJECT_STRUCT_SIZE:             equ 15
+OBJECT_STRUCT_X2:                equ 0    ; they are in this order to enable some optimizations when drawing (in CPC)
+OBJECT_STRUCT_X:                equ 1
+OBJECT_STRUCT_Y:                equ 2
+OBJECT_STRUCT_Y2:                equ 3
+OBJECT_STRUCT_ID:                equ 4
+OBJECT_STRUCT_TYPE_PTR:            equ 5
+OBJECT_STRUCT_NAME_PTR:            equ 7
+OBJECT_STRUCT_DEPTH:            equ 9
+OBJECT_STRUCT_STATE_DIRECTION:    equ 10
+OBJECT_STRUCT_ANIMATION_STEP:    equ 11  ; this is step * 2, so that it's an offset into the animation frame pointers
+OBJECT_STRUCT_ANIMATION_TIMER:    equ 12
+OBJECT_STRUCT_DESCRIPTION_IDX:    equ 13    ; 2 bytes
+
+; GUI:
+GUI_WIDTH:                        equ {GUI_WIDTH}
+GUI_HEIGHT:                        equ {GUI_HEIGHT}
+GUI_N_TILES:                    equ {GUI_N_TILES}
+INVENTORY_VIDEO_MEM_START:        equ {INVENTORY_VIDEO_MEM_START}
+N_POINTER_TYPES:                equ {N_POINTER_TYPES}
+MIN_POINTER_X:                    equ {MIN_POINTER_X}
+MAX_POINTER_X:                    equ {MAX_POINTER_X}
+MIN_POINTER_Y:                    equ {MIN_POINTER_Y}
+MAX_POINTER_Y:                    equ {MAX_POINTER_Y}
+DOUBLE_CLICK_INTERVAL:          equ 16
+
+; verbs:
+VERB_NONE:                      equ 0
+VERB_EXAMINE:                   equ 1
+VERB_PICK_UP:                   equ 2
+VERB_USE:                       equ 3
+VERB_TALK:                      equ 4
+VERB_EXIT:                      equ 5
+VERB_LOAD_SAVE:                 equ 6  ; although this is not really a verb
+
+; object directions:
+OBJECT_DIRECTION_UP:            equ 0
+OBJECT_DIRECTION_RIGHT:            equ 1
+OBJECT_DIRECTION_DOWN:            equ 2
+OBJECT_DIRECTION_LEFT:            equ 3
+
+; object states:
+OBJECT_STATE_WALKING_1:            equ 0
+OBJECT_STATE_WALKING_2:            equ 1
+OBJECT_STATE_WALKING_3:            equ 2
+OBJECT_STATE_WALKING_4:            equ 3
+OBJECT_STATE_IDLE:                equ 4
+OBJECT_STATE_OPEN:                equ 5
+OBJECT_STATE_CLOSED:            equ 6
+OBJECT_STATE_EXIT:                equ 7
+OBJECT_STATE_NUMBER:            equ 8
+OBJECT_STATE_HIDDEN:            equ 9
+
+; player actions:
+PLAYER_HEIGHT:                    equ {PLAYER_HEIGHT}
+PLAYER_WIDTH:                    equ 12
+PLAYER_COLLISION_WIDTH:            equ {PLAYER_COLLISION_WIDTH}
+PLAYER_OBJECT_ID:                equ {PLAYER_OBJECT_ID}
+N_PLAYER_SPRITES:                equ {N_PLAYER_SPRITES}
+PLAYER_ACTION_IDLE:                equ 0
+PLAYER_ACTION_WALKING:            equ 1
+PLAYER_ACTION_NOT_ON_ROOM:        equ 10    ; this should just be a higher number than the other actions
+
+PLAYER_WALK_LEFT_N_FRAMES:              equ {PLAYER_WALK_LEFT_N_FRAMES}
+PLAYER_WALK_RIGHT_N_FRAMES:             equ {PLAYER_WALK_RIGHT_N_FRAMES}
+PLAYER_WALK_UP_N_FRAMES:                equ {PLAYER_WALK_UP_N_FRAMES}
+PLAYER_WALK_DOWN_N_FRAMES:              equ {PLAYER_WALK_DOWN_N_FRAMES}
+
+PLAYER_ACTION_DISTANCE_THRESHOLD:    equ 16  ; If the distance from the player to the target object is larger than this, 
+                                             ; the player will refuse doing the requested action.
+RESET_PLAYER_DIRECTION_ON_IDLE:         equ {RESET_PLAYER_DIRECTION_ON_IDLE}
+PLAYER_DIRECTION_ON_IDLE:               equ {PLAYER_DIRECTION_ON_IDLE}  ; If RESET_PLAYER_DIRECTION_ON_IDLE == 1, player state/direction is reset to this when stopping.
+
+{RULE_CONSTANTS}
+
+
+; ------------------------------------------------
+PATH_FINDING_MAX_LENGTH:    equ {PATH_FINDING_MAX_LENGTH}
+
+PATH_FINDING_OPEN_LIST_SIZE: equ 128
+PATH_FINDING_WALK_TILE_WIDTH: equ 8 
+PATH_FINDING_WALK_TILE_HEIGHT: equ 4
+
+PATH_FINDING_MAP_WIDTH: equ MAX_ROOM_WIDTH * (MSX_TILES_PER_ENGINE_TILE * 8 / PATH_FINDING_WALK_TILE_WIDTH)
+PATH_FINDING_MAP_HEIGHT: equ MAX_ROOM_HEIGHT * (8 / PATH_FINDING_WALK_TILE_HEIGHT)
+
+
+
+;-----------------------------------------------
+; - This macro changes which page is mapped to #4000 - 7fff
+SETMEGAROMPAGE_4000:  MACRO ?p1
+IF ?p1 == 0
+    xor a
+ELSE
+    ld a, ?p1
+ENDIF
+    di
+    ld (current_megarom_page_in_4000), a
+rom_mapper_page_to_update_4000:
+    ld (#6000), a
+    ei
+    ENDM
+
+
+;-----------------------------------------------
+; - This macro changes which page is mapped to #8000 - bfff
+SETMEGAROMPAGE_8000:    MACRO ?p1
+IF ?p1 == 0
+    xor a
+ELSE
+    ld a, ?p1
+ENDIF
+    SETMEGAROMPAGE_8000_A
+    ENDM
+
+
+SETMEGAROMPAGE_8000_A:    MACRO
+    di
+    ld (current_megarom_page_in_8000), a
+rom_mapper_page_to_update_8000:
+    ld (#7000), a
+    ei
+    ENDM
+
+PKT_SET_PAGE:  MACRO ?p1
+    SETMEGAROMPAGE_8000 p1
+    ENDM
+
+; ------------------------------------------------
+{SOUND_CONSTANTS_INCLUDE}
+MUSIC_TYPE_TSV: equ {MUSIC_TYPE_TSV}
+MUSIC_TYPE_WYZ: equ {MUSIC_TYPE_WYZ}
+
+
+; ------------------------------------------------
+; Platform-specific constants, to allow the same code to work for multiple platforms
+PLATFORM_KEYBOARD_LINE_UP: equ 0
+PLATFORM_KEYBOARD_LINE_DOWN: equ 0
+PLATFORM_KEYBOARD_LINE_SPACE: equ 0
+PLATFORM_KEYBOARD_BIT_UP: equ 5
+PLATFORM_KEYBOARD_BIT_DOWN: equ 6
+PLATFORM_KEYBOARD_BIT_SPACE: equ 0
+
+TEXT_COLOR_WHITE: equ COLOR_WHITE * 16
+
+PLATFORM_STORE_LAST_ACTION_LENGTH: equ 0
+
+SCREEN_WIDTH_IN_BYTES: equ 32 * 8
+PLATFORM_PTR_TO_FIRST_DIALOGUE_OPTION_COLOR: equ CLRTBL2 + 8*((32-GUI_WIDTH)/2)

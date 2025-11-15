@@ -1,0 +1,1941 @@
+;-----------------------------------------------
+; input:
+; - hl: pointer to the trigger
+; output:
+; - hl: pointer to the next trigger
+; - z: this was the last trigger
+; - nz: there are more triggers
+skipTrigger:
+    ld c, (hl)
+    ld a, c
+    and #7f  ; remove the "last trigger" flag
+    inc hl
+    cp FIRST_2BYTE_TRIGGER
+    jr c, skipTriggerDone
+    inc hl
+    cp FIRST_3BYTE_TRIGGER
+    jr c, skipTriggerDone
+    inc hl
+skipTriggerDone:
+    bit 7, c
+    ret
+
+
+;-----------------------------------------------
+; Checks if a particular set of triggers are satisfied in the current game state:
+; input:
+; - hl: pointer to the first trigger
+; output:
+; - z: match
+; - nz: no match
+checkForTriggersSatisfied_skip_first:
+eventMatchesRule_match_loop:
+    call skipTrigger
+    ret z
+checkForTriggersSatisfied:
+    push hl
+        call eventMatchesRule_one_trigger
+    pop hl
+    jr z, eventMatchesRule_match_loop
+checkForTriggersSatisfied_no_match:
+    or 1  ; nz
+    ret
+
+
+checkForTriggersSatisfied_or:
+    push hl
+        call eventMatchesRule_one_trigger
+    pop hl
+    jr z, checkForTriggersSatisfied_or_match
+    call skipTrigger
+    jr z, checkForTriggersSatisfied_no_match
+    jr checkForTriggersSatisfied_or  ; try the next trigger
+checkForTriggersSatisfied_or_match:
+    call skipTrigger
+    jr nz, checkForTriggersSatisfied_or_match
+    ret
+    
+
+eventMatchesRule_one_trigger:
+    ld a, (hl)
+    and #7f
+    ; there are extra triggers!
+    cp TRIGGER_TRUE
+    jr z, eventMatchesRule_true
+    cp TRIGGER_VARIABLE_EQ
+    jr z, eventMatchesRule_variable_eq
+    cp TRIGGER_HAVE_ITEM
+    jr z, eventMatchesRule_have_item
+    cp TRIGGER_CURRENT_ROOM_IS
+    jr z, eventMatchesRule_current_room_is
+    cp TRIGGER_NUMBER_OBJECT_EQUALS
+    jr z, eventMatchesRule_number_object_equals
+    ; we should never get here! if we do, just ret with nz (no match)
+    ret
+
+
+eventMatchesRule_true:
+    inc hl
+    xor a  ; z
+    ret
+
+
+eventMatchesRule_variable_eq:
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+        ld hl, game_state_variables
+        ADD_HL_A_VIA_BC
+        ld a, (hl)
+    pop hl
+    cp (hl)
+    ret nz
+    inc hl
+    xor a  ; z
+    ret
+
+
+eventMatchesRule_have_item:
+    inc hl
+    ld a, (hl)  ; item ID to check
+    push hl
+        ld b, INVENTORY_SIZE
+        ld hl, inventory_ids
+eventMatchesRule_have_item_loop:
+        cp (hl)
+        jr z,eventMatchesRule_have_item_found
+        inc hl
+        djnz eventMatchesRule_have_item_loop
+    pop hl
+    or 1  ; nz
+    ret
+eventMatchesRule_have_item_found:
+    pop hl
+    inc hl
+    xor a  ; z
+    ret
+
+
+eventMatchesRule_current_room_is:
+    inc hl
+    ld a, (current_room)
+    cp (hl)  ; room ID to check
+    ret nz
+    inc hl
+    ret
+
+
+eventMatchesRule_number_object_equals:
+    inc hl
+    ld a, (hl)
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    ret nz
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    srl a
+    srl a
+    srl a
+    srl a
+    inc hl
+    cp (hl)
+    ret nz
+    inc hl
+    xor a  ; z
+    ret
+
+
+;-----------------------------------------------
+; checks if any rule in the current room matches with the event at "(current_event)"
+; return:
+; - de: pointer to the rule 
+; - hl: pointer to the scripts to execute 
+; - z: we found a match, nz: no match
+eventMatchesItemRule:
+    ld hl, global_rules_item
+    jp eventMatchesRule_entry_point
+
+eventMatchesRule:
+    ld hl, room_buffer + ROOM_STRUCT_RULES
+eventMatchesRule_entry_point:
+IF IS_6128 == 1
+    SET_128K_PAGE_4000 RULES_AND_SCRIPTS_DATA_PAGE
+ENDIF    		
+    ld a, (hl)  ; a has the # of rules in the current room
+    or a
+    jr z, eventMatchesRule_no_overall_match
+    inc hl  ; skip number of rules
+eventMatchesRule_loop:
+    push af
+        push hl
+            bit 7, (hl)  ; check if its an && or an || rule
+            jr nz, eventMatchesRule_or
+            inc hl  ; skip the rule size
+            ld de, current_event
+            push hl
+                call eventMatchesRule_first_trigger
+            pop hl
+            jr nz, eventMatchesRule_no_match            
+            call checkForTriggersSatisfied_skip_first
+            jr z, eventMatchesRule_match_triggers_done
+
+eventMatchesRule_no_match:
+        pop hl
+        ld d, 0
+        ld e, (hl)
+        res 7, e  ; clear bit 7 (which specifies if its an && or an ||)
+        add hl, de  ; we skip the rule
+    pop af
+    dec a
+    jr nz, eventMatchesRule_loop
+
+eventMatchesRule_no_overall_match:
+    ; no overall match:
+    or 1  ; no match
+    ret
+
+
+eventMatchesRule_match_triggers_done:
+        pop de  ; we get the pointer to the beginning of the rule
+    pop af  ; restore the stack
+    xor a  ; indicate a match
+    ret
+
+
+eventMatchesRule_or:
+            inc hl  ; skip the rule size
+            ld de,current_event
+eventMatchesRule_or_loop2_next_trigger:
+            push hl
+            push de
+                call eventMatchesRule_first_trigger
+                jr nz,eventMatchesRule_or_no_match
+            pop de
+            pop hl
+
+            ; One of the || triggers matched! skip the remaining triggers:
+eventMatchesRule_or_skip_remaining_triggers:
+            call skipTrigger
+            jr z,eventMatchesRule_match_triggers_done
+            jr eventMatchesRule_or_skip_remaining_triggers
+
+eventMatchesRule_or_no_match:
+            pop de
+            pop hl
+            call skipTrigger
+            jr z,eventMatchesRule_no_match
+            jr eventMatchesRule_or_loop2_next_trigger
+
+
+;-----------------------------------------------
+; input:
+; - de: trigger1 (current event)
+; - hl: trigger2 (first trigger in a rule)
+; output:
+; - z/nz: match/no match
+; - hl incremented 3 times
+eventMatchesRule_first_trigger:
+    ld a, (hl)
+    and #7f
+IF {USE_ITEM_WITH_ITEM_SYMMETRIC} == 1
+    cp TRIGGER_USE_ITEM_WITH_ITEM
+    jr z,eventMatchesRule_symmetric_first_trigger
+ENDIF
+    ld b,1
+    cp FIRST_2BYTE_TRIGGER
+    jr c,eventMatchesRule_first_trigger_pre_loop
+    inc b
+    cp FIRST_3BYTE_TRIGGER
+    jr c,eventMatchesRule_first_trigger_pre_loop
+    inc b
+eventMatchesRule_first_trigger_pre_loop:
+    ld c, a
+    ld a, (de)
+    cp c
+    ret nz
+    dec b
+    ret z
+eventMatchesRule_first_trigger_loop:
+    inc de
+    inc hl
+    ld a, (de)
+    cp (hl)
+    ret nz
+    djnz eventMatchesRule_first_trigger_loop
+    ret
+
+IF {USE_ITEM_WITH_ITEM_SYMMETRIC} == 1
+eventMatchesRule_symmetric_first_trigger:
+    ld c, a
+    ld a, (de)
+    cp c  ; compare the trigger type
+    ret nz
+    inc de
+    inc hl
+    ld a, (de)
+    cp (hl)
+    jr nz,eventMatchesRule_symmetric_first_trigger2
+    inc de
+eventMatchesRule_symmetric_first_trigger_last:
+    inc hl
+    ld a, (de)
+    cp (hl)
+    push af
+        inc hl
+    pop af
+    ret
+eventMatchesRule_symmetric_first_trigger2:
+    inc de
+    ld a, (de)
+    cp (hl)
+    ret nz
+    dec de
+    jr eventMatchesRule_symmetric_first_trigger_last
+ENDIF
+
+
+;-----------------------------------------------
+; Executes the scripts in a rule
+; input:
+; - de: pointer to the rule
+; - hl: pointer to the scripts within the rule
+executeRuleScript:
+    push de
+        call executeRuleScript_internal
+    pop hl
+executeRuleScript_delete_rule:
+IF IS_6128 == 1
+    SET_128K_PAGE_4000 RULES_AND_SCRIPTS_DATA_PAGE
+ENDIF
+    ; delete the rule:
+    ld b, 0
+    ld c, (hl)
+    res 7, c  ; clear bit 7 (which specifies if its an && or an ||)
+    ld d, h
+    ld e, l
+    add hl, bc  ; de = rule pointer, hl = right after the rule
+    push hl
+        ld b, h
+        ld c, l
+        ld hl, room_buffer + ROOM_STRUCT_RULES + MAX_ROOM_RULES_SIZE + 1  ; we add one, to prevent the amount being 0 for the last rule
+        xor a
+        sbc hl, bc    
+        ld b, h
+        ld c, l  ; bc = # of bytes we need to copy
+    pop hl
+    ldir
+    ld hl, room_buffer + ROOM_STRUCT_RULES
+    dec (hl)
+    ret
+
+
+executeGlobalRuleScript:
+executeRuleScript_internal:
+    xor a
+    ld (last_script_in_this_rule), a
+    ; execute the scripts:
+executeRuleScript_loop:
+IF IS_6128 == 1
+    SET_128K_PAGE_4000 RULES_AND_SCRIPTS_DATA_PAGE
+ENDIF
+    ; Check the bits that indicate if this is the last script in a rule:
+    ld a, (last_script_in_this_rule)
+IF {SCRIPT_DO_NOT_DELETE_RULE_USED} == 1
+    bit 6, a  ; is it a repeating rule?
+    jp nz, executeRuleScript_do_not_delete_rule
+ENDIF
+    bit 7, a  ; is it the last script in this rule?
+    ret nz
+
+    ld a, (hl)
+    ld (last_script_in_this_rule), a
+    and #3f
+    inc hl
+
+{SCRIPT_DISPATCH_CODE}
+
+    jp executeRuleScript_loop
+
+
+IF {SCRIPT_DO_NOT_DELETE_RULE_USED} == 1
+executeRuleScript_do_not_delete_rule:
+    pop af  ; fake a "ret"
+    pop hl
+    ret
+ENDIF
+
+
+IF {SCRIPT_MESSAGE_USED} == 1
+executeRuleScript_message:
+    push hl
+        call clear_text_area
+    pop hl
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+        ld de, current_action_text_buffer
+        call get_text_from_bank
+        ld hl, current_action_text_buffer
+        ld de, VIDEO_MEMORY + REGULAR_TEXT_FIRST_ROW * SCREEN_WIDTH_IN_BYTES
+        ld iyl, #88  ; color (white)
+        call draw_multi_line_sentence
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_REMOVE_OBJECT_USED} == 1
+executeRuleScript_remove_object:
+    ld a, (hl)
+    inc hl
+    push hl
+        call remove_room_object
+        call find_player_object_ptr
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_GAIN_ITEM_USED} == 1
+executeRuleScript_gain_item:
+    ld a, (hl)
+    inc hl
+    push hl
+        call add_item_to_inventory
+        ld hl, redraw_inventory_signal
+        ld (hl), 1
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_LOSE_ITEM_USED} == 1
+executeRuleScript_lose_item:
+    ld a, (hl)
+    inc hl
+    push hl
+        call remove_item_from_inventory
+        ld hl, redraw_inventory_signal
+        ld (hl), 1
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CHANGE_OBJECT_DESCRIPTION_USED} == 1
+executeRuleScript_change_object_description:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jr nz, executeRuleScript_change_object_description_object_not_found
+    ld a, (hl)
+    ld (ix + OBJECT_STRUCT_DESCRIPTION_IDX), a
+    inc hl
+    ld a, (hl)
+    ld (ix + OBJECT_STRUCT_DESCRIPTION_IDX + 1), a
+    inc hl
+    jp executeRuleScript_loop
+executeRuleScript_change_object_description_object_not_found:
+executeRuleScript_change_object_name_object_not_found:
+    inc hl
+executeRuleScript_change_object_state_not_found:
+executeRuleScript_change_object_direction_not_found:
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CHANGE_OBJECT_NAME_USED} == 1
+executeRuleScript_change_object_name:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jr nz, executeRuleScript_change_object_name_object_not_found
+
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    ; This decompresses the new name over the previous one, so, this assumes the
+    ; new name is the same length or less than the previous!
+    ld e, (ix + OBJECT_STRUCT_NAME_PTR)
+    ld d, (ix + OBJECT_STRUCT_NAME_PTR + 1)
+    push hl
+        call get_text_from_bank
+        xor a
+        ld (current_action_text_id), a
+        call update_command_preview_text_after_pointer_movement
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_GO_TO_ROOM_USED} == 1
+executeRuleScript_go_to_room:
+    push hl
+        call clear_pointer
+    pop hl
+    xor a
+    ld (current_action_text_id), a  ; ensure the pointer is updated upon starting
+                                    ; the new room
+    ld a, (hl)  ; target room
+    inc hl
+    ld c, (hl)
+    inc hl
+    ld b, (hl)  ; target player position
+    push bc
+        ld (current_room), a
+IF ROOMS_PER_BANK == 2
+        srl a
+ENDIF
+        ld h, 0
+        ld l, a
+        add hl, hl
+IF IS_6128 == 1
+        add hl, hl  ; to account for the fact that there are also pages in the table
+        SET_128K_PAGE_4000 ROOMBANK_PTRS_PAGE
+ENDIF
+        ld bc, roomBankPointers
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+IF IS_6128 == 1
+        inc hl
+        ld a, (hl)  ; room page
+        SET_128K_PAGE_4000_A
+ENDIF
+        ex de, hl
+        call load_room
+        call find_player_object_ptr
+    pop bc
+    jr nz, executeRuleScript_go_to_room_no_player
+    ld (ix + OBJECT_STRUCT_X), c
+    ld a, PLAYER_WIDTH
+    add a, c
+    ld (ix + OBJECT_STRUCT_X2), a
+    ld (ix + OBJECT_STRUCT_Y), b
+    ld a, PLAYER_HEIGHT
+    add a, b
+    ld (ix + OBJECT_STRUCT_Y2), a
+    ld (ix + OBJECT_STRUCT_DEPTH), a
+    ; reorder the objects:
+    call reorder_object_by_depth_up
+    call reorder_object_by_depth_down
+executeRuleScript_go_to_room_no_player:
+    ld a, (room_buffer + ROOM_STRUCT_ROOM_FLAGS)
+    and ROOM_FLAG_ISSUBROOM
+    jr z, executeRuleScript_go_to_room_no_need_for_frame
+    ; cover the previous room in "fog" and draw a "frame":
+    call draw_fog_over_game_area
+    jr executeRuleScript_go_to_room_done
+executeRuleScript_go_to_room_no_need_for_frame:
+    call clear_game_area
+executeRuleScript_go_to_room_done:
+    ; set the custom room palette:
+    ld hl, (current_palette_ptr)
+    call set_palette_16
+    ; redraw the whole room:
+    ld sp, STACK_ADDRESS  ; reset the stack, since this function is called from within lot of other functions
+    jp game_loop_entry_point_on_load_new_room
+ENDIF
+
+
+IF {SCRIPT_CHANGE_OBJECT_STATE_USED} == 1
+executeRuleScript_change_object_state:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_change_object_state_not_found
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    and #f0  ; clear the state
+    add a, (hl)  ; add the state
+executeRuleScript_change_object_state_entrypoint_inc_hl:
+    inc hl
+executeRuleScript_change_object_state_entrypoint:
+    ld (ix + OBJECT_STRUCT_STATE_DIRECTION), a
+    ; inc hl
+    ld a, 1
+    ld (redraw_whole_room_signal), a
+    ; make sure the pointer will be updated even if it is over this object:
+    xor a
+    ld (current_action_text_id), a
+    ld (ix + OBJECT_STRUCT_ANIMATION_STEP), a
+    ld a, (ix + OBJECT_STRUCT_ANIMATION_TIMER)
+    inc a
+    ; if it's #ff, reset it to 0, otherwise, do not change it, to keep the
+    ; objects out of animation sync if possible:
+    jp nz, executeRuleScript_loop    
+    ld (ix + OBJECT_STRUCT_ANIMATION_TIMER), a
+    jp executeRuleScript_loop
+
+IF {SCRIPT_CHANGE_OBJECT_DESCRIPTION_USED} == 0
+executeRuleScript_change_object_state_not_found:
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
+ENDIF
+
+
+IF {SCRIPT_SET_VARIABLE_USED} == 1
+executeRuleScript_set_variable:
+    ld a, (hl)
+    inc hl
+    push hl
+        ld hl,game_state_variables
+        ADD_HL_A_VIA_BC
+        ex de, hl
+    pop hl
+    ldi
+    ; inc hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_INC_VARIABLE_USED} == 1
+executeRuleScript_inc_variable:
+    ld a, (hl)
+    inc hl
+    push hl
+        ld hl, game_state_variables
+        ADD_HL_A_VIA_BC
+        inc (hl)
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_DEC_VARIABLE_USED} == 1
+executeRuleScript_dec_variable:
+    ld a, (hl)
+    inc hl
+    push hl
+        ld hl, game_state_variables
+        ADD_HL_A_VIA_BC
+        dec (hl)
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_IF_THEN_ELSE_USED} == 1 || {SCRIPT_IFOR_THEN_ELSE_USED} == 1
+executeRuleScript_if_then_else:
+    ld a, (hl)
+    push hl
+        ADD_HL_A_VIA_BC
+        ; check if the if condition is satisfied:
+        call checkForTriggersSatisfied
+executeRuleScript_if_then_else_entry_point:
+    pop hl
+    jr nz, executeRuleScript_if_then_else_else
+    inc hl  ; skip triggers offset
+    ld a, (hl)
+    push hl
+        ADD_HL_A_VIA_BC
+        ld a, (last_script_in_this_rule)
+        push af
+            call executeRuleScript_internal
+        pop af
+        ld (last_script_in_this_rule), a
+    pop hl
+    inc hl  ; skip then offset
+    inc hl  ; skip else offset
+    jp executeRuleScript_loop
+executeRuleScript_if_then_else_else:
+    inc hl  ; skip triggers offset
+    inc hl  ; skip then offset
+    ld a, (hl)
+    or a
+    jr z, executeRuleScript_if_then_else_else_done
+    push hl
+        ADD_HL_A_VIA_BC
+        ld a, (last_script_in_this_rule)
+        push af
+            call executeRuleScript_internal
+        pop af
+        ld (last_script_in_this_rule), a
+    pop hl
+executeRuleScript_if_then_else_else_done:
+    inc hl  ; skip else offset
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_IFOR_THEN_ELSE_USED} == 1
+executeRuleScript_ifor_then_else:
+    ld a, (hl)
+    push hl
+        ADD_HL_A_VIA_BC
+        ; check if the if condition is satisfied:
+        call checkForTriggersSatisfied_or
+        jr executeRuleScript_if_then_else_entry_point
+ENDIF
+
+
+IF {SCRIPT_ADD_DIALOGUE_OPTION_USED} == 1
+executeRuleScript_add_dialogue_option:
+    ; render the new option (unselected):
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+        ; save the option text IDs:
+        ld hl, dialogue_n_options  ; increase the number of options we have rendered:
+        ld d, 0
+        ld e, (hl)
+        ld hl, dialogue_option_text_ids
+        add hl, de
+        add hl, de
+        ld (hl), c
+        inc hl
+        ld (hl), a
+
+        ; render the option:
+        ld de, current_action_text_buffer
+        call get_text_from_bank
+        ld hl, current_action_text_buffer
+        ld iyl, #80  ; color (grey)
+        call draw_multi_line_sentence_scrolling
+    pop hl
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+        ; save the extended option text IDs:
+        ld hl, dialogue_n_options
+        ld d, 0
+        ld e, (hl)
+        ld hl, dialogue_option_extended_text_ids
+        add hl, de
+        add hl, de
+        ld (hl), c
+        inc hl
+        ld (hl), a
+    pop hl
+
+    ; update the dialogue state variables:
+    ld e, (hl)  ; target state
+    inc hl
+    push hl
+        ld hl, dialogue_n_options  ; increase the number of options we have rendered:
+        ld a, (hl)
+        inc (hl)
+
+        ld hl, dialogue_option_target_states  ; set the target state:
+        ld b, 0
+        ld c, a
+        add hl, bc
+        ld (hl), e
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+
+IF {SCRIPT_GOTO_DIALOGUE_STATE_USED} == 1
+executeRuleScript_goto_dialogue_state:
+    ld a, (hl)
+    ld (dialogue_goto_state), a
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_START_DIALOGUE_USED} == 1
+executeRuleScript_start_dialogue:
+    push hl
+IF IS_6128 == 1
+        ld a, (current_4000_page)
+        push af
+ENDIF
+            ld a, (hl)
+IF IS_6128 == 1
+            push af
+                SET_128K_PAGE_4000 DIALOGUE_DATA_PAGE
+            pop af
+ENDIF
+            add a, a
+            ld hl, dialoguePointers
+            ld b, 0
+            ld c, a
+            add hl, bc
+            ld e, (hl)
+            inc hl
+            ld d, (hl)
+IF IS_6128 == 1
+            ex de, hl
+            ld de, dialogue_buffer
+            push de
+                ld bc, MAX_DIALOGUE_SIZE  ; since we don't know the size of this dialogue
+                ldir
+            pop hl
+ELSE
+            ex de, hl
+ENDIF
+            ld a, (last_script_in_this_rule)
+            push af
+                call handle_dialogue
+            pop af
+            ld (last_script_in_this_rule), a
+IF IS_6128 == 1
+        pop af
+        SET_128K_PAGE_4000_A
+ENDIF
+    pop hl
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_SCROLLING_MESSAGE_USED} == 1
+executeRuleScript_scrolling_message:
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+        ld de, current_action_text_buffer
+        call get_text_from_bank
+        ld hl, current_action_text_buffer
+        ld iyl, #08  ; color (green/purple)
+        call draw_multi_line_sentence_scrolling
+    pop hl
+
+    ; pause if necessary:
+    ld a, (hl)
+    inc hl
+    or a
+    jp z, executeRuleScript_loop
+    push hl
+        ; ask player to press space to continue
+        ld iyl, #88  ; white
+        ld hl, dialogue_pause_text
+        call draw_multi_line_sentence_scrolling
+        ld hl, text_scrolling_next_row
+        dec (hl)  ; as draw_multi_line_sentence_scrolling would have incremented it
+executeRuleScript_scrolling_message_pause_loop:
+        ld a, 16
+executeRuleScript_scrolling_message_pause_loop2:
+        push af
+            call game_update_while_in_scripts
+            ld a, (keyboard_line_clicks+4)
+            bit 7, a
+            jr nz, executeRuleScript_scrolling_message_pause_space
+        pop af
+        halt
+        dec a
+        jr nz, executeRuleScript_scrolling_message_pause_loop2
+        call next_scroll_line_ptr
+        call change_text_line_color
+        jr executeRuleScript_scrolling_message_pause_loop
+executeRuleScript_scrolling_message_pause_space:
+        pop af
+
+        ; clear the waiting cursor:
+        ld bc, SCREEN_WIDTH_IN_BYTES
+        call next_scroll_line_ptr
+        ld d, h
+        ld e, l
+        inc de
+        call clear_command_preview_text_custom_address_and_length
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_INCREASE_NUMBER_OBJECT_USED} == 1
+executeRuleScript_increase_number_object:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_loop
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    add a, 16
+    cp 16 * 10
+    jp c, executeRuleScript_change_object_state_entrypoint
+    sub 16 * 10
+    jp executeRuleScript_change_object_state_entrypoint
+ENDIF
+
+
+IF {SCRIPT_DECREASE_NUMBER_OBJECT_USED} == 1
+executeRuleScript_decrease_number_object:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_loop
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    sub 16
+    jp nc, executeRuleScript_change_object_state_entrypoint
+    add a, 16 * 10
+    jp executeRuleScript_change_object_state_entrypoint
+ENDIF
+
+
+IF {SCRIPT_CHANGE_OBJECT_DIRECTION_USED} == 1
+executeRuleScript_change_object_direction:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_change_object_direction_not_found
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    and #0f  ; clear the direction
+    add a, (hl)  ; add the direction
+    jp executeRuleScript_change_object_state_entrypoint_inc_hl
+ENDIF
+
+
+IF {SCRIPT_WAIT_FOR_SPACE_USED} == 1
+executeRuleScript_wait_for_space:
+    push hl
+        call wait_for_space
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CALL_SCRIPT_USED} == 1
+executeRuleScript_call_script:
+    ld b, 0
+    ld c, (hl)
+    inc hl
+    push hl
+        ld hl, script_pointers
+        add hl, bc
+        ld c, (hl)
+        inc hl
+        ld b, (hl)
+        ld h, b
+        ld l, c
+        ld a, (last_script_in_this_rule)
+        push af
+            call executeRuleScript_internal
+        pop af
+        ld (last_script_in_this_rule), a
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CLEAR_SCREEN_USED} == 1
+executeRuleScript_clear_screen:
+    push hl
+        ld iyl, 0  ; clear the screen fast
+        call clear_screen_pretty_variable_speed
+        ; Clear the pointer background buffer to prevent graphic glitches:
+        ld hl, pointer_background_buffer
+        ld bc, POINTER_WIDTH_IN_BYTES*POINTER_HEIGHT
+        call clear_memory
+    pop hl
+    ld a, (hl)  ; type of clear
+    inc hl
+    push hl
+        or a
+        jr z, executeRuleScript_clear_screen_split_mode1_mode0
+        dec a
+        jr z,executeRuleScript_clear_screen_mode1
+executeRuleScript_clear_screen_mode0:  ; "2"
+        call switch_to_mode0
+    pop hl
+    jp executeRuleScript_loop
+executeRuleScript_clear_screen_mode1:  ; "1"
+        call switch_to_mode1
+        ld hl, text_area_palette
+        call set_palette_4_colors_without_disabling_interrupts
+    pop hl
+    jp executeRuleScript_loop
+executeRuleScript_clear_screen_split_mode1_mode0:  ; "0"
+        call switch_to_split_mode1_mode0
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CLEAR_TEXT_AREA_USED} == 1
+executeRuleScript_clear_text_area:
+    push hl
+        call clear_text_area_for_scroll
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CLEAR_ROOM_AREA_USED} == 1
+executeRuleScript_clear_room_area:
+    push hl
+        ld hl, VIDEO_MEMORY + SCREEN_WIDTH_IN_BYTES*(REGULAR_TEXT_FIRST_ROW + N_REGULAR_TEXT_ROWS + 1)
+        ld a, 8
+executeRuleScript_clear_room_area_loop:
+        push hl
+            ld (hl), 0
+            ld d, h
+            ld e, l
+            inc de
+            ld bc, SCREEN_WIDTH_IN_BYTES * MAX_ROOM_HEIGHT - 1
+            ldir
+        pop hl
+        ld de, #800
+        add hl, de
+        dec a
+        jr nz, executeRuleScript_clear_room_area_loop
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_REDRAW_ROOM_USED} == 1
+executeRuleScript_redraw_room:
+    push hl
+IF CAN_TURN_GUI_ON_OFF = 1
+        ld a, (gui_on)
+        or a
+        push af
+            call nz,draw_gui
+        pop af
+        call z, clear_gui
+ELSE
+        call draw_gui
+ENDIF
+        call draw_room
+        call calculate_pointer_video_mem_address
+        call save_pointer_background
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_PRINT_USED} == 1
+executeRuleScript_print:
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    push hl
+        ld de, current_action_text_buffer
+        call get_text_from_bank
+    pop hl
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    ld a, (hl)
+    ld iyl, a
+    inc hl
+    push hl
+        ld hl, current_action_text_buffer
+        call draw_sentence
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_DRAW_CUTSCENE_IMAGE_USED} == 1
+executeRuleScript_draw_cutscene_image:
+    ld b, 0
+    ld c, (hl)
+    inc hl
+    push hl
+IF IS_6128 == 1
+        SET_128K_PAGE_4000 CUTSCENE_PTRS_PAGE
+ENDIF
+        ld hl, cutscene_image_pointers
+        add hl, bc
+IF IS_6128 == 1
+        add hl, bc  ; since in 6128, we also store pages
+ENDIF
+        ld c, (hl)
+        inc hl
+        ld b, (hl)  ; bc: ptr to the image to unpack
+IF IS_6128 == 1
+        inc hl
+        ld a, (hl)  ; page we need to switch to
+        SET_128K_PAGE_4000 RULES_AND_SCRIPTS_DATA_PAGE
+ENDIF
+    pop hl
+    push bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        inc hl
+IF IS_6128 == 1
+        ex af, af'
+ENDIF
+        ld a, (hl)  ; mode 0 or mode 1
+        inc hl
+        ld c, (hl)  ; y1
+        inc hl
+        ld b, (hl)  ; y2
+        inc hl
+        push af
+            ld a, (hl)  ; x1
+            ld iyl, a
+            inc hl
+            ld a, (hl)  ; x2
+            ld iyh, a
+        pop af
+        inc hl
+        ex (sp), hl  ; hl goes to the stack (without changing SP), and hl = ptr to the image to unpack
+IF IS_6128 == 1
+        ex af, af'
+        SET_128K_PAGE_4000_A
+        ex af, af'
+ENDIF
+        call executeRuleScript_draw_cutscene_image_internal
+    pop hl  ; notice that "ex (sp), hl" above, this recovers the ptr to the script we are executing.
+    jp executeRuleScript_loop
+
+
+;-----------------------------------------------
+; Input:
+; - hl: ptr to the cutscene image to unpack and draw
+; - bc: y1, y2
+; - iyh, iyl; x1, x2
+; - de: draw address in video memory
+; - a: mode 0 or mode 1
+executeRuleScript_draw_cutscene_image_internal:
+    push bc
+    push de
+    push iy
+    push af
+        ld de, general_buffer
+        push de
+            call PAKET_UNPACK
+        pop hl
+        ; change the palette:
+        ld a, (hl)  ; # of colors
+        inc hl
+        or a
+        jr z, executeRuleScript_draw_cutscene_image_palette_set
+        ld iyl, a
+    pop af  ; we recover whether this is a mode 0 or mode 1 image:
+    push af
+        or a
+        jr nz, executeRuleScript_draw_cutscene_image_internal_mode_1
+        ; If it is a mode 0 image, we save the palette as the current:
+        ld (current_palette_ptr), hl
+executeRuleScript_draw_cutscene_image_internal_mode_1:
+        call set_palette_disabling_interrupts
+    executeRuleScript_draw_cutscene_image_palette_set:
+        ld c, (hl)
+        inc hl
+        ld b, (hl)
+        inc hl
+        push hl
+            add hl, bc
+            push hl
+            pop ix  ; ix = name table pointer
+        pop hl  ; bc = tile set pointer
+    pop af
+    pop iy
+    pop de
+    pop bc
+    ; jp draw_tiled_image_mode_a
+
+
+; ------------------------------------------------
+; ix: name table pointer (starting with (width, height))
+; bc: y1, y2
+; iyh, iyl; x1, x2
+; de: draw address in video memory
+; hl: tile set pointer
+; a: screen mode
+draw_tiled_image_mode_a:
+    or a
+    jp nz, draw_tiled_image_mode1
+
+
+; ------------------------------------------------
+; ix: name table pointer (starting with width,height)
+; c, b: y1, y2
+; iyh, iyl; x1, x2
+; de: draw address in video memory
+; hl: tile set pointer
+draw_tiled_image_mode0:
+    ld a, (ix)
+    ex af, af'  ; save image width to a'
+    inc ix
+    inc ix  ; now ix points to the name table, and iy to width/height
+draw_tiled_image_y_loop_mode0:
+    push bc
+        push de
+        push iy
+            ex af, af'
+                ld b, a  ; width
+            ex af, af'
+            ld a, c  ; y1
+            or a
+            jp nz, draw_tiled_image_y_loop_mode0_skip
+draw_tiled_image_x_loop_mode0:
+            push bc
+                ld a, iyl  ; x1
+                or a
+                jp nz, draw_tiled_image_x_loop_mode0_skip
+                ld a, iyh  ; x2
+                or a
+                jp z, draw_tiled_image_x_loop_mode0_skip_continue
+                dec iyh
+
+                ld a, (ix)  ; tile to draw
+                push hl
+                push de
+                    push af
+                        and #7f  ; remove the "mirror" flag
+                        ; each tile is 32 bytes in size in mode 0
+                        ; hl = hl + a*32  (mode 0) 
+                        ld b, h
+                        ld c, l
+
+                        ld h, 0
+                        ld l, a
+                        add hl, hl
+                        add hl, hl
+                        add hl, hl
+                        add hl, hl
+                        add hl, hl
+                        add hl, bc
+                    pop af
+                    bit 7, a  ; is it a mirrored tile?
+                    jr z, draw_tiled_image_x_loop_mode0_no_mirror
+                    push de
+                        ld de, general_buffer + GENERAL_BUFFER_SIZE - 32  ; size of a tile
+                        push de
+                            call copy_tile_flipping_it_row_storage
+                        pop hl
+                    pop de
+draw_tiled_image_x_loop_mode0_no_mirror:
+                    ld bc, #0804
+                    call draw_sprite_variable_size_to_screen_no_transparency
+                pop de
+                pop hl
+                inc de
+                inc de
+                inc de
+                inc de
+draw_tiled_image_x_loop_mode0_skip_continue:
+            pop bc
+            inc ix
+            djnz draw_tiled_image_x_loop_mode0
+            ld bc, SCREEN_WIDTH_IN_BYTES
+        pop iy
+        pop de
+        ex de, hl
+            add hl, bc
+        ex de, hl
+draw_tiled_image_y_loop_mode0_skip_continue:
+    pop bc
+    ld a, c  ; y2
+    or a
+    jr z, draw_tiled_image_y_loop_mode0_skip_done
+    dec c
+draw_tiled_image_y_loop_mode0_skip_done:
+    djnz draw_tiled_image_y_loop_mode0
+    ret
+
+draw_tiled_image_x_loop_mode0_skip:
+                dec iyl
+                dec iyh
+                jr draw_tiled_image_x_loop_mode0_skip_continue
+                
+
+draw_tiled_image_y_loop_mode0_skip:
+            ld c, b
+            ld b, 0
+            add ix, bc
+        pop iy
+        pop de
+        jr draw_tiled_image_y_loop_mode0_skip_continue
+
+
+; ------------------------------------------------
+; ix: name table pointer (starting with width, height)
+; de: draw address in video memory
+; hl: tile set pointer
+draw_tiled_image_mode1:
+    push ix
+    pop iy
+    inc ix
+    inc ix  ; now ix points to the name table, and iy to width/height
+    ld b, (iy + 1)  ; height
+draw_tiled_image_y_loop_mode1:
+    push bc
+        push de
+            ld b, (iy)  ; width
+draw_tiled_image_x_loop_mode1:
+            push bc
+                ld a, (ix)  ; tile to draw
+                push hl
+                push de
+                    ; each tile is 16 bytes in size in mode 1
+                    ; hl = hl + a*16  (mode 1) 
+                    ld b, h
+                    ld c, l
+
+                    ld h, 0
+                    ld l, a
+                    add hl, hl
+                    add hl, hl
+                    add hl, hl
+                    add hl, hl
+                    add hl, bc
+
+                    ; Draw tile "hl" to "de":
+draw_tile_mode1:
+                    ld b, 8
+draw_tile_loop_y_mode1:
+                    push bc
+                        ldi
+                        ldi
+                        ex de, hl
+                            ld bc, #800 - 2
+                            add hl, bc
+                        ex de, hl
+                    pop bc
+                    djnz draw_tile_loop_y_mode1
+                pop de
+                pop hl
+            pop bc
+            inc de
+            inc de
+            inc ix
+            djnz draw_tiled_image_x_loop_mode1
+            ld bc, SCREEN_WIDTH_IN_BYTES
+        pop de
+        ex de,hl
+            add hl, bc
+        ex de, hl
+    pop bc
+    djnz draw_tiled_image_y_loop_mode1
+    ret
+ENDIF
+
+
+IF {SCRIPT_PLAY_SFX_USED} == 1
+executeRuleScript_play_sfx:
+    ld b, 0
+    ld c, (hl)
+    inc hl
+    push hl
+IF PKT_IS_MULTIPAGE == 1
+        SET_128K_PAGE_4000 SFX_DATA_PAGE
+ENDIF
+        ld hl, sfx_pointers
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ex de, hl
+        di
+            call play_SFX_with_high_priority
+        ei
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_PAUSE_USED} == 1
+executeRuleScript_pause:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+executeRuleScript_pause_loop:
+    push hl
+        call wait_for_next_frame
+    pop hl
+    dec bc
+    xor a
+    or b
+    or c
+    jr nz, executeRuleScript_pause_loop
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_SKIPPABLE_PAUSE_USED} == 1
+executeRuleScript_skippable_pause:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    push hl
+executeRuleScript_skippable_pause_loop:
+        push bc
+            call wait_for_next_frame
+            call update_keyboard_buffers
+        pop bc
+        ld a, (keyboard_line_clicks+4)
+        bit 7, a
+        jr nz, executeRuleScript_skippable_pause_loop_end
+        dec bc
+        ld a, b
+        or c
+        jr nz,executeRuleScript_skippable_pause_loop
+executeRuleScript_skippable_pause_loop_end:
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_PAUSE_REDRAWING_USED} == 1
+executeRuleScript_pause_redrawing:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    ; call wait_bc_halts
+executeRuleScript_pause_redrawing_loop:
+    push hl
+    push bc
+        call game_update_while_in_scripts
+    pop bc
+    pop hl
+    dec bc
+    xor a
+    or b
+    or c
+    jr nz,executeRuleScript_pause_redrawing_loop
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_SKIPPABLE_PAUSE_REDRAWING_USED} == 1
+executeRuleScript_skippable_pause_redrawing:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+executeRuleScript_skippable_pause_redrawing_loop:
+    push hl
+    push bc
+        call game_update_while_in_scripts
+    pop bc
+    pop hl
+    ld a, (keyboard_line_clicks)
+    bit 0, a
+    jr nz, executeRuleScript_skippable_pause_redrawing_loop_end
+    dec bc
+    ld a, b
+    or c
+    jr nz, executeRuleScript_skippable_pause_redrawing_loop
+executeRuleScript_skippable_pause_redrawing_loop_end:
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_PLAY_TSV_SONG_USED} == 1
+executeRuleScript_play_tsv_song:
+    ld b, 0
+    ld c, (hl)  ; song offset
+    inc hl
+    ld a, (hl)  ; force restart
+    inc hl
+    or a
+    jr nz, executeRuleScript_play_tsv_song_restart_song
+    ld a, (MUSIC_current_song)
+    dec a
+    cp c
+    jr nz, executeRuleScript_play_tsv_song_restart_song
+    ; we are already playing the song!
+    ld a, (hl)  ; tempo
+    inc hl
+    ld (MUSIC_tempo), a
+    jp executeRuleScript_loop
+executeRuleScript_play_tsv_song_restart_song:
+    ld a, (hl)  ; tempo
+    inc hl
+    push hl
+        push af
+IF IS_6128 == 1
+            SET_128K_PAGE_4000 SONG_DATA_PAGE
+ENDIF
+            ld hl, song_pointers
+            add hl, bc
+        pop af  ; recover the tempo
+        push bc
+            ld e, (hl)
+            inc hl
+            ld d, (hl)
+            ex de, hl  ; hl = pointer to the song to play (maybe compressed)
+            call play_song  ; we have to call this *before* setting "MUSIC_current_song", or otherwise, the sound update interrupt might mess things up if it lands in between
+        pop bc
+        ld a, c
+        inc a
+        ld (MUSIC_current_song), a  ; record which song we are playing (offset + 1)
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_PLAY_WYZ_SONG_USED} == 1
+executeRuleScript_play_wyz_song:
+    ld b, 0
+    ld c, (hl)  ; song offset
+    inc hl
+    ld a, (hl)  ; force restart
+    inc hl
+    or a
+    jr nz, executeRuleScript_play_wyz_song_restart_song
+    ld a, (MUSIC_current_song)
+    dec a
+    cp c
+    jr nz, executeRuleScript_play_wyz_song_restart_song
+    ; we are already playing the song!
+    jp executeRuleScript_loop
+executeRuleScript_play_wyz_song_restart_song:
+    ld a, c
+    push hl
+        call CARGA_CANCION
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_STOP_SONG_USED} == 1
+executeRuleScript_stop_song:
+    push hl
+        call StopPlayingMusic
+    pop hl
+    xor a
+    ld (MUSIC_current_song), a
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_REDRAW_DIRTY_USED} == 1
+executeRuleScript_redraw_dirty:
+    push hl
+        call draw_room_dirty_columns
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_WALK_TO_USED} == 1
+executeRuleScript_walk_to:
+    ; make player walk to a some specific coordinates:
+    ld de, player_current_action
+    ld a, PLAYER_ACTION_WALKING
+    ld (de), a
+    inc de
+    ldi  ; x
+    ldi  ; y
+    push hl
+IF USE_PATH_FINDING == 1  ; pathfinding on click
+        call path_finding
+ENDIF
+IF USE_PATH_FINDING == 2  ; pathfinding on collision
+        xor a
+        ld (path_finding_invoked), a
+ENDIF
+        ld iy, 0
+        ld (player_current_action_target_object), iy
+        ld a, TRIGGER_WALK
+        ld (current_event), a  ; just something that will not match any rule
+executeRuleScript_walk_to_loop:
+        call game_update_while_in_scripts
+        ld a, (player_current_action)
+        or a  ; PLAYER_ACTION_IDLE
+        jr nz, executeRuleScript_walk_to_loop
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_DRAW_FOG_OVER_ROOM_AREA_USED} == 1
+executeRuleScript_draw_fog_over_room_area:
+    push hl
+        call draw_fog_over_game_area
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_RESTORE_ROOM_PALETTE_USED} == 1
+executeRuleScript_restore_room_palette:
+    ld a, (room_buffer + ROOM_STRUCT_PALETTE_ID)  ; palette ID
+IF {SCRIPT_SET_PALETTE_USED} == 1
+    jr executeRuleScript_set_palette_continue
+ELSE
+    push hl
+        ; hl: palette pointer (16 colors)
+        ld hl, game_palettes
+        add a, a
+        ld b, 0
+        ld c, a
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ld (current_palette_ptr), de
+        ex de, hl
+        call set_palette_16
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+ENDIF
+
+
+IF {SCRIPT_SET_PALETTE_USED} == 1
+executeRuleScript_set_palette:
+    ld a, (hl)  ; palette ID
+    inc hl
+executeRuleScript_set_palette_continue:
+    push hl
+        ; hl: palette pointer (16 colors)
+        ld hl, game_palettes
+        add a, a
+        ld b, 0
+        ld c, a
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ld (current_palette_ptr), de
+        ex de, hl
+        call set_palette_16
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CALL_ASSEMBLER_USED} == 1
+executeRuleScript_call_assembler:
+    ld c, (hl)
+    inc hl
+    push hl
+        ld b, 0
+        ld hl, additional_assembler_functions
+        add hl, bc
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ex de, hl
+        ld de, executeRuleScript_call_assembler_ret
+        push de  ; simulating a call
+        jp hl  ; mdl:jumptable additional_assembler_functions
+executeRuleScript_call_assembler_ret:
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED} == 1
+executeRuleScript_custom_assembler_room_draw:
+    ld c, (hl)
+    inc hl
+    ld a, (hl)  ; apply only to full redraw or not
+    inc hl
+    push hl
+        ld (custom_assembler_room_draw_fullredraw_only), a
+        ld b, 0
+        ld hl, additional_assembler_functions
+        add hl, bc
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ld (custom_assembler_room_draw), de
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CLEAR_CUSTOM_ASSEMBLER_ROOM_DRAW_USED} == 1
+executeRuleScript_clear_custom_assembler_room_draw:
+IF {SCRIPT_CUSTOM_ASSEMBLER_ROOM_DRAW_USED} == 1
+    ld de, 0
+    ld (custom_assembler_room_draw), de
+ENDIF
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED} == 1
+executeRuleScript_custom_assembler_on_update:
+    ld c, (hl)
+    inc hl
+    push hl
+        ld b, 0
+        ld hl, additional_assembler_functions
+        add hl, bc
+        add hl, bc
+        ld e, (hl)
+        inc hl
+        ld d, (hl)
+        ld (custom_assembler_on_update), de
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CLEAR_CUSTOM_ASSEMBLER_ON_UPDATE_USED} == 1
+executeRuleScript_clear_custom_assembler_on_update:
+IF {SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED} == 1
+    ld de, 0
+    ld (custom_assembler_on_update), de
+ENDIF
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_GUI_OFF_USED} == 1
+executeRuleScript_gui_off:
+    xor a
+    ld (gui_on), a
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_GUI_ON_USED} == 1
+executeRuleScript_gui_on:
+    ld a,1
+    ld (gui_on), a
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_COLLISION_MAP_CLEAR_USED} == 1
+executeRuleScript_collision_map_clear:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    push hl
+executeRuleScript_collision_map_clear_loop_y:
+        push bc
+        push de
+executeRuleScript_collision_map_clear_loop_x:
+            push de
+                call collision_mask_ptr_and_mask
+                ld a, e
+                cpl
+                and (hl)  ; clear the bit
+                ld (hl), a  ; write it back
+            pop de
+            ; increment the "x" coordinate
+            inc c
+            inc c
+            dec e
+            jr nz, executeRuleScript_collision_map_clear_loop_x
+        pop de
+        pop bc
+        ; increment the "y" coordinate:
+        ld a, 4
+        add a, b
+        ld b, a
+        dec d
+        jr nz, executeRuleScript_collision_map_clear_loop_y
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_COLLISION_MAP_SET_USED} == 1
+executeRuleScript_collision_map_set:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    push hl
+executeRuleScript_collision_map_set_loop_y:
+        push bc
+        push de
+executeRuleScript_collision_map_set_loop_x:
+            push de
+                call collision_mask_ptr_and_mask
+                ld a, e
+                or (hl)  ; set the bit
+                ld (hl), a  ; write it back
+            pop de
+            ; increment the "x" coordinate
+            inc c
+            inc c
+            dec e
+            jr nz, executeRuleScript_collision_map_set_loop_x
+        pop de
+        pop bc
+        ; increment the "y" coordinate:
+        ld a, 4
+        add a, b
+        ld b, a
+        dec d
+        jr nz, executeRuleScript_collision_map_set_loop_y
+    pop hl    
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_SAVE_GAME_USED} == 1
+; This is used by the tape loading/saving routines to make sure we disable the
+; interrupts when we are in mode 0, and not when we are in a mode 1 time (which
+; would mess up the screen).
+wait_until_we_are_in_mode0:
+    ld a, (interrupt_count)
+    cp SCREEN_MODE0_INTERRUPT_COUNT
+    jr nz, wait_until_we_are_in_mode0
+    jp clear_PSG_volume
+
+
+executeRuleScript_save_game:
+    push hl
+        ; Prepare data to save:
+        ; - everything in 'data_for_savegame_start' to 'data_for_savegame_end'
+        ; - player x, y coordinates (2 bytes)
+        ; - current music and tempo (2 bytes)
+        ; game state:
+        call find_player_object_ptr
+        ld hl, data_for_savegame_start
+        ld de, savegame_data_buffer
+        ld bc, data_for_savegame_end - data_for_savegame_start
+        ldir
+        ld a, (ix + OBJECT_STRUCT_X)
+        ld (de), a
+        inc de
+        ld a, (ix + OBJECT_STRUCT_Y)
+        ld (de), a
+        inc de
+        ld hl, MUSIC_current_song
+        ld a, (hl)
+        ldi
+        ldi
+
+        push af
+            ; pause music:
+            xor a
+            ld (MUSIC_current_song), a
+            call wait_until_we_are_in_mode0
+
+            ; save data:
+            ld ix, savegame_data_buffer
+            ld e, (data_for_savegame_end - data_for_savegame_start) + 4
+            call paket_write_to_media
+IFDEF game_state_variable_io_error
+            ; Store success/failure in "io-error"
+            jr c, executeRuleScript_save_game_success
+            ld a, 1
+            jr executeRuleScript_save_game_continue
+executeRuleScript_save_game_success:
+            xor a
+executeRuleScript_save_game_continue:
+            ld (game_state_variable_io_error), a
+ENDIF
+        pop af
+        ; resume music:
+        ld (MUSIC_current_song), a
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+IF {SCRIPT_LOAD_GAME_USED} == 1
+executeRuleScript_load_game:
+    push hl
+        ; pause music:
+        ld hl, MUSIC_current_song
+        ld c, (hl)
+        push bc
+            ld (hl), 0 
+            call wait_until_we_are_in_mode0
+
+            ; Load data:
+            ld ix, savegame_data_buffer
+            ld e, (data_for_savegame_end - data_for_savegame_start) + 4
+            call paket_read_from_media
+            ; Store success/failure in "io-error"
+IFDEF game_state_variable_io_error
+            ; Store success/failure in "io-error"
+            jr c, executeRuleScript_load_game_success
+            ld a, 1
+            jr executeRuleScript_load_game_continue
+executeRuleScript_load_game_success:
+            ld a, 0  ; not "xor a", to preserve the c flag
+executeRuleScript_load_game_continue:
+            ld (game_state_variable_io_error), a
+ENDIF
+        ; resume music if any:
+        pop bc  ; we pushed bc instead of af, to preserve the carry flag here
+        ld a, c
+        ld (MUSIC_current_song), a
+    pop hl
+    jp nc, executeRuleScript_loop
+executeRuleScript_load_game_success_restore_game:
+    ; Success, restore game:
+    call StopPlayingMusic
+    xor a
+    ld (MUSIC_current_song), a
+    ld iyl, a  ; clear the screen fast
+    call clear_screen_pretty_variable_speed
+
+    ; copy over state:
+    ld hl, savegame_data_buffer
+    ld a, (hl)  ; this is "current_room"
+    ld de, data_for_savegame_start
+    ld bc, data_for_savegame_end - data_for_savegame_start
+    ldir
+
+    ; Prepare a fake script and execute it:
+    ld de, executeRuleScript_load_game_load_room_script + 5
+    ld (de), a  ; a == (current_room)
+    inc de
+    ldi  ; player x
+    ldi  ; player y
+    ld a, (hl)  ; song ID
+    or a
+    jr z, executeRuleScript_load_game_no_music
+    ld de, executeRuleScript_load_game_load_room_script + 1
+    dec a
+    ld (de), a
+    inc hl
+    inc de
+    inc de  ; force restart does not matter
+    ldi  ; song tempo
+    ld hl, executeRuleScript_load_game_load_room_script
+    jr executeRuleScript_load_game_continue2
+executeRuleScript_load_game_no_music:
+    ld hl, executeRuleScript_load_game_load_room_script + 4
+executeRuleScript_load_game_continue2:
+    push hl
+        call draw_gui  ; since we had erased it above
+    pop hl
+    jp executeRuleScript_loop
+
+; We will synthesize here a script to teleport the player to the correct room
+; after loading the data:
+executeRuleScript_load_game_load_room_script:
+    db SCRIPT_PLAY_TSV_SONG, 0, 0, 0  ; play song
+    db SCRIPT_GO_TO_ROOM | #80, 0, 0, 0  ; go to room ( | #80 to mark it's the last script in this rule)
+ENDIF
+
+
+;-----------------------------------------------
+game_update_while_in_scripts:
+    call wait_for_next_frame
+    call update_keyboard_buffers
+    call update_player
+    call update_object_animations
+    jp draw_room_dirty_columns_player_height
