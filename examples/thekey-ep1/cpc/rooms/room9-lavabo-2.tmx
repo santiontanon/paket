@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="11" tilewidth="8" tileheight="8" nextobjectid="44">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-tiles-wcs.png" width="128" height="8"/>
+ </tileset>
+ <tileset firstgid="17" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="10" height="11">
+  <data encoding="csv">
+1,2,3,4,2,5,1,3,1,6,
+1,7,8,4,7,8,8,8,9,1,
+1,2,8,4,2,8,8,8,6,6,
+1,1,10,4,2,10,10,10,1,1,
+7,7,8,4,7,8,8,8,9,9,
+7,7,10,4,5,10,10,10,9,9,
+7,7,8,4,7,8,8,8,9,1,
+7,11,10,4,11,10,10,10,12,1,
+7,7,13,4,7,14,14,14,9,1,
+7,11,15,4,11,3,15,5,12,1,
+11,3,3,1,3,3,5,1,5,1
+</data>
+ </layer>
+ <layer name="collision" width="10" height="11">
+  <data encoding="csv">
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,18,18,18,18,18,18,18,18,18,
+18,21,0,20,21,0,0,0,22,18,
+21,0,0,0,0,0,0,0,0,22
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="64" y="56" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="32" name="sink" x="48" y="54" width="8" height="20">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="33" name="door-right" x="72" y="48" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="34" name="bath-mirror" x="48" y="34" width="8" height="20">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="35" name="heater" x="56" y="60" width="8" height="12">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="36" name="towel-holder" x="44" y="62" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="37" name="toilet" x="32" y="56" width="10" height="24">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="38" name="shower" x="18" y="20" width="6" height="44">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="39" name="drain" x="16" y="74" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="40" name="soap" x="14" y="52" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="41" name="towel-right" x="64" y="58" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="42" name="towel-left" x="10" y="54" width="4" height="24">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="43" name="door-left" x="0" y="48" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

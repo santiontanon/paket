@@ -1,0 +1,745 @@
+# ------- Room definitions: -------
+
+room("intro-home", "rooms/room0-intro-home.tmx", 0, 0):
+    repeating-rule examine-object(35):
+        if have-item(item-llave-coche):
+            message("Una mesita sin nada de especial. Mi abuela tenía una igual.")
+        else:
+            message("Una mesita con algo encima.")
+        endif
+    persistent-rule pickup-object(43):
+        gain-item(item-llave-coche)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(43)
+
+    persistent-rule pickup-object(44):
+        gain-item(item-carta-mabus)
+        gain-item(item-llave-mabus)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("¡Es de mi amigo Mabus! Y tenía una llave enganchada con celo.")
+    persistent-rule-effect:
+        remove-object(44)
+
+    repeating-rule use-object(42):
+        if variable-eq(mabus-letter-read, 1):
+            call-script("open-home-door-auxiliar")
+        else:
+            message("Nah... no tengo ninguna razón para salir de casa...")
+        endif
+    repeating-rule exit-through-object(42):
+        lose-item(item-llave-coche)
+        call-script("intro-driving-scene")
+        go-to-room("exterior", 16, 84)
+
+    on-room-load-rule variable-eq(global-story-state,0):
+        call-script("intro-splash-screen")
+        gui-off()
+        redraw-room()
+        pause(50)
+        print(96,16,2,"¡ding dong!")
+        play-sfx("sfx/doorbell.afx")
+        pause(100)
+        clear-text-area()
+        change-object-state(44, "idle")  # make mabus letter appear
+        redraw-room()
+        play-sfx("sfx/door-open.afx")
+        pause(100)
+        change-object-state(63, "idle")  # make player appear
+        walk-to(48, 80)
+        message("Parece que me han entregado una carta por debajo de la puerta...")
+        pause(50)
+        gui-on()
+        redraw-room()
+        set-variable(global-story-state, 1)  # This is necessary so that when we load game in this room, the intro does not show again
+
+    on-room-load-rule variable-eq(global-story-state,1):
+        change-object-state(63, "idle")  # make player appear
+
+
+room("exterior", "rooms/room13-exterior.tmx", 2, 0, lock-player-zoom-75):
+    rule exit-through-object(33):
+        go-to-room("escaleras", 40, 84)
+    rule exit-through-object(34):
+        go-to-room("escaleras", 40, 84)
+
+
+script("open-home-door-auxiliar"):
+    if have-item(item-llave-coche):
+        change-object-state(42, "exit")
+        play-sfx("sfx/door-open.afx")
+    else:
+        message("¡Necesito las llaves del coche primero!")
+    endif
+
+
+room("escaleras", "rooms/room1-escaleras.tmx", 0, 0):
+    repeating-rule exit-through-object(41):
+        if variable-eq(global-story-state,1):
+            walk-to(58,84)
+            start-dialogue("chema")
+        else:
+            go-to-room("pasillo-02", 100, 74)
+        endif
+    on-room-load-rule true():
+        play-tsv-song("music/beginning-d.tsv", 12)
+
+
+room("pasillo", "rooms/room2-pasillo.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 8, 17)
+    rule exit-through-object(62):
+        go-to-room("pasillo-02", 8, 74)
+    rule use-item-with-object(item-small-key,33):
+        lose-item(item-small-key)
+        set-variable(pasillo-table-open,1)
+        message("¡La llave ha abierto el cajón!")
+    rule examine-object(33) && variable-eq(pasillo-table-open, 1):
+        go-to-room("pasillo-cajon")
+    rule use-object(33):
+        if variable-eq(pasillo-table-open, 0):
+            message("El cajón está cerrado con llave.")
+        else:
+            go-to-room("pasillo-cajon")
+        endif
+    rule exit-through-object(61):
+        go-to-room("entrada-dormitorio-principal", 104, 74)
+
+    repeating-rule use-item-with-object(item-bust-key,40): 
+        # Abrir dormitorio 1, con la llave del busto
+        lose-item(item-bust-key)
+        message("¡La llave ha abierto la puerta!")
+        change-object-state(40, "exit")
+        set-variable(dormitorio-1-open, 1)
+        play-sfx("sfx/door-open.afx")
+
+    rule exit-through-object(40):
+        go-to-room("dormitorio-01", 56, 68)
+
+    on-room-load-rule variable-eq(pasillo-table-open, 0):
+        change-object-description(33, "Mi abuela tenía una igual. Tiene un cajón cerrado con llave.")
+
+    on-room-load-rule variable-eq(dormitorio-1-open, 1):
+        change-object-state(40, "exit")
+
+
+room("pasillo-cajon", "rooms/room2a-pasillo-cajon.tmx", 3, 0, subroom):
+    persistent-rule pickup-object(34):
+        gain-item(item-candle-note-clue)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(34)
+
+    repeating-rule pickup-object(33) || pickup-object(35) || pickup-object(36):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+    repeating-rule use-object(35) || use-object(36):  # candy and chimos
+        message("Mucho hambre tendría que tener...")
+    rule click-outside-room-area():
+        go-to-room("pasillo", 18, 74)
+
+
+room("pasillo-02", "rooms/room3-pasillo-02.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 8, 17)
+    rule exit-through-object(62):
+        go-to-room("pasillo", 104, 74)
+    rule exit-through-object(1):
+        go-to-room("bedel", 48, 74)
+    rule use-object(1):
+        change-object-state(1, "exit")
+        play-sfx("sfx/door-open.afx")
+        set-variable(door1-state, 1)
+    # rule exit-through-object(13):
+    #     go-to-room("escaleras", 56, 36)
+    # repeating-rule examine-object(13):
+    repeating-rule exit-through-object(13) || use-object(13):
+        message("No bajaré hasta encontrar la reliquia.")
+    repeating-rule examine-object(36):
+        message("Una puerta de madera. Se oye ajetreo en el interior.")
+    repeating-rule use-object(36):
+        message("No puedo abrirla. Parece que está cerrada por dentro.")
+    repeating-rule talk-to-object(36):
+        start-dialogue("jorge-door")
+
+    rule exit-through-object(36):
+        go-to-room("room-jorge", 52, 68)
+
+    # on-room-load-rule variable-eq(global-story-state,3):
+    #     change-object-state(37,"closed")
+    on-room-start-rule variable-eq(global-story-state,2):
+        # call-script("close-entrance-door")
+        set-variable(global-story-state,3)
+    on-room-load-rule variable-eq(door-fake-jorge, 1):
+        change-object-state(36, "exit")
+
+
+room("bedel", "rooms/room4-bedel-con-b.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 19)
+    rule exit-through-object(1):
+        go-to-room("pasillo-02", 90, 62)
+    rule examine-object(34) && variable-eq(janitor-coathanguer,0):
+        set-variable(janitor-coathanguer,1)
+        change-object-name(34,"chaquetas")
+        message("Hay un par de chaquetas colgadas.")
+    rule examine-object(34) && variable-eq(janitor-coathanguer,1):
+        set-variable(janitor-coathanguer,2)
+        change-object-name(34,"bolsillo")
+        message("Una de las chaquetas tiene algo en el bolsillo...")
+    persistent-rule examine-object(34) && variable-eq(janitor-coathanguer,2):
+        gain-item(item-small-key)
+        set-variable(janitor-coathanguer,3)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("Había una llave pequeña en el bolsillo!")
+    persistent-rule-effect:
+        change-object-name(34,"perchero ")
+
+    persistent-rule examine-object(43):
+        gain-item(item-gas)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("Entre los trastos he encontrado una botella de gas para mecheros. Quizá me sea útil.")
+
+    on-room-load-rule variable-eq(janitor-coathanguer, 1):
+        change-object-name(34,"chaquetas")
+
+    on-room-load-rule variable-eq(janitor-coathanguer, 2):
+        change-object-name(34,"bolsillo")
+
+
+room("entrada-dormitorio-principal", "rooms/room5-entrada-dormitorio-principal.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 8, 17)
+    rule exit-through-object(62):
+        go-to-room("pasillo", 8, 74)
+    rule exit-through-object(61):
+        go-to-room("pasillo-este", 80, 78)
+    rule exit-through-object(33):
+        go-to-room("room-dormitorio-principal", 84, 58)
+
+
+    rule use-item-with-object(item-gran-llave, 33):
+        lose-item(item-gran-llave)
+        message("¡La llave ha abierto la puerta!")
+        change-object-state(33, "exit")
+        set-variable(door-dormitorio-principal, 1)
+        play-sfx("sfx/door-open.afx")
+
+    on-room-load-rule variable-eq(door-dormitorio-principal, 1):
+        change-object-state(33, "exit")
+
+
+room("pasillo-este", "rooms/room6-pasillo-este.tmx", 3, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 8, 17)
+    rule exit-through-object(62):
+        go-to-room("entrada-dormitorio-principal", 8, 78)
+    rule exit-through-object(10):
+        go-to-room("vestuario", 80, 74)
+    rule use-object(10):
+        change-object-state(10, "exit")
+        play-sfx("sfx/door-open.afx")
+        set-variable(door10-state, 1)
+
+
+room("vestuario", "rooms/room7-vestuario.tmx", 1, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 19, 23)
+    rule exit-through-object(10):
+        go-to-room("pasillo-este", 32, 62)
+
+    persistent-rule examine-object(45):
+        gain-item(item-hilo)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("Una caja con varios útiles de costura. He encontrado un hilo de lana bastante resistente.")
+
+    persistent-rule examine-object(38):
+        gain-item(item-mechero-vacio)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("Una pequeña caja para guardar trastos. He encontrado un mechero que puede serme útil.")
+
+
+room("dormitorio-01", "rooms/room8-dormitorio-1.tmx", 0, 0):
+    # persistent-rule pickup-object(44):
+    #     gain-item(item-papel)
+    # persistent-rule-effect:
+    #     remove-object(44)
+
+    repeating-rule exit-through-object(32):
+        go-to-room("pasillo", 48, 68)
+
+    rule examine-object(45) && variable-eq(bedroom1-cabinet,0):
+        set-variable(bedroom1-cabinet,1)
+        message("Está lleno de juguetes y material escolar. He encontrado un imán y una regla que quizá me sean útiles.")
+        play-sfx("sfx/puzzle-resuelto.afx")
+        gain-item(item-iman)
+        gain-item(item-regla)
+
+    rule pickup-object(45) && variable-eq(bedroom1-cabinet,0):
+        set-variable(bedroom1-cabinet,1)
+        message("Está lleno de juguetes y material escolar. He encontrado un imán y una regla que quizá me sean útiles.")
+        play-sfx("sfx/puzzle-resuelto.afx")
+        gain-item(item-iman)
+        gain-item(item-regla)
+
+    rule use-object(46):
+        change-object-state(46, "exit")
+        play-sfx("sfx/door-open.afx")
+        set-variable(door-bedroom1-state, 1)
+
+    rule exit-through-object(46):
+        go-to-room("lavabo-02", 64, 84)
+
+    on-room-load-rule variable-eq(door-bedroom1-state, 1):
+        change-object-state(46, "exit")
+
+
+room("lavabo-02", "rooms/room9-lavabo-2.tmx", 2, 0):
+    rule exit-through-object(33):
+        go-to-room("dormitorio-01", 6, 78)
+
+    rule use-object(32):
+        message("Los grifos no funcionan.")
+
+    rule examine-object(39) && variable-eq(bathroom-drain,0):
+        lose-item(item-llave-mabus)
+        set-variable(bathroom-drain,1)
+        play-sfx("sfx/llave-loud.afx")
+        message("Un profundo desague... y por manazas me ha caído la llave de Mabus dentro!")
+
+    repeating-rule talk-to-object(37):
+        message("No sé qué decirle. Además seguro que sería una conversación de mierda.")
+
+    rule use-item-with-object(item-iman-cuerda, 39) && variable-eq(bathroom-drain,0):
+        message("¡He encontrado una llave!")
+        gain-item(item-llave-luna)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(bathroom-drain,2)
+        change-object-description(39, "Un profundo desague...")
+        # play-sfx("sfx/llave-loud.afx")
+
+    rule use-item-with-object(item-iman-cuerda, 39) && variable-eq(bathroom-drain,1):
+        message("¡He encontrado otra llave a parte de la de Mabus!")
+        gain-item(item-llave-mabus)
+        gain-item(item-llave-luna)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(bathroom-drain,2)
+        change-object-description(39, "Un profundo desague...")
+        # play-sfx("sfx/llave-loud.afx")
+
+    repeating-rule use-item-with-object(item-iman, 39) && variable-eq(bathroom-drain,1):
+        message("es demasiado profundo")
+
+    rule use-item-with-object(item-regla, 43):
+        lose-item(item-regla)
+        message("La puerta ya no está atrancada.")
+        set-variable(door-fake-jorge-bathroom,1)
+
+    repeating-rule use-object(43) && variable-eq(door-fake-jorge-bathroom,0):
+        message("Está atrancada con una cuña. Puedo verla por debajo la puerta pero no me cabe la mano para empujarla.")
+
+    rule use-object(43) && variable-eq(door-fake-jorge-bathroom,1):
+        change-object-state(43, "exit")
+        set-variable(door-fake-jorge-bathroom,2)
+        play-sfx("sfx/door-open.afx")
+
+    on-room-load-rule variable-eq(bathroom-drain,2):
+        change-object-description(39, "Un profundo desague...")
+
+    on-room-load-rule variable-eq(door-fake-jorge-bathroom,2):
+        change-object-state(43, "exit")
+
+    rule exit-through-object(43):
+        go-to-room("room-jorge", 76, 78)
+
+
+room("room-jorge", "rooms/room10-room-jorge.tmx", 1, 0):
+    rule exit-through-object(33):
+        go-to-room("lavabo-02", 6, 84)
+
+    rule use-object(34):
+        change-object-state(34, "exit")
+        play-sfx("sfx/door-open.afx")
+        set-variable(door-fake-jorge, 1)
+    rule exit-through-object(34):
+        go-to-room("pasillo-02", 24, 64)
+
+    repeating-rule talk-to-object(42):
+        start-dialogue("fake-jorge2")
+
+    on-room-load-rule variable-eq(door-fake-jorge, 1):
+        change-object-state(34, "exit")
+
+    on-room-start-rule variable-eq(fake-jorge-dialogue, 0):
+        walk-to(56,82)
+        set-variable(fake-jorge-dialogue, 1)
+        start-dialogue("fake-jorge")
+        start-dialogue("fake-jorge2")
+
+
+room("room-dormitorio-principal", "rooms/room11-dormitorio-principal.tmx", 0, 0):
+    rule exit-through-object(33):
+        go-to-room("entrada-dormitorio-principal", 60, 66)
+    rule exit-through-object(34):
+        go-to-room("room-dormitorio-principal-derecha", 8, 78)
+
+    repeating-rule examine-object(44):
+        if have-item(item-papel2):
+            message("Una mesita de noche sin nada en particular.")
+        else:
+            message("Una mesita con algo encima.")
+        endif
+
+    persistent-rule pickup-object(46):
+        gain-item(item-papel2)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(46)
+
+    repeating-rule use-object(49):  # lámpara
+        if variable-eq(desk-lamp, 0):
+            set-variable(desk-lamp, 1)
+            change-object-state(49, "open")
+            change-object-name(49,"Lámpara encendida")
+            change-object-description(49, "Una lámpara encendida.")
+            message("He encendido la lámpara. Se ven unos grabados en la mesa.")
+        else:
+            set-variable(desk-lamp, 0)
+            change-object-state(49, "closed")
+            change-object-name(49,"Lámpara apagada  ")
+            change-object-description(49, "Una lámpara apagada.")
+            message("He apagado la lámpara.")
+        endif
+
+    repeating-rule examine-object(48):
+        if variable-eq(desk-lamp, 0):
+            message("Una mesita con algo encima. Hay algo, pero es indistinguible con tan poca luz.")
+        else:
+            go-to-room("room-dormitorio-principal-zoom")
+        endif
+
+    repeating-rule use-object(36):
+        if variable-eq(puzzle-9clock, 1):
+            call-script("go-to-clock-puzzle-if-not-solved")
+        else:
+            message("Requiere una llave de cuerda para ponerlo en hora.")
+        endif
+
+    rule use-item-with-object(item-llave-cuerda, 36):
+        call-script("go-to-clock-puzzle-if-not-solved")
+
+    on-room-load-rule variable-eq(desk-lamp, 1):
+        change-object-state(49, "open")
+        change-object-name(49,"Lámpara encendida")
+        change-object-description(49, "Una lámpara encendida.")
+    on-room-load-rule true():
+        change-object-description(48, "Un escitorio aparentemente normal.")
+
+script("go-to-clock-puzzle-if-not-solved"):
+    if variable-eq(clock-puzzle-solved, 2):
+        message("No necesito nada de aquí.")
+    else:
+        go-to-room("room-dormitorio-principal-puzzle")
+    endif
+
+
+room("room-dormitorio-principal-zoom", "rooms/room11a-dormitorio-principal-zoom.tmx", 3, 1, subroom):
+    rule click-outside-room-area():
+        go-to-room("room-dormitorio-principal", 80, 78)
+
+
+room("room-dormitorio-principal-derecha", "rooms/room12-dormitorio-principal-derecha.tmx", 0, 0):
+    rule exit-through-object(33):
+        go-to-room("room-dormitorio-principal", 104, 78)
+
+    persistent-rule pickup-object(42):
+        gain-item(item-cuadro-reloj)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(42)
+
+    rule examine-object(43) || use-object(43):
+        go-to-room("room-dormitorio-principal-derecha-puzzle")
+
+    rule exit-through-object(44) || exit-through-object(45):
+        go-to-room("room-desvan", 24, 64)
+
+    # Remove stairs if puzzle is not solved:
+    on-room-load-rule variable-eq(clock-puzzle-solved, 0):
+        remove-object(44)
+        remove-object(45)
+        remove-object(46)
+        remove-object(47)
+
+
+room("room-dormitorio-principal-derecha-puzzle", "rooms/room12a-dormitorio-principal-derecha-puzzle.tmx", 0, 0, subroom):
+    default-verb("use")
+
+    rule exit-through-object(33):
+        go-to-room("room-dormitorio-principal-derecha", 40, 64)
+
+    repeating-rule use-object(34):
+        if number-object-equals(34, 7):
+          set-number-object(34, 0)
+        else:
+          increase-number-object(34)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(35):
+        if number-object-equals(35, 7):
+          set-number-object(35, 0)
+        else:
+          increase-number-object(35)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(36):
+        if number-object-equals(36, 7):
+          set-number-object(36, 0)
+        else:
+          increase-number-object(36)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(37):
+        if number-object-equals(37, 7):
+          set-number-object(37, 0)
+        else:
+          increase-number-object(37)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(38):
+        if number-object-equals(38, 7):
+          set-number-object(38, 0)
+        else:
+          increase-number-object(38)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(39):
+        if number-object-equals(39, 7):
+          set-number-object(39, 0)
+        else:
+          increase-number-object(39)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(40):
+        if number-object-equals(40, 7):
+          set-number-object(40, 0)
+        else:
+          increase-number-object(40)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(41):
+        if number-object-equals(41, 7):
+          set-number-object(41, 0)
+        else:
+          increase-number-object(41)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+    repeating-rule use-object(42):
+        if number-object-equals(42, 7):
+          set-number-object(42, 0)
+        else:
+          increase-number-object(42)
+        endif
+        call-script("check-9clock-puzzle-solution")
+
+
+script("check-9clock-puzzle-solution"):
+    if variable-eq(puzzle-9clock, 0) &&
+       number-object-equals(34, 1) &&
+       number-object-equals(35, 2) &&
+       number-object-equals(36, 3) &&
+       number-object-equals(37, 4) &&
+       number-object-equals(38, 0) &&
+       number-object-equals(39, 7) &&
+       number-object-equals(40, 6) &&
+       number-object-equals(41, 5) &&
+       number-object-equals(42, 7):
+      set-variable(puzzle-9clock, 1)
+      redraw-room()
+      play-sfx("sfx/puzzle-resuelto.afx")
+      pause(50)
+      message("Al cambiar el último reloj de hora se ha abierto un copartimento y ha caido una llave de cuerda! Y los relojes forman ahora un nuevo número: 21.")
+      gain-item("item-llave-cuerda")
+    endif
+
+
+room("room-dormitorio-principal-puzzle", "rooms/room11a-dormitorio-principal-puzzle.tmx", 0, 0, subroom):
+    default-verb("use")
+
+    rule exit-through-object(16):
+        go-to-room("room-dormitorio-principal", 18, 58)
+
+    repeating-rule use-object(42):
+        call-assembler("custom_clock_puzzle_set_gear_1")
+
+    repeating-rule use-object(43):
+        call-assembler("custom_clock_puzzle_set_gear_2")
+
+    repeating-rule use-object(44):
+        call-assembler("custom_clock_puzzle_set_gear_6")
+
+    repeating-rule use-object(48):
+        call-assembler("custom_clock_puzzle_move_right")
+        change-object-state(48, "closed")
+        change-object-state(49, "open")
+        play-sfx("sfx/button-press.afx")
+
+    repeating-rule use-object(49):
+        call-assembler("custom_clock_puzzle_move_right")
+        change-object-state(49, "closed")
+        change-object-state(50, "open")
+        play-sfx("sfx/button-press.afx")
+
+    repeating-rule use-object(50):
+        call-assembler("custom_clock_puzzle_move_left")
+        change-object-state(50, "closed")
+        change-object-state(51, "open")
+        play-sfx("sfx/button-press.afx")
+
+    repeating-rule use-object(51):
+        set-variable(clock-puzzle-solved, 1)  # Indicate we just pressed the last button (so custom assembler fn knows)
+        call-assembler("custom_clock_puzzle_move_left")
+        change-object-state(51, "closed")
+        play-sfx("sfx/button-press.afx")
+        if variable-eq(clock-puzzle-solved, 2):
+            play-sfx("sfx/puzzle-resuelto.afx")
+            pause(50)
+            play-sfx("sfx/door-open.afx")
+            message("Se ha oído un ruido aquí al lado.")
+        else:
+            set-variable(clock-puzzle-solved, 0)
+            play-sfx("sfx/error.afx")
+            pause(50)
+            change-object-state(48, "open")
+            call-assembler("custom_clock_puzzle_init")
+        endif
+
+    on-room-start-rule have-item(item-llave-cuerda):
+        message("La llave de cuerda encaja en el mecanismo!")
+        lose-item(item-llave-cuerda)
+
+    on-room-load-rule true():
+        call-assembler("custom_clock_puzzle_init")
+
+
+room("room-desvan", "rooms/room14-desvan.tmx", 2, 0):
+    rule exit-through-object(33) || exit-through-object(34):
+        if variable-eq(puzzle-auris-leonis, 2):
+            message("Creo estar viendo el espíritu de una niña delante de mí.")
+        else:
+            play-tsv-song("music/beginning-d.tsv", 12)
+            go-to-room("room-dormitorio-principal-derecha", 32, 74)
+        endif
+
+    repeating-rule use-object(41):
+        message("RUN '' ''")
+        pause(50)
+        message(".--. .- -.- . - . ... --- ..-. - .-.-.- -.-. --- -- -..-. .--. .-. . --- .-. -.. . .-.")
+        call-assembler("custom_cpc_morse")
+
+
+    repeating-rule pickup-object(42):
+        message("¡Quema!")
+    repeating-rule use-object(42):
+        message("No veo el interruptor por ningún lado.")
+
+    repeating-rule use-object(49) || examine-object(49):
+        if variable-eq(puzzle-auris-leonis, 2):
+            message("No necesito nada de aquí.")
+        else:
+            go-to-room("auris-leonis-closed")
+        endif
+
+    repeating-rule talk-to-object(50):
+        start-dialogue("lisa")
+        call-script("lisa-cutscene")
+
+    # El espíritu de la niña solo aparece si has resuelto el puzle de Auro Leonis
+    on-room-load-rule variable-eq(puzzle-auris-leonis, 0):
+        remove-object(50)
+    on-room-load-rule variable-eq(puzzle-auris-leonis, 1):
+        remove-object(50)
+    on-room-load-rule true():
+        stop-song()
+
+
+room("auris-leonis-closed", "rooms/room14-desvan-auris-closed.tmx", 2, 1, subroom):
+    rule click-outside-room-area():
+        go-to-room("room-desvan", 48, 72)
+
+    rule use-object(34) && variable-eq(puzzle-auris-leonis, 1):
+        go-to-room("auris-leonis-open")
+    rule examine-object(34) && variable-eq(puzzle-auris-leonis, 1):
+        go-to-room("auris-leonis-open")
+
+    repeating-rule examine-object(38):
+        message("A U R I L E O N I S")
+        print(0, 16, 3, "1 2 3 4 5 6 7 8 9 10")  # to show it below the text above
+
+    rule use-item-with-object(item-llave-mabus, 34):
+        message("El cerrojo se ha abierto.")
+        lose-item(item-llave-mabus)
+        set-variable(puzzle-auris-leonis, 1)
+        play-sfx("sfx/door-open.afx")
+        pause(50)
+        go-to-room("auris-leonis-open")
+
+room("auris-leonis-open", "rooms/room14-desvan-auris-open.tmx", 2, 1, subroom):
+    default-verb("use")
+
+    rule click-outside-room-area():
+        go-to-room("room-desvan", 48, 72)
+
+    rule use-object(33) || examine-object(33):
+        go-to-room("auris-leonis-closed")
+
+    repeating-rule examine-object(34):
+        message("A U R I L E O N I S")
+        print(0, 16, 3, "1 2 3 4 5 6 7 8 9 10")  # to show it below the text above
+
+    repeating-rule use-object(37):
+        if number-object-equals(37, 8):
+          set-number-object(37, 0)
+        else:
+          increase-number-object(37)
+        endif
+        call-script("check-auris-leonis-puzzle-solution")
+
+    repeating-rule use-object(38):
+        if number-object-equals(38, 8):
+          set-number-object(38, 0)
+        else:
+          increase-number-object(38)
+        endif
+        call-script("check-auris-leonis-puzzle-solution")
+
+    repeating-rule use-object(39):
+        if number-object-equals(39, 8):
+          set-number-object(39, 0)
+        else:
+          increase-number-object(39)
+        endif
+        call-script("check-auris-leonis-puzzle-solution")
+
+    repeating-rule use-object(40):
+        if number-object-equals(40, 8):
+          set-number-object(40, 0)
+        else:
+          increase-number-object(40)
+        endif
+        call-script("check-auris-leonis-puzzle-solution")
+
+script("check-auris-leonis-puzzle-solution"):
+    if variable-eq(puzzle-auris-leonis, 1) &&
+       number-object-equals(37, 4) &&
+       number-object-equals(38, 1) &&
+       number-object-equals(39, 7) &&
+       number-object-equals(40, 0):
+      redraw-room()
+      set-variable(puzzle-auris-leonis, 2)
+      play-sfx("sfx/puzzle-resuelto.afx")
+      gain-item("item-reliquia-lazo")
+      message("Luna es el nombre de la hija de Alan... Había una de las reliquias dentro.")
+      # go-to-room("room-desvan", 48, 72)
+    endif

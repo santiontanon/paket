@@ -1106,7 +1106,7 @@ ENDIF
 ; Input:
 ; - hl: ptr to the cutscene image to unpack and draw
 ; - bc: y1, y2
-; - iyh, iyl; x1, x2
+; - iyl, iyh; x1, x2
 ; - de: draw address in video memory
 ; - a: mode 0 or mode 1
 executeRuleScript_draw_cutscene_image_internal:
@@ -1152,7 +1152,7 @@ executeRuleScript_draw_cutscene_image_internal_mode_1:
 ; ------------------------------------------------
 ; ix: name table pointer (starting with (width, height))
 ; bc: y1, y2
-; iyh, iyl; x1, x2
+; iyl, iyh; x1, x2
 ; de: draw address in video memory
 ; hl: tile set pointer
 ; a: screen mode
@@ -1164,7 +1164,7 @@ draw_tiled_image_mode_a:
 ; ------------------------------------------------
 ; ix: name table pointer (starting with width,height)
 ; c, b: y1, y2
-; iyh, iyl; x1, x2
+; iyl, iyh; x1, x2
 ; de: draw address in video memory
 ; hl: tile set pointer
 draw_tiled_image_mode0:

@@ -1,0 +1,160 @@
+# ------- Dialogues: -------
+
+
+dialogue("chema"):
+    state 1:
+        scrolling-message-pause("¡¿Qué dise el tío?! Oye, ¿tú quién eres y dónde está Mabus?")
+        goto-dialogue-state(2)
+    state 2:
+        add-dialogue-option(3, "- Tengo esta carta...")
+        add-dialogue-option(3, "- Soy amigo de Mabus...")
+    state 3:
+        lose-item(item-carta-mabus)
+        redraw-room()
+        scrolling-message-pause("(entregas la carta de Mabus a Chema)")
+        scrolling-message-pause("¡Por las barbas de Sugar! Entonces Mabus ha muerto ya... Soy Chema. He visto el coche de Jorge, así que seguro que anda por la casa recuperando la reliquia con la llave que custodia él.")
+        add-dialogue-option(4, "- ¿Reliquia...?")
+        add-dialogue-option(4, "- ¿Muerto? ¿Cómo...?")
+        add-dialogue-option(4, "- ¿Llave...?")
+    state 4:
+        scrolling-message-pause("Mejor te lo cuento desde el principio...")
+        call-script("chema-dialogue-cutscene-part1")
+        call-script("chema-dialogue-cutscene-part2")
+        scrolling-message-pause("Pero hubo un incidente y el espíritu quedó atrapado en la casa, buscando cómo liberarse.")
+        goto-dialogue-state(5)
+    state 5:
+        if variable-eq(chema-dialogue-q1,0):
+            add-dialogue-option(6, "- Las 3 reliquias...")
+        endif
+        if variable-eq(chema-dialogue-q2,0):
+            add-dialogue-option(7, "- Esto me supera...")
+        endif
+        if variable-eq(chema-dialogue-q3,0):
+            add-dialogue-option(8, "- Alan...")
+        endif
+        if variable-eq(chema-dialogue-q4,0):
+            add-dialogue-option(9, "- Mabus...")
+        endif
+        if variable-eq(chema-dialogue-q1,1) &&
+           variable-eq(chema-dialogue-q2,1) &&
+           variable-eq(chema-dialogue-q3,1) &&
+           variable-eq(chema-dialogue-q4,1):
+           add-dialogue-option(10, "- ¿Y ahora?")
+        endif
+    state 6:
+        set-variable(chema-dialogue-q1,1)
+        scrolling-message-pause("Escondimos las 3 reliquias hasta encontrar cómo arreglar esto. No sabemos qué pasará si se usan de nuevo. Ya dejamos a un espíritu vagando por esta casa y ahora está matando para encontrarlas.")
+        goto-dialogue-state(5)
+    state 7:
+        set-variable(chema-dialogue-q2,1)
+        scrolling-message-pause("No puedes abandonar. Cada uno de nosotros escondió su reliquia independientemente y esta mansión está llena de secretos y acertijos. Mabus era experto en esto, si te eligió a ti, será por algo.")
+        goto-dialogue-state(5)
+    state 8:
+        set-variable(chema-dialogue-q3,1)
+        scrolling-message-pause("No se le ha vuelto a ver a desde el incidente, hace ya un año. La Mansión parece deshabitada. Seguro que Alan huyó tras esa noche.")
+        goto-dialogue-state(5)
+    state 9:
+        set-variable(chema-dialogue-q4,1)
+        scrolling-message-pause("Lo ha matado para conseguir su reliquia, pues ya debe saber cómo completar el ritual y liberarse. ¡Debemos impedirlo antes de que nos mate a todos!")
+        goto-dialogue-state(5)
+    state 10:
+        scrolling-message-pause("Recuperemos las relíquias antes de que las encuentre y descubramos cómo acabar con esto. No hay tiempo, ya ha matado a Mabus, apresúrate a encontrar la reliquia encerrada con tu llave.")
+        scrolling-message-pause("Voy a por mi reliquia mientras y nos vemos aquí en un rato.")
+        gain-item(item-carta-mabus)  # recuperas la carta
+        set-variable(global-story-state,2)
+        goto-dialogue-state(exit)
+
+dialogue("chema2"):
+    state 1:
+        add-dialogue-option(2, "- Las 3 reliquias...")
+        add-dialogue-option(3, "- Esto me supera...")
+        add-dialogue-option(4, "- Alan...")
+        add-dialogue-option(5, "- Mabus...")
+        add-dialogue-option(6, "- ¿Y ahora?")
+    state 2:
+        scrolling-message-pause("Escondimos las 3 reliquias hasta encontrar cómo arreglar esto. No sabemos qué pasará si se usan de nuevo. Ya dejamos a un espíritu vagando por esta casa y ahora está matando para encontrarlas.")
+        goto-dialogue-state(1)
+    state 3:
+        scrolling-message-pause("No puedes abandonar. Cada uno de nosotros escondió su reliquia independientemente y esta mansión está llena de secretos y acertijos. Mabus era experto en esto, si te eligió a ti, será por algo.")
+        goto-dialogue-state(1)
+    state 4:
+        scrolling-message-pause("No se le ha vuelto a ver a desde el incidente, hace ya un año. La Mansión parece deshabitada. Seguro que Alan huyó tras esa noche.")
+        goto-dialogue-state(1)
+    state 5:
+        scrolling-message-pause("Lo ha matado para conseguir su reliquia, pues ya debe saber cómo completar el ritual y liberarse. ¡Debemos impedirlo antes de que nos mate a todos!")
+        goto-dialogue-state(1)
+    state 6:
+        scrolling-message-pause("Recuperemos las relíquias antes de que las encuentre y descubramos cómo acabar con esto. No hay tiempo, ya ha matado a Mabus, apresúrate a encontrar la reliquia encerrada con tu llave.")
+        scrolling-message-pause("Voy a por mi reliquia mientras y nos vemos aquí en un rato.")
+        goto-dialogue-state(exit)
+
+
+dialogue("jorge-door"):
+    state 1:
+        add-dialogue-option(2, "- ¿Hola?")
+        add-dialogue-option(2, "- ¿Hay alguien?")
+        add-dialogue-option(2, "- ¿Jorge?")
+    state 2:
+        scrolling-message-pause("Nadie responde.")
+        goto-dialogue-state(exit)
+
+
+dialogue("fake-jorge"):
+    state 1:
+    	scrolling-message-pause("Estoy ocupado, ¿quién eres y qué quieres?")
+    	add-dialogue-option(2, "- Chema me ha hablado de ti... ¿Eres Jorge?")
+    state 2:
+    	scrolling-message-pause("Ah, Chema ha llegado ya... Sí, soy Jorge. Estoy intentando recuperar la reliquia que escondimos en esta habitación bajo la llave que yo custodio.")
+        add-dialogue-option(3, "- ¿Reliquia...?")
+        add-dialogue-option(4, "- ¿Llave...?")
+    state 3:
+    	scrolling-message-pause("Ya sabes: tenemos que coger las 3 reliquias e ir a la biblioteca para ver cómo acabar con esto. Pero me llevará un rato, me está costando recuperar la mía.")
+    	scrolling-message-pause("Está dentro de esa cómoda.")
+    	goto-dialogue-state(5)
+    state 4:
+    	scrolling-message-pause("Escondimos cada reliquia bajo llave, en cajas y mecanismos que había en la casa. Y no son fáciles de abrir... La casa está llena de acertijos y secretos.")
+    	scrolling-message-pause("Ese Alan era muy aficionado al ocultismo.")
+    	goto-dialogue-state(5)
+    state 5:
+    	add-dialogue-option(6, "- Déjame probar a mí...")
+    state 6:
+		scrolling-message-pause("¡¿Pero tú qué te has creído?! A todo esto, aún no me has dicho quién eres ni qué haces aquí!")
+		add-dialogue-option(7, "- Soy amigo de Mabus...")
+	state 7:	
+		scrolling-message-pause("Entonces, ¿el espíritu que dejamos suelto ha matado a Mabus y tú debes encontrar la reliquia que él escondió?")
+        gain-item(item-gran-llave)
+        redraw-room()
+		scrolling-message-pause("Toma esta llave que he encontrado, igual te sirve.")
+		goto-dialogue-state(exit)
+
+
+dialogue("fake-jorge2"):
+	state 1:
+        if variable-eq(fake-jorge2-dialogue-q1,0):
+            add-dialogue-option(2, "- Debajo de la cama...")
+        endif
+        if variable-eq(fake-jorge2-dialogue-q2,0):
+            add-dialogue-option(3, "- ¿Por qué llevas un parche?")
+        endif
+        if variable-eq(fake-jorge2-dialogue-q1,1) &&
+           variable-eq(fake-jorge2-dialogue-q2,1):
+           add-dialogue-option(4, "- ¿Y ahora?")
+        endif
+	state 2:
+        set-variable(fake-jorge2-dialogue-q1,1)
+		scrolling-message-pause("¡No tenemos tiempo de entretenernos con imaginaciones, céntrate en encontrar tu relíquia!")
+		goto-dialogue-state(1)
+	state 3:
+        set-variable(fake-jorge2-dialogue-q2,1)
+		scrolling-message-pause("Prefiero no hablar de ello, pasó hace mucho tiempo.")
+		goto-dialogue-state(1)
+	state 4:
+		scrolling-message-pause("Apresúrate a encontrar tu reliquia. Yo sigo intentándolo con la mía y nos vemos abajo con Chema cuando las tengamos para dirigirnos a la biblioteca.")
+		goto-dialogue-state(exit)
+
+
+dialogue("lisa"):
+    state 1:
+        add-dialogue-option(exit, "- ¿Eres Lisa?")
+        add-dialogue-option(exit, "- ¿Mataste a Mabus?")
+

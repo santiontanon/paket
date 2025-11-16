@@ -1,0 +1,54 @@
+# ------- Global Definitions: -------
+language("es")
+font("font-custom-santi2.png", 
+     " ¡!¿$&'()?,-.",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^ùìÈûÊœîôêÉâ«»")
+built-in-texts("¡No puedo coger eso!",
+               "¡No sé como usar eso!",
+               "¡No sé qué decirle!",
+               "¡Ya lo tengo!",
+               "¡No llego desde aquí!")
+action-names("Examinar ", "Coger ", "Usar ", "Hablar con ", "Salir por ", " con ")
+frame-around-subrooms(false)
+pointers("pointers.png")
+text-area(0, 0, 14, 5)
+game-area(0, 6, 14, 11)
+gui(0, 17, "gui.png")
+inventory(10, 2)
+pathfinding(on-collision, stop-early, max-path-length:32)
+double-click-on-exit(true)
+use-item-with-item-symmetric(true)
+player-scaling-thresholds(61,67,81)
+load-save-game-script("the-key-load-save-game-script")
+loading-screen("loading-screen1.bmp", cpc-mode1)
+loading-screen("loading-screen2.png", cpc-mode0)
+
+additional-assembler-file("custom-functions-intro.asm")
+additional-assembler-file("custom-functions-clock-puzzle.asm")
+additional-assembler-incbin("custom_intro_driving_scene_sprites_zx0", "cutscenes/intro-driving-data.asm.zx0")
+additional-assembler-file("custom-functions-morse.asm")
+
+
+# ------- Global object IDs: -------
+# global-story-state:
+# - 0: start
+# - 1: intro scene happened
+# - 2: talked to Chema
+# - 3: reached upper floor
+
+# - bedel con b door: 1
+# - candles in "pasillo": 2, 3, 4, 5
+# - candles in "pasillo 2": 6, 7, 8
+# - candles "entrada dormitorio principal": 9
+# - vestuario door: 10
+# - busto: 11
+# - escaleras: right door: 12
+# - pasillo-02: right door: 13
+
+init-variable(candle2-state, 1)
+init-variable(candle5-state, 1)

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="9" height="11" tilewidth="8" tileheight="8" nextobjectid="28">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="80" columns="16">
+  <image source="bg-tiles-pasillo.png" width="128" height="40"/>
+ </tileset>
+ <tileset firstgid="81" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="9" height="11">
+  <data encoding="csv">
+1,23,1,1,1,1,20,1,1,
+1,24,23,1,1,20,21,1,1,
+1,24,24,25,25,21,21,1,1,
+1,24,24,26,26,21,21,1,1,
+1,24,24,26,26,21,21,1,1,
+1,24,24,27,27,21,21,1,1,
+24,24,24,28,28,21,21,1,1,
+24,24,29,1,1,22,21,1,21,
+24,29,1,1,1,1,22,1,21,
+29,1,1,1,1,1,1,1,21,
+1,1,1,1,1,1,1,1,22
+</data>
+ </layer>
+ <layer name="collision" width="9" height="11">
+  <data encoding="csv">
+82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,
+82,82,85,0,0,86,82,82,82,
+82,85,0,0,0,0,86,82,82,
+85,0,0,0,0,0,0,86,82,
+0,0,0,0,0,0,0,0,86
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="1" name="door-right" x="56" y="40" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="33" name="candle" x="26" y="24" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="34" name="coathanger" x="16" y="36" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="35" name="crate-buttler" x="20" y="72" width="20" height="16">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="36" name="chair-back" x="44" y="64" width="6" height="24">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="37" name="bed-buttler" x="0" y="56" width="26" height="32">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="38" name="painting-small-left" x="2" y="34" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="80"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="39" name="cabinet-buttler" x="32" y="16" width="16" height="52">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="40" name="mop" x="34" y="36" width="6" height="20">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="41" name="vacuum" x="40" y="36" width="4" height="28">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="42" name="ikea-box" x="32" y="56" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="43" name="ikea-box" x="24" y="56" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="63" name="player" x="40" y="56" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

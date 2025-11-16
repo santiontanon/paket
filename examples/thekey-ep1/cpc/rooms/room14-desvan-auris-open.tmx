@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="8" tileheight="8" nextobjectid="41">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="48" columns="16">
+  <image source="bg-tiles-auris-leonis.png" width="128" height="24"/>
+ </tileset>
+ <tileset firstgid="49" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="10" height="10">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,
+1,14,15,15,15,18,18,18,19,1,
+1,1,25,26,26,26,26,27,1,1,
+1,1,28,37,37,37,37,33,1,1,
+1,1,28,34,34,34,34,33,1,1,
+1,1,28,35,35,35,35,33,1,1,
+1,1,28,37,37,37,37,33,1,1,
+1,1,39,40,40,40,40,41,1,1,
+1,1,20,21,21,21,21,24,1,1,
+1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="33" name="auris-leonis-lock" x="36" y="64" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="34" name="auris-leonis-plaque" x="36" y="8" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="35" name="auris-leonis-clue" x="30" y="24" width="20" height="4">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="37" name="auris-leonis-letter" x="26" y="34" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="38" name="auris-leonis-letter" x="34" y="34" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="1"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="39" name="auris-leonis-letter" x="42" y="34" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="2"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="40" name="auris-leonis-letter" x="50" y="34" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="3"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

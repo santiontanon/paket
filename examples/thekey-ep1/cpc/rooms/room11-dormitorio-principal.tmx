@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="54">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-dormitorio-principal.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+1,1,1,1,1,2,3,3,3,4,2,2,4,2,
+5,1,1,1,6,6,6,3,3,7,1,1,7,2,
+8,2,1,1,6,6,6,3,3,7,1,1,7,2,
+8,9,2,2,6,6,6,3,3,7,1,1,7,2,
+10,9,11,2,3,6,6,3,3,7,1,1,7,2,
+10,9,11,2,12,12,12,12,12,7,1,1,7,2,
+10,9,11,11,13,13,13,13,13,7,1,1,7,2,
+10,14,1,1,1,1,1,1,1,1,15,16,1,1,
+14,17,17,1,1,1,1,1,1,1,18,19,15,16,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="14" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,39,0,0,0,0,0,0,0,0,0,0,0,0,
+39,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="88" y="32" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="33" name="locked-double-door" x="80" y="8" width="16" height="48">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="34" name="exit" x="104" y="56" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="78"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="36" name="large-clock" x="16" y="8" width="8" height="48">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="37" name="large-bed" x="32" y="8" width="24" height="56">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="38" name="slippers" x="26" y="58" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="62"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="39" name="leather-couch" x="56" y="64" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="40" name="leather-couch-right" x="32" y="64" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="41" name="couch-small" x="44" y="56" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="80"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="42" name="candle-corridor2" x="56" y="0" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="43" name="painting" x="64" y="16" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="44" name="night-table" x="56" y="40" width="8" height="20">
+   <properties>
+    <property name="depth" type="int" value="58"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="45" name="small-table-clock" x="58" y="34" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="46" name="bedroom2-paper" x="58" y="44" width="4" height="2">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="47" name="chair-front" x="74" y="54" width="6" height="24">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="48" name="corridor-table" x="72" y="68" width="16" height="20">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="49" name="desktop-lamp" x="80" y="60" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="86"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="51" name="large-clock-pendulum" x="18" y="24" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

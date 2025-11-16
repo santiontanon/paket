@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="11" tilewidth="8" tileheight="8" nextobjectid="48">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="80" columns="16">
+  <image source="bg-tiles-pasillo.png" width="128" height="40"/>
+ </tileset>
+ <tileset firstgid="81" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="13" height="11">
+  <data encoding="csv">
+52,1,23,1,1,1,1,1,1,20,1,1,52,
+21,59,24,55,49,49,49,49,49,21,1,55,21,
+52,61,59,21,64,64,64,64,64,21,63,1,52,
+21,61,61,21,64,64,64,64,64,21,52,1,21,
+63,26,24,52,64,64,64,64,64,52,1,52,1,
+26,24,24,21,64,64,64,64,64,21,52,1,1,
+65,24,24,53,53,53,53,53,53,21,21,1,1,
+66,24,29,1,1,1,67,63,1,22,21,1,52,
+68,29,1,1,1,1,1,1,1,1,22,1,21,
+29,1,1,1,1,1,1,1,1,1,1,1,21,
+1,1,1,1,1,1,1,1,1,1,1,1,22
+</data>
+ </layer>
+ <layer name="collision" width="13" height="11">
+  <data encoding="csv">
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,85,0,0,0,0,0,0,86,82,82,82,
+82,85,0,0,0,0,0,0,0,0,86,82,82,
+85,0,0,0,0,0,0,0,0,0,0,86,82,
+0,0,0,0,0,0,0,0,0,0,0,0,86
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="10" name="door-right" x="88" y="40" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="63" name="player" x="80" y="48" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="33" name="chair-front" x="70" y="60" width="6" height="24">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="34" name="chair-back" x="30" y="52" width="6" height="24">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="35" name="sewing-machine" x="72" y="64" width="10" height="24">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="36" name="red-wardrobe" x="32" y="8" width="16" height="56">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="37" name="ikea-box" x="28" y="56" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="38" name="ikea-box" x="36" y="56" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="39" name="mirror" x="20" y="24" width="10" height="44">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="40" name="coathanger" x="48" y="32" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="41" name="ironing-board" x="58" y="40" width="14" height="24">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="42" name="candle" x="10" y="16" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="43" name="candle-off" x="58" y="12" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="44" name="candle-off" x="66" y="12" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="45" name="sewing-box" x="58" y="72" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="46" name="leather-couch" x="34" y="64" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="47" name="leather-long-couch" x="0" y="64" width="28" height="24">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

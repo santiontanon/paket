@@ -1,0 +1,74 @@
+# ------- Item definition: -------
+
+item(item-rama, "rama", "Una rama de ficus bastante seca."):
+  image("items.png", 0, 0, 8, 12)
+
+item(item-rama-ardiendo, "rama ardiendo", "Una rama ardiendo."):
+  image("items.png", 8, 0, 16, 12)
+
+item(item-small-key, "llave pequeña", "Una llave más pequeña de lo normal."):
+  image("items.png", 16, 0, 24, 12)
+  default-use-message("No encaja aquí.")
+
+item(item-candle-note-clue, "nota", "Un papel con algo escrito."):
+  image("items.png", 24, 0, 32, 12)
+
+item(item-mechero, "mechero", "Un mechero a tope de gas."):
+  image("items.png", 32, 0, 40, 12)
+
+item(item-bust-key, "llave", "La llave que he encontrado en el busto del pasillo."):
+  image("items.png", 40, 0, 48, 12)
+  default-use-message("No encaja aquí.")
+
+item(item-gas, "botella de gas", "Una botella de gas para mecheros."):
+  image("items.png", 48, 0, 56, 12)
+
+item(item-mechero-vacio, "mechero", "Un mechero sin gas. Se puede leer Amstrad Foreign en su base."):
+  image("items.png", 56, 0, 64, 12)
+  default-use-message("El mechero no tiene gas.")
+
+item(item-carta-mabus, "carta de Mabus", "carta de Mabus"):
+  image("items.png", 64, 0, 72, 12)
+
+item(item-llave-mabus, "llave de Mabus", "La llave que me envió Mabus."):
+  image("items.png", 72, 0, 80, 12)
+  default-use-message("No encaja aquí.")
+
+item(item-llave-coche, "llave del coche", "Llave del flamante R11."):
+  image("items.png", 80, 0, 88, 12)
+  default-use-message("No encaja aquí.")
+
+item(item-iman, "imán", "Un imán no demasiado potente."):
+  image("items.png", 88, 0, 96, 12)
+
+item(item-regla, "regla", "Una regla escolar de plástico rígido."):
+  image("items.png", 96, 0, 104, 12)
+
+item(item-hilo, "hilo de lana", "Hilo de lana bastante largo y resistente."):
+  image("items.png", 104, 0, 112, 12)
+
+item(item-iman-cuerda, "imán con cuerda", "Un imán no muy potente atado a un hilo largo resistente."):
+  image("items.png", 112, 0, 120, 12)
+
+# item(item-papel, "papel", "Un papel sin nada especial."):
+#   image("items.png", 120, 0, 128, 12)
+
+item(item-llave-luna, "llave del Zodíaco", "La llave que recuperé del sumidero."):
+  image("items.png", 0, 12, 8, 24)
+  default-use-message("No encaja aquí.")
+
+item(item-gran-llave, "gran llave", "Una gran llave con un dragón grabado."):
+  image("items.png", 8, 12, 16, 24)
+  default-use-message("No encaja aquí.")
+
+item(item-papel2, "nota", "El reflejo de una preciosa niña revela la verdad."):
+  image("items.png", 120, 0, 128, 12)
+
+item(item-cuadro-reloj, "retrato", "Retrato de una preciosa niña. ¿La hija de Alan? Aparece un número: 1852."):
+  image("items.png", 16, 12, 24, 24)
+
+item(item-llave-cuerda, "llave de cuerda", "Una llave para dar cuerda a algún mecanismo."):
+  image("items.png", 24, 12, 32, 24)
+
+item(item-reliquia-lazo, "lazo", "Una de las 3 relíquias. Un lazo de pelo cuidadosamente conservado."):
+  image("items.png", 32, 12, 40, 24)

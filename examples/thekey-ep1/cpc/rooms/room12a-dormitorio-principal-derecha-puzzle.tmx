@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="11" height="11" tilewidth="8" tileheight="8" nextobjectid="43">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="48" columns="16">
+  <image source="bg-tiles-dormitorio-principal-puzzles.png" width="128" height="8"/>
+ </tileset>
+ <tileset firstgid="49" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="11" height="11">
+  <data encoding="csv">
+1,1,2,2,2,2,2,2,2,2,1,
+1,1,2,2,3,4,4,4,5,2,1,
+1,1,2,2,1,1,1,1,1,2,2,
+1,1,2,2,1,1,1,1,1,2,2,
+1,1,2,2,1,1,1,1,1,2,2,
+1,1,2,2,1,1,1,1,1,2,2,
+1,1,2,2,1,1,1,1,1,2,2,
+1,1,2,2,1,1,1,1,1,2,2,
+1,1,2,2,6,7,7,7,8,2,2,
+1,1,2,2,2,2,2,2,2,2,2,
+1,1,2,2,2,2,2,2,2,2,2
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="33" name="puzzle-x" x="80" y="0" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="34" name="puzzle-9clocks-face" x="36" y="14" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="35" name="puzzle-9clocks-face" x="46" y="14" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="36" name="puzzle-9clocks-face" x="56" y="14" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="37" name="puzzle-9clocks-face" x="36" y="32" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="38" name="puzzle-9clocks-face" x="46" y="32" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="39" name="puzzle-9clocks-face" x="56" y="32" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="40" name="puzzle-9clocks-face" x="36" y="50" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="41" name="puzzle-9clocks-face" x="46" y="50" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="42" name="puzzle-9clocks-face" x="56" y="50" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

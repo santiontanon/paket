@@ -1,0 +1,15 @@
+include("palette.pak")
+include("globals.pak")
+include("items.pak")
+include("global-rules.pak")
+include("cutscenes.pak")
+
+# ------- Objects --------
+include("player.pak")
+include("objects.pak")
+
+# ------- Room definitions: -------
+include("rooms.pak")
+
+# ------- Dialogues -------
+include("dialogues.pak")

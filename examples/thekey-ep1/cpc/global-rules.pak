@@ -1,0 +1,79 @@
+# ------- Other Global Scripts: -------
+script("check-candle-puzzle-solved"):
+    if variable-eq(candle-puzzle-solved, 0) &&
+       variable-eq(candle9-state, 1) &&
+       variable-eq(candle2-state, 0) &&
+       variable-eq(candle3-state, 0) &&
+       variable-eq(candle4-state, 1) &&
+       variable-eq(candle5-state, 1) &&
+       variable-eq(candle6-state, 1) &&
+       variable-eq(candle7-state, 1) &&
+       variable-eq(candle8-state, 0):
+       message("Algo he hecho, ha sonado como un mecanismo abriéndose cerca.")
+       change-object-description(11, "Un busto masculino, muestra una guía en la zona del cuello.")
+       play-sfx("sfx/puzzle-resuelto.afx")
+       set-variable(candle-puzzle-solved, 1)
+    endif
+
+
+# ------- Global Room Rules: -------
+onRoomLoadRules:
+    # rule variable-eq(janitor-coathanguer, 1):
+    #     set-variable(janitor-coathanguer, 0)
+
+    # rule variable-eq(janitor-coathanguer, 2):
+    #     set-variable(janitor-coathanguer, 0)
+
+    rule have-item(item-rama-ardiendo): 
+        lose-item(item-rama-ardiendo)  # Branch crumbles after you change rooms
+        message("Se ha consumido la rama.")
+
+
+# ------- Item rules: -------
+itemRules:
+    rule examine-item(item-candle-note-clue):
+        call-script("candle-puzzle-clue-cutscene")
+    rule use-item-with-item(item-gas, item-mechero-vacio):
+        message("He recargado el mechero de gas, ahora ya funciona.")
+        lose-item(item-gas)
+        lose-item(item-mechero-vacio)
+        gain-item(item-mechero)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    rule use-item-with-item(item-mechero, item-rama):
+        lose-item(item-rama)
+        gain-item(item-rama-ardiendo)
+    rule use-item-with-item(item-rama-ardiendo, item-gas):
+        message("No tengo especial interés en explotar ahora mismo.")
+    rule use-item-with-item(item-rama-ardiendo, item-candle-note-clue):
+        message("No quiero salir ardiendo de aquí.")
+    rule use-item-with-item(item-mechero, item-candle-note-clue):
+        message("No quiero salir ardiendo de aquí.")
+    rule use-item-with-item(item-rama-ardiendo, item-carta-mabus):
+        message("No quiero salir ardiendo de aquí.")
+    rule use-item-with-item(item-mechero, item-carta-mabus):
+        message("No quiero salir ardiendo de aquí.")
+    rule use-item-with-item(item-mechero, item-hilo):
+        message("No quiero salir ardiendo de aquí.")
+    rule use-item-with-item(item-mechero, item-iman-cuerda):
+        message("No quiero salir ardiendo de aquí.")
+    # rule use-item-with-item(item-mechero, item-papel):
+    #     message("No quiero salir ardiendo de aquí.")
+    rule examine-item(item-carta-mabus):
+        call-script("mabus-letter-cutscene")
+    rule use-item-with-item(item-iman, item-hilo):
+        message("He atado el imán al cordel.")
+        lose-item(item-iman)
+        lose-item(item-hilo)
+        gain-item(item-iman-cuerda)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    rule use-item-with-item(item-mechero, item-papel2):
+        message("No quiero salir ardiendo de aquí.")
+    rule use-item-with-item(item-mechero, item-cuadro-reloj):
+        message("No quiero salir ardiendo de aquí.")
+    rule examine-item(item-cuadro-reloj):
+        if variable-eq(item-cuadro-reloj-reflejo, 1):
+            message("Retrato de una preciosa niña. ¿La hija de Alan? Aparece un número: 1852. El reflejo muestra el verdadero número: 5281.")
+        else:
+            message("Retrato de una preciosa niña. ¿La hija de Alan? Aparece un número: 1852.")
+        endif
+

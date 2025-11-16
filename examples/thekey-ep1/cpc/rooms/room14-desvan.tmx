@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="11" height="11" tilewidth="8" tileheight="8" nextobjectid="51">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-desvan.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="11" height="11">
+  <data encoding="csv">
+1,1,2,3,4,5,4,5,1,1,1,
+1,2,6,2,1,7,5,8,1,1,1,
+1,6,2,1,1,5,7,9,10,1,1,
+1,2,1,11,1,1,5,8,1,12,1,
+1,1,1,13,1,14,1,1,15,1,15,
+1,1,1,16,14,17,1,1,1,12,1,
+1,1,1,16,17,18,1,19,20,7,1,
+1,1,1,21,1,1,1,22,23,1,1,
+1,1,1,1,24,25,25,26,27,14,1,
+1,1,1,26,28,25,24,27,29,1,1,
+1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="11" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,
+34,34,35,0,0,0,41,0,0,0,38,
+34,34,34,0,0,0,0,0,0,0,36,
+34,34,34,0,0,0,0,0,0,0,36
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="32" y="48" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="33" name="atic-stairs-1" x="16" y="52" width="8" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="34" name="atic-stairs-1" x="8" y="68" width="8" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="40" name="crate-atic" x="64" y="72" width="20" height="16">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="41" name="cpc" x="58" y="40" width="12" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="42" name="attic-lamp" x="68" y="24" width="4" height="20">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="43" name="attic-shelves" x="48" y="40" width="8" height="28">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="44" name="attic-painting" x="20" y="32" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="45" name="attic-box" x="32" y="60" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="46" name="attic-frame" x="34" y="50" width="8" height="12">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="47" name="attic-bag" x="40" y="52" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="49" name="attic-relic-box" x="50" y="49" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="50" name="espiritu" x="24" y="50" width="8" height="20">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

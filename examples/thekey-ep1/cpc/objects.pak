@@ -1,0 +1,1269 @@
+# ------- Room objects: -------
+
+object("1x4-collider", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-1x4-collider.png")
+        collisionmask("1111", "1111", "1111", "1111", "1111", "1111", "1111", "1111")
+        selection(none)
+
+
+object("locked-door-front", "puerta", "Una puerta de madera."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-front.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+    state("exit", "front"):
+        image("rooms/objects/object-door-front-open.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+    repeating-rule use-object($this):
+        message("Está cerrada con llave.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+#object("locked-door-right", "puerta", "Una puerta de madera."):
+#    state("closed", "right"):
+#        image("rooms/objects/object-door-right.png")
+#        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+#    state("exit", "right"):
+#        image("rooms/objects/object-door-right-open.png")
+#        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+#
+#    repeating-rule use-object($this):
+#        message("Está cerrada con llave.")
+#
+#    repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+#        message("No quiero salir ardiendo de aquí.")
+
+
+object("door-left", "puerta", "Una puerta de madera."):
+    state("closed", "left"):
+        image("rooms/objects/object-door-left.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "110")
+    state("exit", "left"):
+        image("rooms/objects/object-door-left-open.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "110")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("door-small", "puerta", "Una puerta de madera."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-small-front.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+    state("exit", "front"):
+        image("rooms/objects/object-door-small-front-open.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+
+    on-room-load-rule variable-eq(door{$this}-state, 1):
+        change-object-state($this, "exit")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+# object("door-front", "puerta", "Una puerta de madera."):
+#     state("closed", "front"):
+#         image("rooms/objects/object-door-front.png")
+#         collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+# 
+#     on-room-load-rule variable-eq(door{$this}-state, 1):
+#         change-object-state($this, "exit")
+# 
+#     repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+#         message("No quiero salir ardiendo de aquí.")
+
+
+object("door-right", "puerta", "Una puerta de madera."):
+    state("closed", "right"):
+        image("rooms/objects/object-door-right.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+    state("exit", "right"):
+        image("rooms/objects/object-door-right-open.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+
+    on-room-load-rule variable-eq(door{$this}-state, 1):
+        change-object-state($this, "exit")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("corridor-table", "mesita", "Una mesita sin nada de especial. Mi abuela tenía una igual."):
+    state("idle", "front"):
+        image("rooms/objects/object-corridor-table.png")
+        collisionmask("00000000", "00000000", "00000000", "11111111", "11111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("table-clock", "reloj", "No está en hora."):
+    state("idle", "front"):
+        image("rooms/objects/object-table-clock.png")
+
+
+object("painting", "cuadro", "Ni idea de lo que el artista quería representar aquí."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("painting-small", "cuadro pequeño", "Un pequeño retrato."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting-small.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("painting-castle", "cuadro", "El cuadro representa un castillo en algún lugar de Wallachia."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting-castle.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("painting-small-left", "cuadro pequeño", "Un paisaje nocturno con la luna llena."):
+    state("idle", "left"):
+        image("rooms/objects/object-painting-small-left.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("painting-vampire", "gran retrato", "Antiguo retrato, data del 1886. Parece que Lord Alan mantuvo la mansión con su mobiliario original."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting-vampire.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+# These are the candles for the candles puzzle:
+object("candle-corridor", "vela", "Una vela apagada."):
+    state("closed", "front"):
+        image("rooms/objects/object-candle-corridor-off.png")
+        selection(box)
+    state("open", "front"):
+        animation(10,  0,1,0,2,0,1):
+           image("rooms/objects/object-candle-corridor-on-1-3-5.png")
+           image("rooms/objects/object-candle-corridor-on-2-6.png")
+           image("rooms/objects/object-candle-corridor-on-4.png")
+        selection(box)
+    repeating-rule use-object($this):
+      if variable-eq(candle{$this}-state, 0):
+        message("Puedo soplar para apagarla pero no puedo encenderla sin más.")
+      else:
+        message("La he apagado de un soplido.")
+        change-object-state($this, "closed")
+        set-variable(candle{$this}-state, 0)
+        change-object-description($this, "Una vela apagada.")
+        call-script("check-candle-puzzle-solved")
+      endif
+    repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+        change-object-state($this, "open")
+        set-variable(candle{$this}-state, 1)
+        change-object-description($this, "Una vela encendida.")
+        call-script("check-candle-puzzle-solved")
+    repeating-rule use-item-with-object(item-rama,$this) && variable-eq(candle{$this}-state, 1):
+        lose-item(item-rama)
+        gain-item(item-rama-ardiendo)  # we put it the second in the script, so that this rule does not disappear after gaining "item-rama-ardiendo" the first time.
+        message("He prendido la rama con la vela.")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+    repeating-rule use-item-with-object(item-gas,$this) && variable-eq(candle{$this}-state, 1):
+        message("No tengo especial interés en explotar ahora mismo.")
+    on-room-load-rule variable-eq(candle{$this}-state, 1):
+        change-object-state($this, "open")
+        change-object-description($this, "Una vela encendida.")
+
+
+# This is a big candle that casts light around and that is always on:
+object("candle-corridor2", "vela", "Una vela encendida."):
+    state("open", "front"):
+        animation(10,  0,1,0,2):
+           image("rooms/objects/object-candle-corridor2-on-1-3-5.png")
+           image("rooms/objects/object-candle-corridor2-on-2-6.png")
+           image("rooms/objects/object-candle-corridor2-on-4.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/object-candle-corridor2-off.png")
+        selection(box)
+    repeating-rule use-object($this):
+        message("No llego para apagarla.")
+    repeating-rule use-item-with-object(item-rama,$this):
+        lose-item(item-rama)
+        gain-item(item-rama-ardiendo)  # we put it the second in the script, so that this rule does not disappear after gaining "item-rama-ardiendo" the first time.
+        message("He prendido la rama con la vela.")
+    repeating-rule use-item-with-object(item-gas,$this):
+        message("No tengo especial interés en explotar ahora mismo.")
+
+
+# This is a small candle that is always on:
+object("candle", "vela", "Una vela encendida."):
+    state("open", "front"):
+        animation(10,  0,1,0,2):
+           image("rooms/objects/object-candle-on-1-3-5.png")
+           image("rooms/objects/object-candle-on-2-6.png")
+           image("rooms/objects/object-candle-on-4.png")
+        selection(box)
+    repeating-rule use-object($this):
+        message("No llego para apagarla.")
+    repeating-rule use-item-with-object(item-rama,$this):
+        lose-item(item-rama)
+        gain-item(item-rama-ardiendo)  # we put it the second in the script, so that this rule does not disappear after gaining "item-rama-ardiendo" the first time.
+        message("He prendido la rama con la vela.")
+    repeating-rule use-item-with-object(item-gas,$this):
+        message("No tengo especial interés en explotar ahora mismo.")
+
+
+object("candle-off", "vela", "Una vela apagada."):
+    state("closed", "front"):
+        image("rooms/objects/object-candle-off.png")
+        selection(box)
+    repeating-rule use-object($this) || use-item-with-object(item-rama-ardiendo,$this):
+        message("No llego para encenderla.")
+
+
+object("exit", "salida", "Salida"):
+    state("exit", "front"):
+        image("rooms/objects/object-exit.png")
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+#object("couch", "butaca", "Una butaca de aspecto bastante cómodo."):
+#    state("idle", "front"):
+#        image("rooms/objects/object-couch-front.png")
+#        collisionmask("00000000", "00000000", "11111111", "11111111", "11111111", "11111111")
+#    repeating-rule pickup-object($this):
+#        message("Pesa demasiado.")
+#
+#    repeating-rule use-object($this):
+#        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+#
+#    repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+#        message("No quiero salir ardiendo de aquí.")
+
+object("couch-small", "butaca", "Parece cómoda, pero ahora no tengo tiempo."):
+    state("idle", "front"):
+        image("rooms/objects/object-couch-small-front.png")
+        collisionmask("000000", "000000", "000000", "000000", "111111", "111111")
+
+    repeating-rule use-object($this):
+        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("bust-key", "llave", "Una llave."):
+    state("closed", "front"):
+        image("rooms/objects/object-bust-key-transparent.png")
+        selection(none)
+    state("open", "front"):
+        image("rooms/objects/object-bust-key.png")
+        selection(box)
+
+    rule pickup-object($this) && variable-eq(candle-puzzle-solved, 2):
+        gain-item(item-bust-key)
+        set-variable(candle-puzzle-solved, 3)
+        change-object-description(11, "Un busto masculino con un compartimiento secreto vacío.")
+        remove-object($this)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+
+object("bust", "busto", "Un busto masculino, tiene una especie de mecanismo en la zona del cuello."):
+    state("closed", "front"):
+        image("rooms/objects/object-bust.png")
+        collisionmask("000", "000", "000", "000", "000", "111", "111")
+    state("open", "front"):
+        image("rooms/objects/object-bust-open.png")
+        collisionmask("000", "000", "000", "000", "000", "111", "111")
+
+    repeating-rule use-object($this) && variable-eq(candle-puzzle-solved, 0):
+        message("Hay un mecanismo, pero no veo la manera de hacerlo funcionar.")
+    repeating-rule use-object($this) && variable-eq(candle-puzzle-solved, 1):
+        set-variable(candle-puzzle-solved, 2)
+        change-object-state($this, "open")
+        change-object-state(47, "open")  # make the key appear
+        change-object-description($this, "El mecanismo ha abierto un compartimiento secreto con una llave.")
+        message("El mecanismo ha abierto un compartimiento secreto con una llave.")
+    repeating-rule use-object($this) && variable-eq(candle-puzzle-solved, 2):
+        set-variable(candle-puzzle-solved,3)
+        gain-item(item-bust-key)
+        change-object-description($this, "Un busto masculino con un compartimiento secreto vacío.")
+        remove-object(47)  # remove key
+        play-sfx("sfx/puzzle-resuelto.afx")
+    repeating-rule pickup-object($this) && variable-eq(candle-puzzle-solved, 2):
+        set-variable(candle-puzzle-solved,3)
+        gain-item(item-bust-key)
+        change-object-description($this, "Un busto masculino con un compartimiento secreto vacío.")
+        remove-object(47)  # remove key
+        play-sfx("sfx/puzzle-resuelto.afx")
+    repeating-rule pickup-object($this):  # If the previous rule does not match
+        message("Pesa demasiado.")
+
+    on-room-load-rule variable-eq(candle-puzzle-solved, 1):
+        change-object-description($this, "Un busto masculino, muestra una guía en la zona del cuello.")
+    on-room-load-rule variable-eq(candle-puzzle-solved, 2):
+        change-object-state($this, "open")
+        change-object-state(47, "open")  # make the key appear
+        change-object-description($this, "El mecanismo ha abierto un compartimiento secreto con una llave.")
+    on-room-load-rule variable-eq(candle-puzzle-solved, 3):
+        change-object-state($this, "open")
+        change-object-description($this, "Un busto masculino con un compartimiento secreto vacío.")
+
+
+object("plant", "planta", "Un ficus sin mucho glamour, bastante seco."):
+    state("idle", "front"):
+        image("rooms/objects/object-plant.png")
+        collisionmask("0000", "0000", "1111", "1111")
+    repeating-rule use-object($this) || pickup-object($this):
+      if have-item(item-rama) || have-item(item-rama-ardiendo) || variable-eq(candle-puzzle-solved,3):
+        message("No necesito nada de aquí.")
+      else:
+        message("He arrancado una rama seca.")
+        gain-item(item-rama)
+        play-sfx("sfx/puzzle-resuelto.afx")
+      endif
+
+
+# Notice the space after "perchero", do not delete! It's because we need the name to be longer for the later "change-object-name" commands to work!
+object("coathanger", "perchero ", "Un par de chaquetas, nada de interés."):
+    state("idle", "front"):
+        image("rooms/objects/object-coathanger.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "1111", "1111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Estoy contento con la ropa que llevo ahora mismo.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("crate-buttler", "caja", "Una caja de madera llena de ropa de trabajo."):
+    state("idle", "front"):
+        image("rooms/objects/object-crate-buttler.png")
+        collisionmask("0000000000", "0000000000", "1111111111", "1111111111")
+
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("chair-back", "silla", "Una silla de madera."):
+    state("idle", "back"):
+        image("rooms/objects/object-chair-back.png")
+        collisionmask("000", "000", "000", "000", "000", "111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+    repeating-rule use-object($this):
+        message("No me apetece ahora mismo.")
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("chair-front", "silla", "Una silla de madera."):
+    state("idle", "front"):
+        image("rooms/objects/object-chair-front.png")
+        collisionmask("000", "000", "000", "000", "000", "111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+    repeating-rule use-object($this):
+        message("No me apetece ahora mismo.")
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("bed-buttler", "cama", "Una cama con un somier barato de muelles."):
+    state("idle", "front"):
+        image("rooms/objects/object-bed-buttler.png")
+        collisionmask("0000000000000", "0000000000000", "0000000000000", "0000000000000", "0000000000000", "1111111111111", "1111111111111", "1111111111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("cabinet-buttler", "armario", "Un armario metálico lleno de trastos de limpieza."):
+    state("idle", "front"):
+        image("rooms/objects/object-cabinet-buttler-open.png")
+        collisionmask("00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "11111111", "00000011")
+
+
+object("mop", "fregona", "Una fregona en un cubo sin agua."):
+    state("idle", "front"):
+        image("rooms/objects/object-mop.png")
+
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+
+    repeating-rule use-object($this):
+        message("No pienso ponerme a limpiar ahora mismo.")
+
+
+object("vacuum", "aspirador", "Un aspirador, parece estar en buenas condiciones."):
+    state("idle", "front"):
+        image("rooms/objects/object-vacuum-cleaner.png")
+
+    repeating-rule pickup-object($this):
+        message("No tengo intención de ir cargando con esto por toda la casa.")
+
+    repeating-rule use-object($this):
+        message("No pienso ponerme a limpiar ahora mismo.")
+
+
+object("ikea-box", "caja", "Una pequeña caja para guardar trastos, no hay nada interesante dentro."):
+    state("idle", "front"):
+        image("rooms/objects/object-ikea-box.png")
+        collisionmask("0000", "1111")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("drawer-pen", "bolígrafo", "Un boli multimina de 4 colores."):
+    state("idle", "front"):
+        image("rooms/objects/object-drawer-pen.png")
+
+
+object("drawer-chimos", "chimos", "Un paquete de Chimos con el papel pegajoso."):
+    state("idle", "front"):
+        image("rooms/objects/object-drawer-chimos.png")
+
+
+object("drawer-candy", "caramelo", "Un Werthers Original. No me parece muy original..."):
+    state("idle", "front"):
+        image("rooms/objects/object-drawer-candy.png")
+
+
+object("drawer-clue", "nota", "Un papel con algo escrito."):
+    state("idle", "front"):
+        image("rooms/objects/object-drawer-clue.png")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("locked-double-door", "puerta", "Esta puerta es enorme."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-double-front.png")
+        collisionmask("00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "11111111")
+    state("exit", "front"):
+        image("rooms/objects/object-door-double-front-open.png")
+        collisionmask("00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000")
+
+    repeating-rule use-object($this):
+        message("Está cerrada con llave.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("carpet-dragon", "alfombra", "Una alfombra con un dragón estampado."):
+    state("idle", "front"):
+        image("rooms/objects/object-carpet-dragon.png")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("sewing-machine", "máquina de coser", "Una máquina de coser eléctrica Singer."):
+    state("idle", "back"):
+        image("rooms/objects/object-sewing-machine.png")
+        collisionmask("00000", "00000", "00000", "00000", "00000", "11111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("¡No sabría ni enchufarla!")
+
+
+object("red-wardrobe", "armario", "Un armario lleno de trajes."):
+    state("idle", "front"):
+        image("rooms/objects/object-red-wardrobe.png")
+        collisionmask("00000000", "00000000", "00000000", "00000000", "00000000", "00000000",
+                      "00000000", "00000000", "00000000", "00000000", "00000000", "00000000",
+                      "11111111", "11111111")
+
+    repeating-rule use-object($this):
+        message("Estoy contento con la ropa que llevo ahora mismo.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("mirror", "espejo", "Tengo una pinta de paquete que no me aguanto."):
+    state("idle", "right"):
+        image("rooms/objects/object-mirror-right.png")
+        collisionmask("00000", "00000", "00000", "00000", "00000", "00000",
+                      "00000", "00000", "00000", "11111", "11111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Ya he cubierto mis necesidades narcicistas por esta semana.")
+
+    # repeating-rule talk-to-object($this):
+    #     start-dialogue("mirror")
+
+    repeating-rule talk-to-object($this):
+        message("- Bitelchús, Bitelchús, Bitelchús")
+
+    repeating-rule use-item-with-object(item-cuadro-reloj, $this):
+        message("¡El reflejo revela ahora otro número: 5281!")
+        set-variable(item-cuadro-reloj-reflejo, 1)
+
+# dialogue("mirror"):
+#     state 1:
+#         add-dialogue-option(exit, "- Bitelchús, Bitelchús, Bitelchús")
+#         add-dialogue-option(exit, "- ¿Quién es el más guapo del reino?")
+#         add-dialogue-option(exit, "- Are you talking to me?")
+
+
+object("ironing-board", "tabla de planchar", "Una tabla de planchar con una plancha."):
+    state("idle", "front"):
+        image("rooms/objects/object-ironing-board.png")
+        collisionmask("0000000", "0000000", "0000000", "0000000", "0000000", "1111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("No he utilizado una plancha en mi vida y no voy a empezar ahora.")
+
+
+object("sewing-box", "caja", "Una caja con varios útiles de costura."):
+    state("idle", "front"):
+        image("rooms/objects/object-sewing-box.png")
+        collisionmask("0000", "0000", "0000", "1111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("leather-couch", "butaca", "Parece cómoda, pero ahora no tengo tiempo."):
+    state("idle", "back"):
+        image("rooms/objects/object-leather-couch-back-left.png")
+        collisionmask("000000", "000000", "000000", "000000", "000000", "111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("leather-couch-right", "butaca", "Parece cómoda, pero ahora no tengo tiempo."):
+    state("idle", "back"):
+        image("rooms/objects/object-leather-couch-back-right.png")
+        collisionmask("000000", "000000", "000000", "000000", "000000", "111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("leather-long-couch", "sofá", "Un sofá de aspecto bastante cómodo."):
+    state("idle", "back"):
+        image("rooms/objects/object-leather-long-couch-back-right.png")
+        collisionmask("00000000000000", "00000000000000", "00000000000000",
+                      "00000000000000", "00000000000000", "11111111111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("entrance-column-right", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-column.png")
+        selection(none)
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000")
+
+
+object("entrance-stairs-handle1", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle1.png")
+        selection(none)
+        collisionmask("000000", "110000", "110000", "110000", "111111", "001111")
+
+
+object("entrance-stairs-handle2", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle2.png")
+        selection(none)
+        collisionmask("1111111111", "1111111111", "0000000000")
+
+
+object("entrance-stairs-handle3", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle3.png")
+        selection(none)
+        collisionmask("00000000")
+
+
+object("entrance-candle-stand", "candelabro", "Un candelabro de suelo metálico delicadamente ornamentado."):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-candle-stand.png")
+        collisionmask("000", "000", "000", "000", "111", "111")
+
+
+object("chema", "Chema", "Un tipo enorme. Debe ser uno de los colegas de Mabus."):
+    state("idle", "front"):
+        image("rooms/objects/object-chema.png")
+        collisionmask("000000", "000000", "000000", "000000", "000000", "000000", "000000", "111111", "111111")
+
+    repeating-rule talk-to-object($this):
+        if variable-eq(global-story-state,1):
+            start-dialogue("chema")
+        else:
+            start-dialogue("chema2")
+        endif
+
+
+#object("entrance-column-light", "", ""):
+#    state("idle", "front"):
+#        animation(10,  0,1,2,1):
+#           image("rooms/objects/object-entrance-column-left-light0.png")
+#           image("rooms/objects/object-entrance-column-left-light1.png")
+#           image("rooms/objects/object-entrance-column-left-light2.png")
+#        selection(none)
+
+
+#object("entrance-carpet-light", "", ""):
+#    state("idle", "front"):
+#        animation(10,  0,1):
+#           image("rooms/objects/object-entrance-carpet-light1.png")
+#           image("rooms/objects/object-entrance-carpet-light2.png")
+#        selection(none)
+
+
+object("car-key", "llave", "La llave de mi flamante Renault 11."):
+    state("idle", "front"):
+        image("rooms/objects/object-car-key.png")
+        selection(box)
+
+
+object("mabus-letter", "carta", "Una carta que me han entregado por debajo de la puerta."):
+    state("idle", "front"):
+        image("rooms/objects/object-mabus-letter.png")
+    state("hidden", "front"):
+        image("rooms/objects/object-mabus-letter.png")
+
+
+object("bed", "cama", "Una vieja cama de aspecto confortable."):
+    state("idle", "front"):
+        image("rooms/objects/object-bed.png")
+        collisionmask("000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "111111111111", "111111111111", "111111111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("Ganas no me faltan, pero no tengo tiempo para una siesta.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("night-table", "mesita", "Una mesita de noche sin nada en particular."):
+    state("idle", "front"):
+        image("rooms/objects/object-night-table.png")
+        collisionmask("0000", "0000", "0000", "1111", "1111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("small-table-clock", "reloj", "No está en hora."):
+    state("idle", "front"):
+        image("rooms/objects/object-table-clock-small.png")
+
+
+# object("bedroom1-paper", "papel", "Un papel sin nada especial."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-bedroom1-paper.png")
+
+
+object("bedroom2-paper", "papel", "'El reflejo de una preciosa niña revela la verdad'"):
+    state("idle", "front"):
+        image("rooms/objects/object-bedroom1-paper.png")
+
+
+object("bedroom1-cabinet", "armario", "Está lleno de juguetes y material escolar."):
+    state("idle", "front"):
+        image("rooms/objects/object-bedroom1-cabinet.png")
+        collisionmask("00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "00000000", "11111111", "11111111", "11111111", "11111111")
+
+
+object("sink", "lavamanos", "Un lavamanos de cerámica. Los grifos no funcionan."):
+    state("idle", "front"):
+        image("rooms/objects/object-sink.png")
+        collisionmask("0000", "0000", "0000", "0000", "1111")
+
+
+object("bath-mirror", "espejo", "Tengo una pinta de paquete que no me aguanto."):
+    state("idle", "front"):
+        image("rooms/objects/object-bath-mirror.png")
+
+    repeating-rule use-item-with-object(item-cuadro-reloj, $this):
+        message("¡El reflejo revela ahora otro número: 5281!")
+        set-variable(item-cuadro-reloj-reflejo, 1)
+
+
+object("heater", "radiador", "Un radiador. Está caliente."):
+    state("idle", "front"):
+        image("rooms/objects/object-heater.png")
+        collisionmask("0000", "0000", "1111")
+
+
+object("towel-holder", "toallero", "Una toalla húmeda y mohosa."):
+    state("idle", "front"):
+        image("rooms/objects/object-towel-holder.png")
+        collisionmask("00", "00", "11")
+
+
+object("toilet", "wc", "Un WC bastante sucio."):
+    state("idle", "front"):
+        image("rooms/objects/object-toilet.png")
+        collisionmask("00000", "00000", "00000", "00000", "00000", "11111")
+
+    repeating-rule use-object($this):
+        message("Tengo mis necesidades fisiológicas cubiertas, por ahora.")
+
+
+object("shower", "ducha", "Una ducha sin agua. Los grifos no funcionan."):
+    state("idle", "front"):
+        image("rooms/objects/object-shower.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "000", "000", "000")
+
+    repeating-rule use-object($this):
+        message("Los grifos no funcionan.")
+
+
+object("drain", "sumidero", "Un profundo desague... y por manazas me ha caído la llave de Mabus dentro!"):
+    state("idle", "front"):
+        image("rooms/objects/object-drain.png")
+        collisionmask("000", "000")
+
+    repeating-rule pickup-object($this):
+        message("Es muy profundo.")
+
+
+object("soap", "jabón", "Jabón para la ducha. Está intacto."):
+    state("idle", "front"):
+        image("rooms/objects/object-soap.png")
+        collisionmask("00", "00")
+
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+
+
+object("towel-right", "toallero", "Una toalla húmeda y mohosa."):
+    state("idle", "front"):
+        image("rooms/objects/object-towel-right.png")
+        collisionmask("00", "00", "00", "00")
+
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+
+
+object("towel-left", "toallero", "Una toalla húmeda y mohosa."):
+    state("idle", "front"):
+        image("rooms/objects/object-towel-left.png")
+        collisionmask("00", "00", "00", "00", "00", "00")
+
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+
+
+object("puzzle-desk", "cómoda", "Una enorme cómoda de madera antigua cerrada con llave."):
+    state("idle", "right"):
+        image("rooms/objects/object-puzzle-desk.png")
+        collisionmask("00000", "00000", "00000", "00000", "00000", "00000", "00000", "11111", "11111")
+
+
+object("bed-jorge", "cama", "Una cama pequeña pero lujosa y cómoda. Parece que hay algo debajo, pero no puedo comprobarlo desde aquí. Es un cuerpo?"):
+    state("idle", "left"):
+        image("rooms/objects/object-bed-jorge.png")  # 26x36
+        collisionmask("0000000000000", "0000000000000", "0000000000000", "0000000000000", "0000000000000", "0000000000000", "1111111111111", "1111111111111", "1111111111111")
+
+
+object("corpse", "algo", "Parece que hay algo debajo de la cama, pero no puedo comprobarlo desde aquí."):
+    state("idle", "left"):
+        image("rooms/objects/object-corpse.png")  # 20x8
+        collisionmask("0000000000", "0000000000")
+
+
+object("alan-jorge", "Jorge", "Jorge... Me lo imaginaba más joven. Es pelirrojo y lleva un parche en el ojo que apenas le cubre la cicatriz."):
+    state("idle", "right"):
+        image("rooms/objects/object-alan-jorge.png")  # 8x32
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("jorge-blood", "sangre", ""):
+    state("idle", "left"):
+        image("rooms/objects/object-jorge-blood.png")  # 20x4
+        collisionmask("0000000000")
+        selection(none)
+
+
+object("large-clock", "gran reloj", "Un gran reloj de pared. Requiere una llave de cuerda para ponerlo en hora."):
+    state("idle", "front"):
+        image("rooms/objects/object-large-clock.png")
+
+
+object("large-clock-pendulum", "", ""):
+    state("idle", "front"):
+        animation(40,  0,0,1,2,2,1):
+           image("rooms/objects/object-clock-pendulum-1.png")
+           image("rooms/objects/object-clock-pendulum-2.png")
+           image("rooms/objects/object-clock-pendulum-3.png")
+        selection(none)
+
+
+object("large-bed", "cama", "Una lujosa cama con dosel."):
+    state("idle", "front"):
+        image("rooms/objects/object-large-bed.png")
+        collisionmask("000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "000000000000", "111111111111", "111111111111", "111111111111", "111111111111")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("slippers", "zapatillas", "Unas zapatillas viejas."):
+    state("idle", "front"):
+        image("rooms/objects/object-slippers.png")
+        collisionmask("00")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+    repeating-rule use-object($this):
+        message("Estoy contento con la ropa que llevo ahora mismo.")
+
+
+object("desktop-lamp", "Lámpara apagada  ", "Una lámpara apagada."):
+    state("closed", "front"):
+        image("rooms/objects/object-desk-lamp-off.png")
+        selection(box)
+    state("open", "front"):
+        image("rooms/objects/object-desk-lamp-on.png")
+        selection(box)
+
+    repeating-rule pickup-object($this):
+        message("no estoy aquí para llenarme los bolsillos de basura.")
+
+
+object("carving", "grabados", "pon el gran reloj a la hora escondida y se abrirá el camino: 21:15, 21:30, 12:30, 15:30, 9:00, 6:00, 3:00, 15:45, 18:00"):
+    state("idle", "front"):
+        image("rooms/objects/object-desk-carving.png")
+
+
+object("vanity", "tocador", "Un lujoso tocador de época. Tiene el espejo roto."):
+    state("idle", "front"):
+        image("rooms/objects/object-tocador.png")
+        collisionmask("0000000", "0000000", "0000000", "0000000", "0000000", "1111111", "1111111")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+
+object("table-cage", "mesita", "Una pequeña mesita metálica."):
+    state("idle", "front"):
+        image("rooms/objects/object-cage-table.png")
+        collisionmask("0000", "0000", "1111", "1111")
+
+
+# object("cage", "jaula", "Una jaula de pájaros."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-cage.png")
+
+
+# object("cage-plate", "plato", "Una pequeño plato."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-cage-plate.png")
+
+
+object("painting-clock", "retrato", "Retrato de una preciosa niña. ¿La hija de Alan? Aparece un número: 1852. Debería llevármelo por si significa algo."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting-clock.png")
+    
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+object("puzzle-clocks", "panel", "Un curioso panel con varios relojes."):
+    state("idle", "front"):
+        image("rooms/objects/object-puzzle-clocks.png")
+
+object("atic-stairs-1", "escaleras", ""):
+    state("exit", "front"):
+        image("rooms/objects/object-stairs-1.png")
+    state("idle", "front"):
+        image("rooms/objects/object-stairs-1.png")
+        selection(none)
+
+object("atic-stairs-2", "escaleras", ""):
+    state("exit", "front"):
+        image("rooms/objects/object-stairs-2.png")
+
+object("atic-stairs-3", "escaleras", ""):
+    state("exit", "front"):
+        image("rooms/objects/object-stairs-3.png")
+        selection(none)
+
+object("puzzle-x", "x", ""):
+    state("exit", "front"):
+        image("rooms/objects/object-puzzle-x.png")
+        selection(box)
+
+
+object("puzzle-9clocks-face", "reloj", "Un reloj de agujas."):
+    state("number", "0"):
+        image("rooms/objects/object-puzzle-9clocks-face1.png")
+        selection(box)
+    state("number", "1"):
+        image("rooms/objects/object-puzzle-9clocks-face2.png")
+        selection(box)
+    state("number", "2"):
+        image("rooms/objects/object-puzzle-9clocks-face3.png")
+        selection(box)
+    state("number", "3"):
+        image("rooms/objects/object-puzzle-9clocks-face4.png")
+        selection(box)
+    state("number", "4"):
+        image("rooms/objects/object-puzzle-9clocks-face5.png")
+        selection(box)
+    state("number", "5"):
+        image("rooms/objects/object-puzzle-9clocks-face6.png")
+        selection(box)
+    state("number", "6"):
+        image("rooms/objects/object-puzzle-9clocks-face7.png")
+        selection(box)
+    state("number", "7"):
+        image("rooms/objects/object-puzzle-9clocks-face8.png")
+        selection(box)
+
+
+object("mansion", "Mansión Carfax", "¡Inmensa!"):
+    state("exit", "front"):
+        image("rooms/objects/object-3x3-collider.png")
+        selection(box)
+
+
+object("car1", "coche", "Mi flamante Renault R11."):
+    state("idle", "front"):
+        image("rooms/objects/object-car1.png")
+        collisionmask("0000000000000", "0000000000000",
+                      "1111111111111", "1111111111110",
+                      "0000111100000", "0000111000000")
+        
+
+object("car2", "coche", "Un coche que ya estaba aparcado aquí cuando he llegado."):
+    state("idle", "front"):
+        image("rooms/objects/object-car2.png")
+        collisionmask("11111111", "11111111", "11111111", "11111111")
+        
+
+object("puzzle-clock-10-9", "", ""):
+    state("number", "0"):
+        image("rooms/objects/object-puzzle-clock-10.png")
+        selection(none)
+
+    state("number", "1"):
+        image("rooms/objects/object-puzzle-clock-1.png")
+        selection(none)
+
+    state("number", "2"):
+        image("rooms/objects/object-puzzle-clock-2.png")
+        selection(none)
+
+    state("number", "3"):
+        image("rooms/objects/object-puzzle-clock-3.png")
+        selection(none)
+
+    state("number", "4"):
+        image("rooms/objects/object-puzzle-clock-4.png")
+        selection(none)
+
+    state("number", "5"):
+        image("rooms/objects/object-puzzle-clock-5.png")
+        selection(none)
+
+    state("number", "6"):
+        image("rooms/objects/object-puzzle-clock-6.png")
+        selection(none)
+
+    state("number", "7"):
+        image("rooms/objects/object-puzzle-clock-7.png")
+        selection(none)
+
+    state("number", "8"):
+        image("rooms/objects/object-puzzle-clock-8.png")
+        selection(none)
+
+    state("number", "9"):
+        image("rooms/objects/object-puzzle-clock-9.png")
+        selection(none)
+
+object("puzzle-clock-10-45", "", ""):
+    state("number", "0"):
+        image("rooms/objects/object-puzzle-clock-10.png")
+        selection(none)
+
+    state("number", "1"):
+        image("rooms/objects/object-puzzle-clock-11.png")
+        selection(none)
+
+    state("number", "2"):
+        image("rooms/objects/object-puzzle-clock-12.png")
+        selection(none)
+
+    state("number", "3"):
+        image("rooms/objects/object-puzzle-clock-15.png")
+        selection(none)
+
+    state("number", "4"):
+        image("rooms/objects/object-puzzle-clock-20.png")
+        selection(none)
+
+    state("number", "5"):
+        image("rooms/objects/object-puzzle-clock-25.png")
+        selection(none)
+
+    state("number", "6"):
+        image("rooms/objects/object-puzzle-clock-30.png")
+        selection(none)
+
+    state("number", "7"):
+        image("rooms/objects/object-puzzle-clock-35.png")
+        selection(none)
+
+    state("number", "8"):
+        image("rooms/objects/object-puzzle-clock-40.png")
+        selection(none)
+
+    state("number", "9"):
+        image("rooms/objects/object-puzzle-clock-45.png")
+        selection(none)
+
+object("puzzle-clock-50-55-00-5", "", ""):
+    state("number", "0"):
+        image("rooms/objects/object-puzzle-clock-50.png")
+        selection(none)
+
+    state("number", "1"):
+        image("rooms/objects/object-puzzle-clock-55.png")
+        selection(none)
+
+    state("number", "3"):
+        image("rooms/objects/object-puzzle-clock-00.png")
+        selection(none)
+
+    state("number", "5"):
+        image("rooms/objects/object-puzzle-clock-5.png")
+        selection(none)
+
+
+object("puzzle-clock-gear", "engranaje", "Un engranaje con un número escrito."):
+    state("closed", "front"):
+        image("rooms/objects/object-puzzle-clock-gear-off.png")
+        selection(box)
+    state("open", "front"):
+        image("rooms/objects/object-puzzle-clock-gear-on.png")
+        selection(box)
+    state("idle", "front"):
+        image("rooms/objects/object-puzzle-clock-gear-used.png")
+        selection(none)
+
+object("puzzle-clock-gear-1", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-puzzle-clock-gear-1.png")
+        selection(none)
+
+object("puzzle-clock-gear-2", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-puzzle-clock-gear-2.png")
+        selection(none)
+
+object("puzzle-clock-gear-6", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-puzzle-clock-gear-6.png")
+        selection(none)
+
+object("puzzle-clock-arrow", "botón", "Un botón con una flecha pintada."):
+    state("closed", "left"):
+        image("rooms/objects/object-puzzle-clock-left-off.png")
+        selection(none)
+    state("closed", "right"):
+        image("rooms/objects/object-puzzle-clock-right-off.png")
+        selection(none)
+    state("open", "left"):
+        image("rooms/objects/object-puzzle-clock-left-on.png")
+        selection(box)
+    state("open", "right"):
+        image("rooms/objects/object-puzzle-clock-right-on.png")
+        selection(box)
+
+
+object("crate-atic", "caja", "Nada interesante."):
+    state("idle", "front"):
+        image("rooms/objects/object-crate-atic.png")
+        collisionmask("0000000000", "0000000000", "1111111111", "1111111111")
+
+    repeating-rule pickup-object($this):
+        message("No estoy aquí para llenarme los bolsillos de basura.")
+
+    # repeating-rule use-item-with-object(item-rama-ardiendo,$this) || use-item-with-object(item-mechero,$this):
+    #     message("No quiero salir ardiendo de aquí.")
+
+object("cpc", "CPC464", "¡Un ordenador de la misma marca que mi mechero! Tiene una cinta dentro."):
+    state("idle", "front"):
+        image("rooms/objects/object-cpc.png")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+object("attic-lamp", "bombilla", "Una bombilla encendida."):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-lamp.png")
+
+object("attic-shelves", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-shelves.png")
+        selection(none)
+
+object("attic-painting", "cuadro", "Indistinguible con tan poca luz."):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-painting.png")
+
+object("attic-box", "caja", "Una pequeña caja para guardar trastos, no hay nada interesante dentro."):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-box.png")
+
+object("attic-frame", "marco", "Un marco sin ningún lienzo."):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-frame.png")
+
+object("attic-bag", "bolsa", "Una bolsa con peluches y ropa vieja."):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-bag.png")
+
+object("attic-relic-box", "caja secreta", "Nada interesante."):
+    state("idle", "front"):
+        image("rooms/objects/object-attic-relic-box.png")
+
+object("auris-leonis", "león", "Un león dorado adorna la caja."):
+    state("idle", "front"):
+        image("rooms/objects/object-auris-leonis.png")
+
+object("auris-leonis-lock", "cerrojo", "Está cerrado con llave."):
+    state("idle", "front"):
+        image("rooms/objects/object-auris-leonis-lock.png")
+
+object("auris-leonis-plaque", "placa", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-auris-leonis-plaque.png")
+
+object("auris-leonis-clue", "inscripción", "El nombre de la niña abre el secreto."):
+    state("idle", "front"):
+        image("rooms/objects/object-auris-leonis-clue.png")
+
+object("auris-leonis-letter", "letra", "Un tambor rotatorio con letras grabadas."):
+    state("number", "0"):
+        image("rooms/objects/object-auris-leonis-a.png")
+        selection(box)
+    state("number", "1"):
+        image("rooms/objects/object-auris-leonis-u.png")
+        selection(box)
+    state("number", "2"):
+        image("rooms/objects/object-auris-leonis-r.png")
+        selection(box)
+    state("number", "3"):
+        image("rooms/objects/object-auris-leonis-i.png")
+        selection(box)
+    state("number", "4"):
+        image("rooms/objects/object-auris-leonis-l.png")
+        selection(box)
+    state("number", "5"):
+        image("rooms/objects/object-auris-leonis-e.png")
+        selection(box)
+    state("number", "6"):
+        image("rooms/objects/object-auris-leonis-o.png")
+        selection(box)
+    state("number", "7"):
+        image("rooms/objects/object-auris-leonis-n.png")
+        selection(box)
+    state("number", "8"):
+        image("rooms/objects/object-auris-leonis-s.png")
+        selection(box)
+
+
+object("espiritu", "espíritu", "Creo estar viendo el espíritu de una niña delante de mí."):
+    state("idle", "right"):
+        animation(10,  0,1):
+        #    image("rooms/objects/ghost-6x20-1.png")
+        #    image("rooms/objects/ghost-6x20-2.png")
+        #collisionmask("000", "000", "000", "000", "000")
+            image("rooms/objects/ghost2-8x20-1.png")
+            image("rooms/objects/ghost2-8x20-2.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000")
+        selection(box)

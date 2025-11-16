@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="7" height="8" tilewidth="8" tileheight="8" nextobjectid="34">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-dormitorio-principal.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="7" height="8">
+  <data encoding="csv">
+1,23,23,1,1,1,1,
+1,24,25,26,27,1,1,
+1,24,25,25,26,27,1,
+1,24,25,25,25,26,1,
+1,28,29,25,25,25,1,
+1,1,30,25,25,25,1,
+1,1,31,25,25,25,1,
+1,1,1,23,23,23,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="33" name="carving" x="16" y="32" width="16" height="16">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="52">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="48" columns="16">
+  <image source="bg-tiles-dormitorio-principal-puzzles.png" width="128" height="24"/>
+ </tileset>
+ <tileset firstgid="49" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+9,1,10,11,12,1,1,12,13,1,10,11,1,1,
+14,15,16,17,18,19,20,21,22,15,16,17,18,1,
+21,23,24,25,26,9,22,14,20,23,24,25,26,1,
+14,27,28,9,29,30,30,12,22,27,31,13,29,1,
+12,32,33,34,35,20,21,20,30,32,33,34,35,1,
+13,36,37,38,39,22,14,22,14,36,37,38,39,1,
+9,22,40,41,12,30,12,30,12,22,40,41,14,1,
+13,20,1,13,1,13,20,9,9,20,1,13,21,1,
+9,22,19,12,3,42,42,42,42,5,19,30,14,1,
+19,30,9,1,6,43,43,43,43,8,9,1,12,44,
+1,1,1,1,1,1,1,1,1,1,1,1,1,31
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="16" name="puzzle-x" x="104" y="0" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="17" name="puzzle-clock-50-55-00-5" x="84" y="2" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="3"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="18" name="puzzle-clock-50-55-00-5" x="90" y="8" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="5"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="19" name="puzzle-clock-10-45" x="92" y="14" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="20" name="puzzle-clock-10-45" x="94" y="24" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="3"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="21" name="puzzle-clock-10-45" x="92" y="33" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="4"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="22" name="puzzle-clock-10-45" x="90" y="40" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="5"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="23" name="puzzle-clock-10-45" x="84" y="46" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="6"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="24" name="puzzle-clock-10-45" x="77" y="40" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="7"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="25" name="puzzle-clock-10-45" x="74" y="33" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="8"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="26" name="puzzle-clock-10-45" x="74" y="24" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="9"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="27" name="puzzle-clock-50-55-00-5" x="76" y="14" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="28" name="puzzle-clock-50-55-00-5" x="78" y="8" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="1"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="29" name="puzzle-clock-10-45" x="20" y="2" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="2"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="30" name="puzzle-clock-10-45" x="15" y="8" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="1"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="31" name="puzzle-clock-10-9" x="12" y="16" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="32" name="puzzle-clock-10-9" x="10" y="24" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="9"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="33" name="puzzle-clock-10-9" x="10" y="34" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="8"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="34" name="puzzle-clock-10-9" x="14" y="40" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="7"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="35" name="puzzle-clock-10-9" x="20" y="46" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="6"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="36" name="puzzle-clock-10-9" x="26" y="42" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="5"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="37" name="puzzle-clock-10-9" x="30" y="34" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="4"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="38" name="puzzle-clock-10-9" x="30" y="24" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="3"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="39" name="puzzle-clock-10-9" x="30" y="16" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="2"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="40" name="puzzle-clock-10-9" x="26" y="8" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="number" value="1"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="42" name="puzzle-clock-gear" x="42" y="32" width="12" height="28">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="43" name="puzzle-clock-gear" x="50" y="10" width="12" height="28">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="44" name="puzzle-clock-gear" x="58" y="32" width="12" height="28">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="45" name="puzzle-clock-gear-1" x="46" y="42" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="46" name="puzzle-clock-gear-2" x="52" y="21" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="47" name="puzzle-clock-gear-6" x="60" y="42" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="48" name="puzzle-clock-arrow" x="34" y="68" width="10" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="49" name="puzzle-clock-arrow" x="44" y="68" width="10" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="50" name="puzzle-clock-arrow" x="58" y="68" width="10" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="51" name="puzzle-clock-arrow" x="68" y="68" width="10" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

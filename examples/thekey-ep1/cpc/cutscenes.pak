@@ -1,0 +1,195 @@
+# ------- Cutscene definitions: -------
+
+
+# -------------------------------------
+define-palette("intro_driving",       1, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 23, 25, 26)
+define-palette("intro_driving_fade1", 0, 0, 0, 1, 3,  1,  0,  0,  1,  3,  3,  4, 10, 12, 13)
+
+cutscene-image("intro-driving-bg", "cutscenes/intro-driving-bg.tmx", self-contained-tileset, cpc-mode0, palette="intro_driving")
+
+script("text-fade-in"):
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,26)
+
+script("text-fade-out"):
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,0)
+
+script("intro-splash-screen"):
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(80,64,3,"Pakete Soft")
+    print(88,80,3,"presenta")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-split-mode1-mode0)
+    set-palette("room_intro-home")
+
+script("intro-driving-scene"):
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(84,64,3,"Un juego de")
+    print(80,80,3,"Jordi Sureda")
+    print(72,96,3,"Santiago Ontañón")
+    call-script("text-fade-in")
+    skippable-pause(200)
+    call-script("text-fade-out")
+    clear-screen(cpc-mode0)
+    play-tsv-song("music/voyage4.tsv", 5)
+    call-assembler("custom_intro_driving_scene")
+    stop-song()
+    clear-screen(cpc-split-mode1-mode0)
+
+
+# -------------------------------------
+cutscene-image("candle-puzzle-clue-image", "cutscenes/bg-tiles-clue-mode1.tmx", self-contained-tileset, cpc-mode1)
+
+script("candle-puzzle-clue-cutscene"):
+    clear-screen(cpc-mode1)
+    draw-cutscene-image(7,7,"candle-puzzle-clue-image")
+    print(40,136,3,"Pulsa espacio o botón para continuar")
+    wait-for-space()
+    clear-screen(cpc-split-mode1-mode0)
+    redraw-room()
+
+
+# -------------------------------------
+cutscene-image("mabus-letter-image", "cutscenes/bg-tiles-mabus-letter-mode1.tmx", self-contained-tileset, cpc-mode1)
+
+script("mabus-letter-cutscene"):
+    clear-screen(cpc-mode1)
+    draw-cutscene-image(1,2,"mabus-letter-image")
+    print(20, 24, 0, "Querido amigo,")
+    print-paragraph(20, 40, 0,
+        "Escribo porque no confío en nadie más. Hace un año, con 2 colegas, Chema y Jorge, hicimos algo terrible que hay que enmendar.", 188)
+    print-paragraph(20, 64, 0,
+        "Yo ya estoy muerto. Me ha encontrado y quiere mi llave. Tómala tú y reúnete con Chema y Jorge en la Mansión Carfax el 21 de octubre, a las 22h y te dirán más. Espero no haberles avisado tarde.", 188)
+    print-paragraph(20, 104, 0,
+        "Confío en que tus horas de videojuegos te sirvan para resolver lo que te espera. Un abrazo,", 188)
+    # print-paragraph(20,24,0, 
+     	# "Querido amigo, escribo porque no confío en nadie más. Hace un año, con 2 colegas, Chema y Jorge, hicimos algo terrible que hay que enmendar. Yo ya estoy muerto. Me ha encontrado y quiere mi llave. Tómala tú y reúnete con Chema y Jorge en la Mansión Carfax el 21 de octubre, a las 22h y te dirán más. Espero no haberles avisado tarde. Confío en que tus horas de videojuegos te sirvan para resolver lo que te espera. Un abrazo,", 188)
+    print(160,136,0,"Mabus")
+    wait-for-space()
+    clear-screen(cpc-split-mode1-mode0)
+    set-variable(mabus-letter-read, 1)
+    redraw-room()
+
+
+# -------------------------------------
+cutscene-image("chema-dialogue-cutscene-slide1", "cutscenes/chema-dialogue-scene1.tmx", self-contained-tileset, cpc-mode0, no-palette)
+define-palette("slide1_dark", 0, 1, 1, 0, 0, 13, 4, 3, 16, 25, 6, 5, 4, 1, 17)
+define-palette("slide1_bright", 1, 23, 0, 26, 2, 13, 4, 3, 16, 25, 6, 23, 11, 5, 17)
+cutscene-image("chema-dialogue-cutscene-slide2", "cutscenes/chema-dialogue-scene2-santi.tmx", self-contained-tileset, cpc-mode0)
+# cutscene-image("chema-dialogue-cutscene-slide3", "cutscenes/chema-dialogue-scene3-santi.tmx", self-contained-tileset, cpc-mode0)
+cutscene-image("chema-dialogue-cutscene-slide3", "cutscenes/ending-cutscene3.tmx", self-contained-tileset, cpc-mode0)
+
+script("chema-dialogue-cutscene-part1"):
+    clear-screen()
+    print-paragraph(0,0,2,"1980. Lisa Stevia, mujer de Lord Alan Stevia, fallece en un trágico accidente de coche.",224)
+    set-palette("slide1_dark")
+    draw-cutscene-image(4,8,"chema-dialogue-cutscene-slide1")
+    call-assembler("slide1_lightning_animation")
+    clear-text-area()
+
+    print-paragraph(0,0,2,"Tras eso, Alan se obsesionó con las ciencias ocultas y antiguos rituales de resurrección con el fin de traer a Lisa de vuelta a su lado y al de su hija...",224)
+    call-assembler("slide1_lightning_animation")
+    clear-screen()
+
+script("chema-dialogue-cutscene-part2"):
+    draw-cutscene-image(4,8,"chema-dialogue-cutscene-slide2")
+    print-paragraph(0,0,2,"Por eso compró la Mansión Carfax (donde estamos ahora), que se levantó sobre los restos de una antigua vivienda que fue quemada con sus habitantes dentro, al parecer por prácticas relacionadas con el vampirismo y la magia oscura...",224)
+    wait-for-space()
+    clear-text-area()
+
+	print-paragraph(0,0,2,"Al poco tiempo, Lord Alan encontró un pasadizo secreto hacia los cimientos de la mansión original. Entre la oscuridad y los restos del antiguo incendio, encontró, intacto, un pozo del que emana una antigua fuente capaz de revivir espiritus.",224)
+    wait-for-space()
+    clear-screen()
+
+    draw-cutscene-image(4,8,"chema-dialogue-cutscene-slide3")
+    # draw-cutscene-image(4,8,"ending-cutscene-slide3")
+    print-paragraph(0,0,2,"En octubre de 1983. Mabus, Jorge y yo vinimos a Carfax para ayudarle con el ritual de resurrección (a pesar de nuestras reticencias...). Según Alan, el ritual requería 3 relíquias que el espíritu a resucitar llevara en el momento de la muerte.",224)
+    wait-for-space()
+    clear-screen()
+
+    set-palette("room_escaleras")
+    redraw-room()
+
+
+# -------------------------------------
+cutscene-image("ending-cutscene-slide1-2", "cutscenes/ending-cutscene1-2.tmx", self-contained-tileset, cpc-mode0)
+
+script("lisa-cutscene"):
+    stop-song()
+    clear-screen(cpc-mode1)
+
+    set-palette(0,0,0)
+    print(80,64,3,"Hace un año...")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-split-mode1-mode0)
+
+    draw-cutscene-image-rectangle(4,8,"ending-cutscene-slide1-2", 0, 0, 4, 8)
+    print-paragraph(24, 0, 2, "¿¡Papá qué ha sido ese ruido!? ¿Papá?", 224)
+    wait-for-space()
+    
+    clear-screen()
+    draw-cutscene-image-rectangle(4, 8, "ending-cutscene-slide1-2", 0, 8, 4, 16)
+    print-paragraph(16, 0, 2, "¿Papá? ¿Estás aquí? ¿Qué es este pasadizo?", 224)
+    wait-for-space()
+
+    clear-screen()
+    draw-cutscene-image(4,8,"chema-dialogue-cutscene-slide3")
+    print-paragraph(16, 0, 2, "¿Qué es este sitio? ¿Qué está pasando aquí?", 224)
+    wait-for-space()
+
+    clear-screen()
+    print-paragraph(32, 0, 2, "¡¡¡Papáaa!!! ¡¡¡NOOOOO!!! AAGHHHH.....", 224)
+    wait-for-space()
+    call-script("text-fade-out")
+
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(32,64,3,"Fin del capítulo 1. 'La luz de la noche'")
+    print(62,80,3,"Continúa en capítulo 2.")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-mode1)
+    call-assembler("game_start")    
+
+
+# -------------------------------------
+script("the-key-load-save-game-script"):
+    start-dialogue("load-save-game")
+
+dialogue("load-save-game"):
+    state 1:
+        add-dialogue-option(exit, "- Cancelar")
+        add-dialogue-option(2, "- Grabar a cinta")
+        add-dialogue-option(3, "- Cargar de cinta")
+    state 2:
+        scrolling-message-pause("Inserta una cinta, pulsa REC y luego espacio.")
+        clear-text-area()
+        save-game()
+        if variable-eq(io-error,0):
+            scrolling-message-pause("Juego guardado.")
+        else:
+            scrolling-message-pause("IO error.")
+        endif
+        goto-dialogue-state(exit)
+    state 3:
+        scrolling-message-pause("Inserta una cinta, pulsa PLAY y luego espacio.")
+        clear-text-area()
+        load-game()
+        # If we are here, is that there was an error:
+        scrolling-message-pause("IO error.")
+        goto-dialogue-state(exit)
+
