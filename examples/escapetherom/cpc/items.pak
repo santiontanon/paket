@@ -1,0 +1,24 @@
+# ------- Item definition: -------
+item(1, "papel",         "Hay algo escrito: 2110,1608."):
+  image("items.png", 0, 0, 8, 12)
+
+item(2, "abrecartas",    "No tiene nada de especial."):
+  image("items.png", 8, 0, 16, 12)
+
+item(3, "abridor",       "No tiene nada de especial."):
+  image("items.png", 16, 0, 24, 12)
+
+item(4, "franziskaner",  "Todavía está fresca."):
+  image("items.png", 24, 0, 32, 12)
+
+item(5, "llave",         "No tiene nada de especial."):
+  image("items.png", 32, 0, 40, 12)
+
+item(6, "bolígrafo",     "Es un bic cristal, escribe normal. Pero al parecer este ya no escribe."):
+  image("items.png", 40, 0, 48, 12)
+
+item(7, "cojín",         "Un cojín de plumas extrañamente pesado."):
+  image("items.png", 48, 0, 56, 12)
+
+item(8, "llave pequeña", "No tiene nada de especial."):
+  image("items.png", 56, 0, 64, 12)

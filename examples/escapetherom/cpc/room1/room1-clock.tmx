@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.1.4" orientation="orthogonal" renderorder="right-down" width="10" height="8" tilewidth="8" tileheight="8" infinite="0" nextobjectid="48">
+ <properties>
+ </properties>
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="48" columns="16">
+  <image source="bg-tiles.png" width="128" height="24"/>
+ </tileset>
+ <layer name="background" width="10" height="8">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,
+1,1,1,29,29,29,29,1,1,1,
+1,1,30,31,31,31,31,32,1,1,
+1,1,33,34,34,34,34,35,1,1,
+1,1,36,37,37,37,37,38,1,1,
+1,1,39,40,40,40,40,41,1,1,
+1,1,1,42,42,42,42,1,1,1,
+1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="32" name="clock-plus" x="24" y="12" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="33" name="clock-plus" x="32" y="12" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="34" name="clock-plus" x="40" y="12" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="35" name="clock-plus" x="48" y="12" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="36" name="clock-minus" x="24" y="43" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="37" name="clock-minus" x="32" y="43" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="38" name="clock-minus" x="40" y="43" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="39" name="clock-minus" x="48" y="43" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="40" name="clock-reset" x="8" y="27" width="6" height="12">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="41" name="clock-check" x="66" y="27" width="6" height="12">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="3" name="clock-light" x="66" y="10" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="4" name="clock-light" x="70" y="10" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="44" name="number" x="26" y="28" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="number" type="int" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="45" name="number" x="34" y="28" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="number" type="int" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="46" name="number" x="42" y="28" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="number" type="int" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+  <object id="47" name="number" x="50" y="28" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="number" type="int" value="0"/>
+    <property name="state" value="number"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

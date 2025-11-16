@@ -1,0 +1,5 @@
+object("chema", "Chema", "Va de cepecero, pero en realidad es un emesequisero..."):
+    state("idle", "front"):
+        image("object-chema.png")
+        collisionmask("000000", "000000", "000000", "000000", "000000", "000000", "011110")
+

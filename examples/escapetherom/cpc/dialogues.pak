@@ -1,0 +1,46 @@
+# ------- Dialogues: -------
+dialogue("chema"):
+    state 1:
+        add-dialogue-option(2, "- Eres un monstruo de final de fase?")
+        add-dialogue-option(4, "- Qué haces tú aquí?")
+        add-dialogue-option(exit, "- Me das miedo, adiós.")
+
+    state 2:
+        scrolling-message-pause("- Me lo dicen mucho, sobretodo las mujeres, pero no, he venido solo a testear esta demo.")
+        add-dialogue-option(3, "- Y qué tal está?")
+        add-dialogue-option(exit, "- Me das miedo, adiós.")
+
+    state 3:
+        scrolling-message-pause("- Te lo digo a cambio de una cerveza.")
+        goto-dialogue-state(exit)
+
+    state 4:
+        scrolling-message-pause("- Gutten tag. Qué dise el tío! Estoy buscando el bar. No tendrás una Paulaner por aquí?")
+        if have-item(3):
+            add-dialogue-option(5, "- Vaya sinver! Solo tengo esta Franziskaner.")
+        endif
+        add-dialogue-option(exit, "- No he entendido nada de lo que has dicho, adiós.")
+
+    state 5:
+        scrolling-message-pause("- Bueeno, vaaale, me sirve...")
+        goto-dialogue-state(exit)
+
+
+# When you give the beer to Chema:
+dialogue("chema2"):
+    state 1:
+        add-dialogue-option(2, "- Toma al cerveza. Resume la demo en una frase.")
+        add-dialogue-option(3, "- Toma la cerveza, qué vas a hacer con ella?")
+        add-dialogue-option(4, "- Tuya si admites OPQA como la única verdad!")
+
+    state 2:
+        scrolling-message-pause("- QAOP 4ever!")
+        goto-dialogue-state(exit)
+
+    state 3:
+        scrolling-message-pause("- No sé si bebermela o si hacer un unboxing en YouTube.")
+        goto-dialogue-state(exit)
+
+    state 4:
+        scrolling-message-pause("- Nunca! Eres un perturbado mental!! Y esta demo es una mierda!!")
+        goto-dialogue-state(exit)

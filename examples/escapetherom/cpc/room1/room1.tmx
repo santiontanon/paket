@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="9" tilewidth="8" tileheight="8" nextobjectid="28">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="48" columns="16">
+  <image source="bg-tiles.png" width="128" height="24"/>
+ </tileset>
+ <tileset firstgid="49" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="9">
+  <data encoding="csv">
+2,2,3,3,3,3,3,3,3,3,3,3,4,4,
+2,2,3,3,3,3,3,3,3,3,3,3,4,4,
+2,2,5,5,5,5,5,5,5,5,5,5,4,4,
+2,2,6,6,6,6,6,6,6,6,6,6,4,4,
+2,7,8,8,8,8,8,8,8,8,8,8,9,4,
+7,10,11,11,11,11,11,11,11,11,11,11,12,9,
+10,13,14,14,14,14,14,14,14,14,14,14,15,12,
+13,16,1,1,1,1,1,1,1,1,1,1,17,15,
+16,1,1,1,1,1,1,1,1,1,1,1,1,17
+</data>
+ </layer>
+ <layer name="collision" width="14" height="9">
+  <data encoding="csv">
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,50,50,50,50,50,50,
+50,55,0,0,0,0,0,0,0,0,0,0,56,50,
+55,0,0,0,0,0,0,0,0,0,0,0,0,56
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="32" name="carpet" x="24" y="64" width="16" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="33" name="balcony" x="24" y="16" width="16" height="40">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="34" name="coathanger" x="40" y="32" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="35" name="couch" x="48" y="48" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="36" name="lamp-table" x="56" y="40" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="1" name="door" x="64" y="16" width="12" height="40">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="37" name="lamp" x="16" y="20" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="38" name="lamp" x="56" y="20" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="39" name="painting" x="44" y="16" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="40" name="lamp" x="80" y="20" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="41" name="clock" x="88" y="16" width="8" height="40">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="42" name="chair" x="96" y="36" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="43" name="chair" x="8" y="36" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="44" name="desk-A" x="8" y="48" width="10" height="24">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="45" name="desk-B" x="18" y="48" width="6" height="20">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="46" name="painting" x="4" y="24" width="6" height="20">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="47" name="pillow" x="48" y="54" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="48" name="paper-sheet" x="18" y="48" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="49" name="pen" x="16" y="52" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="63" name="player" x="80" y="32" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

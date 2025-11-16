@@ -1,0 +1,115 @@
+object("balcony", "balcón", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-balcony.png")
+
+
+object("carpet", "alfombra", "Una alfombra persa."):
+    state("idle", "right"):
+        image("object-carpet.png")
+
+
+object("chair", "silla", "No tiene nada de especial."):
+    state("idle", "right"):
+        image("object-chair.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+    state("idle", "left"):
+        image("object-chair-left.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("clock", "reloj", "No está en hora, pero hay un complejo mecanismo para ajustarlo..."):
+    state("idle", "front"):
+        image("object-clock.png")
+
+
+object("couch", "butaca", "Hay un cojín."):
+    state("idle", "front"):
+        image("object-couch.png")
+        collisionmask("0000", "0000", "0000", "1111")
+
+
+object("pillow", "cojín", "Un cojín de plumas extrañamente pesado."):
+    state("idle", "front"):
+        image("object-pillow.png")
+
+
+object("coathanger", "colgador", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-coathanger.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("lamp", "lámpara", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-lamp.png")
+
+
+object("lamp-table", "mesilla", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-lamp-table.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("painting", "cuadro", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-painting-front.png")
+
+    state("idle", "right"):
+        image("object-painting-right.png")
+
+
+object("door", "puerta", "Está cerrada por fuera. Por el agujero de la cerradura puedes ver que la llave está puesta por el otro lado."):
+    state("closed", "front"):
+        image("object-door-closed.png")
+
+    state("exit", "front"):
+        image("object-door-open.png")
+
+
+object("pen", "bolígrafo", "Es un bic cristal, escribe normal. Pero al parecer este ya no escribe."):
+    state("idle", "right"):
+        image("object-pen.png")
+
+
+object("paper-sheet", "papel", "Hay algo escrito: 2110,1608."):
+    state("idle", "right"):
+        image("object-paper-sheet.png")
+
+
+object("desk-A", "escritorio", "El escritorio tiene un cajón."):
+    state("idle", "right"):
+        image("object-desk-A.png")
+        collisionmask("00000", "00000", "00000", "00000", "00011", "11111")
+
+
+object("desk-B", "escritorio", "El escritorio tiene un cajón."):
+    state("idle", "right"):
+        image("object-desk-B.png")
+        collisionmask("000", "000", "000", "000", "111")
+
+
+# ------- Start room sub-rooms objects: -------
+
+
+object("drawer", "cajón", "Está cerrado con llave."):
+    state("closed", "front"):
+        image("object-drawer-closed.png")
+
+    state("open", "front"):
+        image("object-drawer-open.png")
+
+
+object("pen-zoom", "bolígrafo", "Es un bic cristal, escribe normal. Pero al parecer este ya no escribe."):
+    state("idle", "right"):
+        image("object-pen-zoom.png")
+
+
+object("paper-sheet-zoom", "papel", "Hay algo escrito: 2110,1608."):
+    state("idle", "right"):
+        image("object-paper-sheet-zoom.png")
+
+object("letter-opener", "abrecartas", "No tiene nada de especial."):
+    state("idle", "right"):
+        image("object-letter-opener.png")
+
+include("objects-clock.pak")

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="8" height="8" tilewidth="8" tileheight="8" nextobjectid="30">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="48" columns="16">
+  <image source="bg-tiles.png" width="128" height="24"/>
+ </tileset>
+ <tileset firstgid="49" name="collision" tilewidth="8" tileheight="8" tilecount="9" columns="9">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="8" height="8">
+  <data encoding="csv">
+2,2,3,3,3,3,4,4,
+2,2,5,5,5,5,4,4,
+2,2,6,6,6,6,4,4,
+2,7,8,8,8,8,9,4,
+7,10,11,11,11,11,12,9,
+10,13,14,14,14,14,15,12,
+13,16,1,1,1,1,17,15,
+16,1,1,1,1,1,1,17
+</data>
+ </layer>
+ <layer name="collision" width="8" height="8">
+  <data encoding="csv">
+50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,
+50,50,50,50,50,50,50,50,
+50,55,0,0,0,0,56,50,
+55,0,0,0,0,0,0,56
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="1" name="door" x="32" y="8" width="12" height="40">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="63" name="player" x="40" y="24" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="32" name="chema" x="16" y="24" width="12" height="28">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

@@ -1,0 +1,53 @@
+# ------- Global Definitions: -------
+language("es")
+font("font-custom.png", 
+     " abcdefghijklmnñopqrstuvwxyz'",
+     "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ",
+     "0123456789.,:;Çç?!-áéíóúàèìòâêïôü^")
+built-in-texts("No puedo coger eso!",
+               "No sé como usar eso!",
+               "No sé qué decirle!",
+               "Ya lo tengo!",
+               "No llego desde aquí!")
+action-names("Examinar ", "Coger ", "Usar ", "Hablar con ", "Salir por ", " con ")
+
+loading-screen("loading-screen.png")
+pointers("pointers.png")
+gui(0, 17, "gui.png")
+
+
+# ------- Global rules: -------
+itemRules:
+    rule use-item-with-item(2, 7):
+        lose-item(2)
+        lose-item(7)
+        gain-item(3)
+        message("Rajas el cojín y descubres por qué era tan pesado.")
+
+    rule use-item-with-item(3, 4):
+        message("A ver, estamos jugando o bebiendo?")
+
+onRoomLoadRules:
+    rule variable-eq(door-state, 2):
+        change-object-description(1, "Está cerrada con llave.")
+
+    rule variable-eq(door-state, 3):
+        change-object-state(1, "exit")
+        change-object-description(1, "No tiene nada de especial.")
+
+    rule variable-eq(drawer-state, 1):
+        change-object-state(2, "open")
+        change-object-description(2, "No tiene nada de especial.")
+
+    rule variable-eq(drawer-state, 2):
+        change-object-state(2, "closed")
+        change-object-description(2, "No tiene nada de especial.")
+
+    # Clock puzzle:
+    rule variable-eq(clock-puzzle1, 1):
+        change-object-state(3, "open")
+
+    rule variable-eq(clock-puzzle2, 1):
+        change-object-state(4, "open")
+
+

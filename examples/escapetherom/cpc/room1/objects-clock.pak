@@ -1,0 +1,27 @@
+object("clock-light", "luz", "No tiene nada de especial."):
+    state("closed", "front"):
+        image("object-clock-redlight.png")
+
+    state("open", "front"):
+        image("object-clock-greenlight.png")
+
+
+object("clock-minus", "botón", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-clock-minus.png")
+
+
+object("clock-plus", "botón", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-clock-plus.png")
+
+
+object("clock-check", "botón", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-clock-check.png")
+
+
+object("clock-reset", "botón", "No tiene nada de especial."):
+    state("idle", "front"):
+        image("object-clock-reset.png")
+

@@ -1,0 +1,18 @@
+include("palette.pak")
+include("items.pak")
+include("globals.pak")
+
+# ------- Objects --------
+include("objects.pak")
+include("room1/objects.pak")
+include("room2/objects.pak")
+
+
+# ------- Room definitions: -------
+include("rooms.pak")
+
+# ------- Dialogues -------
+include("dialogues.pak")
+
+# ------- Custom assembler code -------
+# additional-assembler-file("custom-functions.asm")

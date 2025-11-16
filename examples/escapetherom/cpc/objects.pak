@@ -1,0 +1,80 @@
+# ------- Global objects: -------
+
+player-stop-state("idle", "left")
+object("player", "paket", "Estoy hecho un paquete..."):
+    state("idle", "left"):
+        image("object-player.png", 0, 0, 6, 28)
+
+    state("walking-1", "left"):
+        image("object-player.png", 0, 28, 6, 56)
+
+    state("walking-2", "left"):
+        image("object-player.png", 8, 28, 14, 56)
+
+    state("walking-3", "left"):
+        image("object-player.png", 16, 28, 24, 56)
+
+    state("walking-4", "left"):
+        image("object-player.png", 24, 28, 32, 56)
+
+    state("walking-1", "right"):
+        image("object-player.png", 0, 56, 6, 84)
+
+    state("walking-2", "right"):
+        image("object-player.png", 8, 56, 14, 84)
+
+    state("walking-3", "right"):
+        image("object-player.png", 16, 56, 24, 84)
+
+    state("walking-4", "right"):
+        image("object-player.png", 24, 56, 30, 84)
+
+    state("walking-1", "down"):
+        image("object-player.png", 0, 84, 6, 112)
+
+    state("walking-2", "down"):
+        image("object-player.png", 8, 84, 14, 112)
+
+    state("walking-3", "down"):
+        image("object-player.png", 16, 84, 22, 112)
+
+    state("walking-4", "down"):
+        image("object-player.png", 24, 84, 30, 112)
+
+    state("walking-1", "up"):
+        image("object-player.png", 0, 112, 6, 140)
+
+    state("walking-2", "up"):
+        image("object-player.png", 8, 112, 14, 140)
+
+
+object("number", "numero", "No tiene nada de especial."):
+    state("number", "0"):
+        image("object-number.png", 0, 0, 4, 8)
+
+    state("number", "1"):
+        image("object-number.png", 4, 0, 8, 8)
+
+    state("number", "2"):
+        image("object-number.png", 8, 0, 12, 8)
+
+    state("number", "3"):
+        image("object-number.png", 12, 0, 16, 8)
+
+    state("number", "4"):
+        image("object-number.png", 16, 0, 20, 8)
+
+    state("number", "5"):
+        image("object-number.png", 20, 0, 24, 8)
+
+    state("number", "6"):
+        image("object-number.png", 24, 0, 28, 8)
+
+    state("number", "7"):
+        image("object-number.png", 28, 0, 32, 8)
+
+    state("number", "8"):
+        image("object-number.png", 32, 0, 36, 8)
+
+    state("number", "9"):
+        image("object-number.png", 36, 0, 40, 8)

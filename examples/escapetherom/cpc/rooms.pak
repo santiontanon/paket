@@ -1,0 +1,229 @@
+# ------- Room definitions: -------
+room("start-room", "room1/room1.tmx", 0, 0):
+
+    rule pickup-object(48):   # Paper
+        gain-item(1)
+        set-variable(paper-taken, 1)
+        remove-object(48)
+
+    rule pickup-object(49):   # Pen
+        gain-item(6)
+        set-variable(pen-taken, 1)
+        remove-object(49)
+
+    persistent-rule pickup-object(47):   # Pillow
+        gain-item(7)
+    persistent-rule-effect:
+        change-object-description(35, "No tiene nada de especial.")
+        remove-object(47)
+
+    rule examine-object(32) && variable-eq(llave-alfombra, 0):
+        gain-item(8)
+        set-variable(llave-alfombra, 1)
+        message("Levantas la alfombra y encuentras una pequeña llave debajo.")
+
+    rule examine-object(44):  # Desk A
+        go-to-room("start-room-desk")
+
+    rule examine-object(45):  # Desk B
+        go-to-room("start-room-desk")
+
+    rule use-object(41):      # Clock
+        go-to-room("start-room-clock")
+
+    rule use-item-with-object(1, 1) && variable-eq(door-state, 0):
+        message("Parece que la puerta tiene una apertura inferior suficiente para que puedas pasar una llave. Pones el papel por debajo, justo debajo de la cerradura.")
+        lose-item(1)
+        set-variable(door-state, 1)
+
+    repeating-rule use-item-with-object(6, 1) && variable-eq(door-state, 0):
+        message("Podría empujar la llave con el bolígrafo, pero no la podría recoger. Tendría que pasar algo por debajo de la puerta antes.")
+
+    rule use-item-with-object(6, 1) && variable-eq(door-state, 1):
+        gain-item(5)
+        gain-item(1)
+        message("Empujas la llave con el bolígrafo y cae encima del papel.")
+        lose-item(6)
+        set-variable(door-state, 2)
+        change-object-description(1, "Está cerrada con llave.")
+
+    rule use-item-with-object(5, 1):
+        lose-item(5)
+        set-variable(door-state, 3)
+        change-object-state(1, "exit")
+        change-object-description(1, "No tiene nada de especial.")
+
+    rule exit-through-object(1) && have-item(3) && have-item(4):
+        go-to-room("room-chema", 34, 52)
+
+    repeating-rule exit-through-object(1):
+        message("No me puedo ir todavía, creo que me dejo algo...")
+
+    on-room-load-rule variable-eq(paper-taken, 1):
+        remove-object(48)
+
+    on-room-load-rule variable-eq(pen-taken, 1):
+        remove-object(49)
+
+
+room("start-room-desk", "room1/room1-desk.tmx", 2, 1, subroom):
+    repeating-rule use-object(2) &&
+              variable-eq(drawer-state, 0):
+        message("Está cerrado con llave.")
+
+    repeating-rule use-object(2) &&
+              variable-eq(drawer-state, 1):
+        set-variable(drawer-state, 2)
+        change-object-state(2, "closed")
+
+    repeating-rule use-object(2) &&
+              variable-eq(drawer-state, 2):
+        set-variable(drawer-state, 1)
+        change-object-state(2, "open")
+
+    rule use-item-with-object(8, 2):
+        message("La llave encaja perfectamente.")
+        lose-item(8)
+        change-object-description(2, "No tiene nada de especial.")
+        set-variable(drawer-state, 1)
+        change-object-state(2, "open")
+
+    rule pickup-object(33):  # paper
+        gain-item(1)
+        set-variable(paper-taken, 1)
+        remove-object(33)
+
+    rule pickup-object(32):  # pen
+        gain-item(6)
+        set-variable(pen-taken, 1)
+        remove-object(32)
+
+    persistent-rule pickup-object(34):
+        gain-item(2)
+    persistent-rule-effect:
+        remove-object(34)
+
+    rule click-outside-room-area():
+        go-to-room("start-room", 20, 72)
+
+    on-room-load-rule variable-eq(paper-taken, 1):
+        remove-object(33)
+
+    on-room-load-rule variable-eq(pen-taken, 1):
+        remove-object(32)
+
+
+room("start-room-clock", "room1/room1-clock.tmx", 2, 1, subroom):
+  default-verb("use")
+
+  # plus signs:
+  repeating-rule use-object(32):
+      increase-number-object(45)
+
+  repeating-rule use-object(33):
+      increase-number-object(44)
+      increase-number-object(46)
+
+  repeating-rule use-object(34):
+      increase-number-object(45)
+      increase-number-object(47)
+
+  repeating-rule use-object(35):
+      increase-number-object(46)
+
+  # minus signs:
+  repeating-rule use-object(36):
+      decrease-number-object(45)
+
+  repeating-rule use-object(37):
+      decrease-number-object(44)
+      decrease-number-object(46)
+
+  repeating-rule use-object(38):
+      decrease-number-object(45)
+      decrease-number-object(47)
+
+  repeating-rule use-object(39):
+      decrease-number-object(46)
+
+  # reset and check:
+  repeating-rule use-object(40):
+      set-number-object(44, 0)
+      set-number-object(45, 0)
+      set-number-object(46, 0)
+      set-number-object(47, 0)
+
+  rule use-object(41) &&
+     variable-eq(clock-puzzle1, 0) &&
+     number-object-equals(44, 2) &&
+     number-object-equals(45, 1) &&
+     number-object-equals(46, 1) &&
+     number-object-equals(47, 0):
+      change-object-state(3, "open")
+      set-variable(clock-puzzle1, 1)
+      if variable-eq(clock-puzzle2, 0):
+          message("Se ha oído un clic, pero parece que falta introducir otra hora más.")
+      else:
+          message("El mecanismo ha abierto un resorte que ha dejado caer una cerveza.")
+          gain-item(4)
+      endif
+
+  rule use-object(41) &&
+     variable-eq(clock-puzzle2, 0) &&
+     number-object-equals(44, 1) &&
+     number-object-equals(45, 6) &&
+     number-object-equals(46, 0) &&
+     number-object-equals(47, 8):
+      change-object-state(4, "open")
+      set-variable(clock-puzzle2, 1)
+      if variable-eq(clock-puzzle1, 0):
+          message("Se ha oído un clic, pero parece que falta introducir otra hora más.")
+      else:
+          message("El mecanismo ha abierto un resorte que ha dejado caer una cerveza.")
+          gain-item(4)
+      endif
+
+  repeating-rule use-object(41):
+      message("No ha pasado nada, seguro que la hora introducida es incorrecta.")
+
+  rule click-outside-room-area():
+      go-to-room("start-room", 88, 64)
+
+
+room("room-chema", "room2/room2.tmx", 3, 1):
+    repeating-rule talk-to-object(32):
+        start-dialogue("chema")
+
+    repeating-rule use-item-with-object(4, 32):
+        start-dialogue("chema2")
+        call-script("game-complete")
+
+    rule exit-through-object(1):
+        go-to-room("start-room", 66, 72)
+
+
+# ------- Scripts: -------
+script("game-complete"):
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(80,64,3,"Demo over!")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-split-mode1-mode0)
+    redraw-room()
+    set-palette("room_room-chema")
+    
+script("text-fade-in"):
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,26)
+
+script("text-fade-out"):
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,0)
