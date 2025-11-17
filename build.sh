@@ -26,6 +26,9 @@ echo "Generating JAR file..."
 cd target/classes
 jar cf ../PAKET.jar .
 cd ../..
+cd src
+jar uf ../target/PAKET.jar paket/templates
+cd ..
 
 # Add the mdl/jdom depenedncies
 cd lib

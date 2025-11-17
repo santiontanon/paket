@@ -38,6 +38,7 @@ import paket.tiles.TileBankCPC;
 import paket.tiles.TileBankCPCMode1;
 import paket.util.ConsoleExecution;
 import paket.util.Pair;
+import paket.util.Resources;
 import paket.util.Z80Assembler;
 import paket.util.cpc2cdt.CPC2CDT;
 import paket.util.idsk.IDsk;
@@ -1508,13 +1509,23 @@ public class CPC extends Platform {
         
         config.info("getRAMBlocks ... ");
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL url = classLoader.getResource("paket/templates/cpc/ramblocks");
-        String path = url.getPath();
-        for(File f:new File(path).listFiles()) {
-            // Compile and get size of "f":
-            String f_path = f.getPath();
-            String f_name = f_path.substring(f_path.lastIndexOf(File.separator)+1);
-            addRAMBlock(f_name, f_path, blocks, outputFolder, game);
+        for(String f_name: new String[]{
+            "dialogue-state.asm",
+            "general-buffer.asm",
+            "general-variables.asm",
+            "inventory-data.asm",
+            "music-buffer.asm",
+            "music-variables.asm",
+            "object-name-buffer.asm",
+            "other-variables.asm",
+            "pathfinding-variables.asm",
+            "redraw-dirty-variables.asm",
+            "room-buffer.asm",
+            "room-on-load-rules-buffer.asm",
+            "tiles-object-types-buffer.asm",
+            "to-zero-on-game-start.asm",
+        }) {
+            addRAMBlock(f_name, "paket/templates/cpc/ramblocks/" + f_name, blocks, outputFolder, game);
         }
         
         if (game.loadSaveGameScript != null) {
@@ -1624,7 +1635,7 @@ public class CPC extends Platform {
     public static String getRAMBlockAssembler(String f_path) throws Exception
     {
         String assembler = "";
-        BufferedReader br = new BufferedReader(new FileReader(f_path));
+        BufferedReader br = Resources.asReader(f_path);
         String line = br.readLine();
         boolean started = false;
         while(line != null) {
@@ -1666,7 +1677,7 @@ public class CPC extends Platform {
         int start_of_music_data = 0, end_of_music_data = 0;
         int stack_size = 128;
         
-        BufferedReader br = new BufferedReader(new FileReader(symbolFile));
+        BufferedReader br = Resources.asReader(symbolFile);
         while(true) {
             String line = br.readLine();
             if (line == null) break;
