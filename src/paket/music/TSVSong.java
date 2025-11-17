@@ -24,6 +24,8 @@ public class TSVSong {
     public int loopBackTime = -1;
     public List<String> subSongsPlayed = new ArrayList<>();
     
+    
+    @SuppressWarnings("unchecked")
     public TSVSong() {
         channels = new List[N_CHANNELS];
         for(int i = 0;i<N_CHANNELS;i++) {
@@ -32,6 +34,7 @@ public class TSVSong {
     }
 
 
+    @SuppressWarnings("unchecked")
     public TSVSong(TSVSong s) {
         channels = new List[N_CHANNELS];
         for(int i = 0;i<N_CHANNELS;i++) {

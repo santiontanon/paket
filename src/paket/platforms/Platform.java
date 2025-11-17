@@ -205,6 +205,7 @@ public abstract class Platform {
     }     
     
     
+    @SuppressWarnings("unchecked")
     public Pair<Integer, Integer> generateObjectTypeBanksInternal(String outputFolder, List<PAKObjectType> objectTypes, PAKGame game,
             PAKETOptimizer optimizerState) throws Exception {
         int largest_size = 0;
@@ -212,7 +213,7 @@ public abstract class Platform {
         List<List<Integer>> bank_bytes = new ArrayList<>();
         game.objectTypeBankSizes = new ArrayList<>();
         if (config.maxObjectOptimizationIterations == 0) {
-            List<PAKObjectType> objectTypes2 = (List<PAKObjectType>) optimizerState.heuristicCompressionOrder(objectTypes, config);            
+            List<PAKObjectType> objectTypes2 = (List<PAKObjectType>) optimizerState.heuristicCompressionOrder(objectTypes, config);
             objectTypes.clear();
             objectTypes.addAll(objectTypes2);
         } else {

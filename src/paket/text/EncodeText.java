@@ -20,6 +20,7 @@ import paket.util.Z80Assembler;
  */
 public class EncodeText {    
     // maxBankSize is in bytes of text per bank
+    @SuppressWarnings("unchecked")
     public static List<Integer> encodeTextInBanks(List<String> lines, PAKFont font, int maxBankSize, String outputFolder, HashMap<String, Pair<Integer, Integer>> ids, 
             PAKETOptimizer optimization_textState,
             PAKETConfig config) throws Exception

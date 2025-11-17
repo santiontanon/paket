@@ -420,6 +420,7 @@ public class PAKETCompiler {
     }
     
     
+    @SuppressWarnings("unchecked")
     public void generateTileData(PAKGame game, Platform platform, String destinationFolder, List<String> dataFolders, PAKETConfig config) throws Exception
     {
         // Each tile is directly the bytes used to store it in each platform
@@ -893,6 +894,7 @@ public class PAKETCompiler {
     }
     
     
+    @SuppressWarnings("unchecked")
     public int generateRoomData(PAKGame game, String outputFolder, List<PAKObjectType> objectTypes, HashMap<String, String> variables, int screenWidth, HashMap<String, Pair<Integer, Integer>> textIDHash, List<PAKDialogue> dialogues, Platform platform, PAKETConfig config) throws Exception
     {
         int largest_size = 0;

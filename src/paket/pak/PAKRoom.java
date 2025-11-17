@@ -167,14 +167,7 @@ public class PAKRoom {
         }
         
         // Sort objects according to the order in which they need to be drawn:
-        Collections.sort(objects, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                PAKObject po1 = (PAKObject)o1;
-                PAKObject po2 = (PAKObject)o2;
-                return Integer.compare(po1.depth, po2.depth);
-            }
-        });
+        Collections.sort(objects, (PAKObject po1, PAKObject po2) -> Integer.compare(po1.depth, po2.depth));
         
         int flags = 0;
         if (isSubRoom) flags |= 1;
