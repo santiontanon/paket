@@ -1,0 +1,429 @@
+Main		
+		
+instruments-with-speed:		
+LeftHand	5	10,8,4,6,3,1,0,2,1,-1
+RightHand	1	1,3,7,10,11,12,11,12,11,11,11,10,8,9,8,8,7,7,6,5,4,3,2,2,1,2,1,0,-1
+RightHandEcho	1	1,2,5,8,9,10,9,10,9,9,9,8,6,7,6,6,5,5,3,4,4,3,2,1,2,1,0,-1
+		
+sfx:		
+sfx_drum_shorter_re	sfx_drum_shorter_re.asm	
+sfx_short_hihat	sfx_short_hihat.asm	
+sfx_open_hihat	sfx_open_hihat.asm	
+		
+song:		
+LeftHand,-	LeftHand,re3	RightHand,-
+		
+		
+fa3		
+	sib3	
+la3		
+	re4	
+la3		
+	fa4	
+		
+re4		
+		
+	la3	
+		
+re4		
+		
+-	re3	
+		
+		
+fa3		
+	sib3	
+la3		
+	re4	
+la3		
+	fa4	
+		
+re4		
+		
+	la3	
+		
+re4		
+		
+re3	RightHand,la4	
+		
+		RightHandEcho,la4
+fa3		
+	LeftHand,sib3	
+la3		-
+	re4	
+la3		
+	fa4	
+		
+re4		
+		
+la3	RightHand,sib4	
+		
+re4		
+	la4	
+do#3	la4	
+		
+		RightHandEcho,la4
+mi3		
+	LeftHand,la3	
+sol3		
+	sib3	
+la3		
+	mi4	
+		
+do#4		
+		
+la3	RightHand,sib4	
+		
+mi3		
+	la4	
+do3	la4	
+		
+		RightHandEcho,la4
+mib3		
+	LeftHand,sol3	
+fa#3		
+	sib3	
+la3		
+	mib4	
+		
+do4		
+		
+la3	RightHand,sib4	
+		
+mib3		
+	la4	
+sib3	re5	
+		
+		
+re3		
+	LeftHand,sol3	
+fa#3		
+	sib3	
+sol3		
+re4	sol4	
+		
+sib3		
+		
+sol3		
+		
+re3		
+		
+la3	RightHand,sol4	
+		
+		
+do#3		
+	LeftHand,re3	
+mi3		
+	sol3	
+sib3		
+	do#4	
+		
+re4		
+		
+	RightHand,la4	
+		
+		
+	sol4	
+la3	fa4	
+		
+		
+re3		
+	LeftHand,mi3	
+fa3		
+	la3	
+re4		
+	mi4	
+		
+re4		
+		
+	RightHand,sol4	
+		
+		
+	fa4	
+lab3	mi4	
+		
+		
+do#3		
+	LeftHand,mi3	
+sol3		
+	sib3	
+do#4		
+	mi4	
+		
+do#4		
+		
+	RightHand,fa4	
+		
+		
+	mi4	
+-	re4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+		
+	-	sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		sfx(sfx_drum_shorter_re)
+		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+re3	la4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+fa3		
+	LeftHand,sib3	sfx(sfx_open_hihat)
+la3		
+	re4	sfx(sfx_short_hihat)
+la3		sfx(sfx_drum_shorter_re)
+	fa4	sfx(sfx_drum_shorter_re)
+		
+re4		sfx(sfx_drum_shorter_re)
+		
+la3	RightHand,sib4	sfx(sfx_open_hihat)
+		
+re4		sfx(sfx_short_hihat)
+	la4	
+do#3	la4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+mi3		
+	LeftHand,la3	sfx(sfx_open_hihat)
+sol3		
+	sib3	sfx(sfx_short_hihat)
+la3		sfx(sfx_drum_shorter_re)
+	mi4	sfx(sfx_drum_shorter_re)
+		
+do#4		sfx(sfx_drum_shorter_re)
+		
+la3	RightHand,sib4	sfx(sfx_open_hihat)
+		
+mi3		sfx(sfx_short_hihat)
+	la4	
+do3	la4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+mib3		
+	LeftHand,sol3	sfx(sfx_open_hihat)
+fa#3		
+	sib3	sfx(sfx_short_hihat)
+la3		sfx(sfx_drum_shorter_re)
+	mib4	sfx(sfx_drum_shorter_re)
+		
+do4		sfx(sfx_drum_shorter_re)
+		
+la3	RightHand,sib4	sfx(sfx_open_hihat)
+		
+mib3		sfx(sfx_short_hihat)
+	la4	
+sib3	re5	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+re3		
+	LeftHand,sol3	sfx(sfx_open_hihat)
+fa#3		
+	sib3	sfx(sfx_short_hihat)
+sol3		sfx(sfx_drum_shorter_re)
+re4	sol4	sfx(sfx_drum_shorter_re)
+		
+sib3		sfx(sfx_drum_shorter_re)
+		
+sol3		sfx(sfx_open_hihat)
+		
+re3		sfx(sfx_short_hihat)
+		
+la3	RightHand,sol4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+do#3		
+	LeftHand,re3	sfx(sfx_open_hihat)
+mi3		
+	sol3	sfx(sfx_short_hihat)
+sib3		sfx(sfx_drum_shorter_re)
+	do#4	sfx(sfx_drum_shorter_re)
+		
+re4		sfx(sfx_drum_shorter_re)
+		
+	RightHand,la4	sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+	sol4	
+la3	fa4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+re3		
+	LeftHand,mi3	sfx(sfx_open_hihat)
+fa3		
+	la3	sfx(sfx_short_hihat)
+re4		sfx(sfx_drum_shorter_re)
+	mi4	sfx(sfx_drum_shorter_re)
+		
+re4		sfx(sfx_drum_shorter_re)
+		
+	RightHand,sol4	sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+	fa4	
+lab3	mi4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+do#3		
+	LeftHand,mi3	sfx(sfx_open_hihat)
+sol3		
+	sib3	sfx(sfx_short_hihat)
+do#4		sfx(sfx_drum_shorter_re)
+	mi4	sfx(sfx_drum_shorter_re)
+		
+do#4		sfx(sfx_drum_shorter_re)
+		
+	RightHand,fa4	sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+	mi4	
+-	re4	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+		
+	-	sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		sfx(sfx_drum_shorter_re)
+		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+leftHand,re3	LeftHand,re1	sfx(sfx_drum_shorter_re)
+	re1	
+		sfx(sfx_short_hihat)
+fa3		
+	sib3	sfx(sfx_open_hihat)
+la3		
+	re4	sfx(sfx_short_hihat)
+la3		sfx(sfx_drum_shorter_re)
+	fa4	sfx(sfx_drum_shorter_re)
+		
+re4		sfx(sfx_drum_shorter_re)
+		
+la3		sfx(sfx_open_hihat)
+		
+re4		sfx(sfx_short_hihat)
+		
+do#3	do#1	sfx(sfx_drum_shorter_re)
+	do#1	
+		sfx(sfx_short_hihat)
+mi3		
+	la3	sfx(sfx_open_hihat)
+sol3		
+	sib3	sfx(sfx_short_hihat)
+la3		sfx(sfx_drum_shorter_re)
+mi4		sfx(sfx_drum_shorter_re)
+		
+do#4		sfx(sfx_drum_shorter_re)
+		
+la3		sfx(sfx_open_hihat)
+		
+mi3		sfx(sfx_short_hihat)
+		
+do3	do1	sfx(sfx_drum_shorter_re)
+	do1	
+		sfx(sfx_short_hihat)
+mib3		
+	sol3	sfx(sfx_open_hihat)
+fa#3		
+	sib3	sfx(sfx_short_hihat)
+la3		sfx(sfx_drum_shorter_re)
+mib4		sfx(sfx_drum_shorter_re)
+		
+do4		sfx(sfx_drum_shorter_re)
+		
+la3		sfx(sfx_open_hihat)
+		
+mib3		sfx(sfx_short_hihat)
+		
+sib3	sib1	sfx(sfx_drum_shorter_re)
+	sib1	
+		sfx(sfx_short_hihat)
+re3		
+	sol3	sfx(sfx_open_hihat)
+fa#3		
+	sib3	sfx(sfx_short_hihat)
+sol3		sfx(sfx_drum_shorter_re)
+re4		sfx(sfx_drum_shorter_re)
+		
+sib3		sfx(sfx_drum_shorter_re)
+		
+sol3		sfx(sfx_open_hihat)
+		
+re3		sfx(sfx_short_hihat)
+		
+la3	la1	sfx(sfx_drum_shorter_re)
+	la1	
+		sfx(sfx_short_hihat)
+do#3		
+	re3	sfx(sfx_open_hihat)
+mi3		
+	sol3	sfx(sfx_short_hihat)
+sib3		sfx(sfx_drum_shorter_re)
+do#4		sfx(sfx_drum_shorter_re)
+		
+re4		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+la3	la1	sfx(sfx_drum_shorter_re)
+	la1	
+		sfx(sfx_short_hihat)
+re3		
+	mi3	sfx(sfx_open_hihat)
+fa3		
+	la3	sfx(sfx_short_hihat)
+re4		sfx(sfx_drum_shorter_re)
+mi4		sfx(sfx_drum_shorter_re)
+		
+re4		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+lab3	lab1	sfx(sfx_drum_shorter_re)
+	lab1	
+		sfx(sfx_short_hihat)
+do#3		
+	mi3	sfx(sfx_open_hihat)
+sol3		
+	sib3	sfx(sfx_short_hihat)
+do#4		sfx(sfx_drum_shorter_re)
+mi4		sfx(sfx_drum_shorter_re)
+		
+do#4		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		
+-	-	sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_short_hihat)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		sfx(sfx_drum_shorter_re)
+		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_drum_shorter_re)
+		
+		sfx(sfx_open_hihat)
+		
+		sfx(sfx_short_hihat)
+		

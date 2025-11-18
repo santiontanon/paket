@@ -1,0 +1,90 @@
+# ------- Other Global Scripts: -------
+
+
+
+# ------- Global Room Rules: -------
+
+
+# ------- Item rules: -------
+itemRules:
+	rule examine-item(item-carta-amarilla):
+		draw-fog-over-room-area()
+		draw-cutscene-image(6, 8, "carta-amarilla")
+		wait-for-space()
+		restore-current-room-palette()
+		redraw-room()
+
+	rule examine-item(item-carta-azul):
+		draw-fog-over-room-area()
+		draw-cutscene-image(6, 8, "carta-azul")
+		wait-for-space()
+		restore-current-room-palette()
+		redraw-room()
+
+	rule examine-item(item-carta-roja):
+		draw-fog-over-room-area()
+		draw-cutscene-image(6, 8, "carta-roja")
+		wait-for-space()
+		restore-current-room-palette()
+		redraw-room()
+
+    # rule examine-item(item-mapa-estrellas):
+    #     call-script("cutscene3-mapa")
+
+	rule use-item-with-item(item-puro, item-mechero):
+		message("He encendido el puro.")
+		lose-item(item-puro)
+		gain-item(item-puro-encendido)
+		play-sfx("sfx/puzzle-resuelto.afx")
+
+	rule examine-item(item-melody-pops):
+		if current-room-is("melody-pops-zoom"):
+			pause(1)
+		else:
+			call-assembler("custom_push_room_and_position")
+			go-to-room("melody-pops-zoom")
+		endif
+
+	rule use-item-with-item(item-destornillador, item-tren):
+		message("He podido aprovechar un cable y la batería.")
+		lose-item(item-tren)
+		lose-item(item-destornillador)
+		gain-item(item-cable)
+		gain-item(item-bateria)
+		play-sfx("sfx/puzzle-resuelto.afx")
+
+	rule use-item-with-item(item-goma, item-rama2):
+		message("He fabricado un tirachinas.")
+		lose-item(item-goma)
+		lose-item(item-rama2)
+		gain-item(item-tirachinas)
+		play-sfx("sfx/puzzle-resuelto.afx")
+
+	rule use-item-with-item(item-piedra, item-tirachinas):
+		message("Listo para disparar.")
+		lose-item(item-piedra)
+		lose-item(item-tirachinas)
+		gain-item(item-tirachinas-cargado)
+		play-sfx("sfx/puzzle-resuelto.afx")
+
+	rule use-item-with-item(item-bateria, item-pktd):
+		message("Le he puesto la batería.")
+		lose-item(item-bateria)
+		lose-item(item-pktd)
+		gain-item(item-pktd-on)
+		play-sfx("sfx/puzzle-resuelto.afx")
+
+	rule examine-item(item-papiro-letras):
+		if current-room-is("papiro"):
+			pause(1)
+		else:
+			call-assembler("custom_push_room_and_position")
+			go-to-room("papiro")
+		endif
+
+	rule use-item-with-item(item-fragmento-ritual, item-fragmento-ritual2):
+		message("¡Encajan!")
+		lose-item(item-fragmento-ritual)
+		lose-item(item-fragmento-ritual2)
+		gain-item(item-ritual-completo)
+		play-sfx("sfx/puzzle-resuelto.afx")

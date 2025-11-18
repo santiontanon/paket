@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="48">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="80" columns="16">
+  <image source="bg-tiles-pasillo-original.png" width="128" height="40"/>
+ </tileset>
+ <tileset firstgid="81" name="collision" tilewidth="8" tileheight="8" tilecount="10" columns="10">
+  <image source="bg-collision-masks.png" width="72" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+2,2,3,2,3,2,2,2,2,2,2,1,1,20,
+5,5,6,5,6,5,5,5,5,5,5,1,20,21,
+5,5,9,5,9,5,5,5,5,5,5,1,21,21,
+5,5,10,5,10,5,5,5,5,5,5,1,21,21,
+5,5,10,5,10,5,5,5,5,5,5,1,21,21,
+5,5,10,5,10,5,5,5,5,5,5,1,21,21,
+5,5,15,5,15,5,5,5,5,5,5,1,21,21,
+17,17,18,17,18,17,17,17,17,17,17,1,22,21,
+1,1,1,1,1,1,1,1,1,1,1,1,1,22,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="14" height="11" visible="0">
+  <data encoding="csv">
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,0,82,82,82,82,0,82,82,
+82,82,82,82,82,82,82,82,82,82,82,0,82,82,
+82,82,82,82,82,82,82,82,82,82,82,0,82,82,
+89,89,82,89,82,89,89,89,89,89,89,0,86,82,
+0,0,0,0,0,0,0,0,0,0,0,0,0,86,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="1" name="door-small" x="88" y="32" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="56"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="6" name="candle-corridor" x="8" y="0" width="8" height="56">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="7" name="candle-corridor" x="40" y="0" width="8" height="56">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="8" name="candle-corridor" x="56" y="0" width="8" height="56">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="11" name="bust" x="50" y="36" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="36" name="locked-door-front" x="24" y="29" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="13" name="door-right" x="104" y="32" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="39" name="corridor-table" x="48" y="68" width="16" height="20">
+   <properties>
+    <property name="depth" type="int" value="88"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="40" name="couch-small" x="64" y="48" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="41" name="painting-castle" x="64" y="24" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="42" name="painting" x="72" y="16" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="43" name="painting-small" x="82" y="26" width="6" height="10">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="45" name="plant" x="40" y="52" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="46" name="plant" x="80" y="52" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="68"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="62" name="exit" x="0" y="56" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="78"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="63" name="player" x="80" y="48" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

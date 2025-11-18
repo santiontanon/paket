@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="11" tilewidth="8" tileheight="8" nextobjectid="9">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-jorge.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="10" columns="10">
+  <image source="bg-collision-masks.png" width="80" height="8"/>
+ </tileset>
+ <layer name="background" width="12" height="11">
+  <data encoding="csv">
+1,1,1,2,2,3,2,2,1,1,1,1,
+1,1,4,2,3,5,3,2,2,1,1,1,
+1,4,4,6,7,7,5,6,2,4,4,4,
+1,8,4,3,7,9,7,3,6,4,4,4,
+1,8,4,3,7,9,7,3,6,10,4,4,
+11,12,4,3,7,7,5,3,6,10,10,4,
+13,12,4,14,14,14,14,14,14,10,10,10,
+15,12,16,17,17,17,17,17,17,10,10,10,
+18,12,19,1,1,1,20,21,1,22,10,10,
+23,19,1,1,1,1,24,25,20,21,26,10,
+19,1,1,1,1,1,1,1,1,1,1,27
+</data>
+ </layer>
+ <layer name="collision" width="12" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,39,33,33,33,33,33,33,40,34,34,
+34,39,33,33,33,33,33,33,33,33,40,34,
+39,33,33,33,33,33,33,33,33,33,33,40
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="56" y="40" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="2" name="locked-door-front" x="56" y="32" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="62"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="3" name="door-right" x="82" y="40" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="80"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="4" name="candle" x="42" y="24" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="62"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="5" name="jorge-sangre" x="18" y="74" width="32" height="12">
+   <properties>
+    <property name="depth" type="int" value="74"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="6" name="jorge-cama" x="16" y="40" width="26" height="36">
+   <properties>
+    <property name="depth" type="int" value="75"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="7" name="jorge-escritorio" x="70" y="40" width="10" height="36">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="8" name="jorge-cartera" x="32" y="72" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

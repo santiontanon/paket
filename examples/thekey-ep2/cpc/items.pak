@@ -1,0 +1,115 @@
+# ------- Item definition: -------
+
+item(item-mechero, "mechero", "Un mechero a tope de gas."):
+  image("items.png", 32, 0, 40, 12)
+
+item(item-llave-luna, "llave luna", "La llave que encontré en el sumidero. Seguramente es de Jorge."):
+  image("items.png", 0, 12, 8, 24)
+  default-use-message("No encaja aquí.")
+
+item(item-reliquia-lazo, "reliquia lazo", "Una de las 3 relíquias. Un lazo de pelo cuidadosamente conservado."):
+  image("items.png", 32, 12, 40, 24)
+
+item(item-reliquia-foto, "reliquia foto", "La reliquia de Chema. Una Polaroid de Lisa y Luna que llevaría al morir. Tiene una nota detrás 'Auriga'."):
+  image("items.png", 96, 0, 104, 12)
+
+item(item-llave-chema, "llave de Chema", "La llave que me entregó Chema."):
+  image("items.png", 40, 12, 48, 24)
+  default-use-message("No encaja aquí.")
+
+item(item-oro-en-polvo, "oro en polvo", "Ralladuras de oro del candelabro."):
+  image("items.png", 48, 12, 56, 24)
+
+item(item-llave-plata, "llave de plata", "Llave de plata que cayó del cuadro."):
+  image("items.png", 56, 12, 64, 24)
+  default-use-message("No encaja aquí.")
+
+item(item-cubitera, "cubitera", "Una cubitera vacía con asas."):
+  image("items.png", 64, 12, 72, 24)
+
+item(item-cubitera-cuerda, "cubitera con cuerda", "Una cubitera con una cuerda pequeña."):
+  image("items.png", 88, 12, 96, 24)
+
+item(item-cubitera-cuerda-larga, "cubitera con cuerda larga", "Una cubitera con una cuerda larga."):
+  image("items.png", 96, 12, 104, 24)
+
+item(item-cuerda, "cuerda", "Una cuerda corta pero resistente."):
+  image("items.png", 72, 12, 80, 24)
+
+item(item-cuerda-larga, "cuerda larga", "Una cuerda larga y resistente."):
+  image("items.png", 80, 12, 88, 24)
+
+# item(item-botella-blanca, "botella de licor", "Orujo de hierbas casero."):
+#   image("items.png", 104, 12, 112, 24)
+
+item(item-taza, "taza", "Una gruesa taza de arcilla."):
+  image("items.png", 112, 12, 120, 24)
+
+item(item-cuchillo, "cuchillo", "Un afilado cuchillo de cocina."):
+  image("items.png", 120, 12, 128, 24)
+
+item(item-afilador, "afilador", "Un afilador de cuchillos."):
+  image("items.png", 0, 24, 8, 36)
+
+item(item-pinzas, "pinzas", "Unas pinzas metálicas."):
+  image("items.png", 8, 24, 16, 36)
+
+item(item-atizador, "atizador", "Un atizador de acero para la chimenea."):
+  image("items.png", 16, 24, 24, 36)
+
+item(item-tablilla, "tabla de madera", "Una vieja tablilla con símbolos alquímicos."):
+  image("items.png", 24, 24, 32, 36)
+
+item(item-carbon, "carbón vegetal", "Carbón vegetal que arde a gran temperatura."):
+  image("items.png", 32, 24, 40, 36)
+
+item(item-cubitera-llena, "cubitera con agua", "Una cubitera con agua."):
+  image("items.png", 40, 24, 48, 36)
+
+item(item-llave-de-paso, "llave de paso", "Una llave de paso que ha quedado inservible."):
+  image("items.png", 48, 24, 56, 36)
+
+item(item-termometro, "termómetro", "Un termómetro de mercurio."):
+  image("items.png", 56, 24, 64, 36)
+
+item(item-nota-alquimia, "nota", "Una nota con varios símbolos."):
+  image("items.png", 64, 24, 72, 36)
+
+item(item-taza-plata, "taza con plata", "Una taza con plata."):
+  image("items.png", 16, 0, 24, 12)
+
+item(item-taza-oro, "taza con oro", "Una taza con oro."):
+  image("items.png", 0, 0, 8, 12)
+
+item(item-taza-plata-pinzas, "taza con plata con pinzas", "Así podré fundir materiales."):
+  image("items.png", 56, 0, 64, 12)
+
+item(item-taza-oro-pinzas, "taza con oro con pinzas", "Así podré fundir materiales."):
+  image("items.png", 48, 0, 56, 12)
+
+item(item-taza-plata-liquida, "taza con plata líquida", "Una taza con plata líquida."):
+  image("items.png", 40, 0, 48, 12)
+
+item(item-taza-oro-liquido, "taza con oro líquido", "Una taza con oro líquido."):
+  image("items.png", 8, 0, 16, 12)
+
+item(item-paketenio, "moneda", "Una liviana Moneda de Paketenio (Pk83) muy pesada."):
+  image("items.png", 64, 0, 72, 12)
+
+item(item-gafas, "gafas UV", "¿Gafas para ver en la oscuridad?"):
+  image("items.png", 72, 0, 80, 12)
+
+item(item-cartera, "cartera", "La cartera de Jorge. Dentro había el DNI y una nota."):
+  image("items.png", 80, 0, 88, 12)
+
+item(item-dni, "DNI", "El DNI de Jorge. En la foto es joven y moreno."):
+  image("items.png", 104, 0, 112, 12)
+
+item(item-mapa-estrellas, "mapa", "No es una relíquia. Es un mapa de constelaciones."):
+  image("items.png", 88, 0, 96, 12)
+
+item(item-fragmento-ritual, "fragmento de ritual", "'Ritual de Paz Eterna'. Está incompleto. Al contrario que el Ritual de Resurrección, este no resucita, sinó que permite el descanso de los espíritus atrapados en nuestro plano."):
+  image("items.png", 112, 0, 120, 12)
+
+item(item-pista-zodiaco, "nota", "'Solo 4 signos mueven al pez.'"):
+  image("items.png", 120, 0, 128, 12)

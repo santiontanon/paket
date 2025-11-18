@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="3" height="10" tilewidth="8" tileheight="8" nextobjectid="7">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-caldera-puzzle.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="10" columns="10">
+  <image source="bg-collision-masks.png" width="80" height="8"/>
+ </tileset>
+ <layer name="background" width="3" height="10">
+  <data encoding="csv">
+2,3,4,
+5,1,6,
+7,1,6,
+8,1,1,
+8,9,10,
+8,8,7,
+8,8,8,
+11,12,13,
+14,15,16,
+17,18,19
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="1" name="caldera-puzzle-button-l" x="4" y="62" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="2" name="caldera-puzzle-button-r" x="8" y="62" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="3" name="caldera-puzzle-button-l" x="14" y="62" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="4" name="caldera-puzzle-button-r" x="18" y="62" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="5" name="caldera-puzzle-button-l" x="8" y="72" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="6" name="caldera-puzzle-button-r" x="12" y="72" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

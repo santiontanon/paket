@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="9" height="11" tilewidth="8" tileheight="8" nextobjectid="29">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-piano-teclado.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="9" height="11">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,
+1,2,3,4,5,3,4,5,6,
+1,7,8,9,10,8,9,10,11,
+1,12,13,14,15,13,14,15,16,
+1,17,18,19,17,18,19,17,20,
+1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="10" name="piano-tecla" x="8" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="11" name="piano-tecla" x="14" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="12" name="piano-tecla" x="20" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="13" name="piano-tecla" x="26" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="14" name="piano-tecla" x="32" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="15" name="piano-tecla" x="38" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="16" name="piano-tecla" x="44" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="17" name="piano-tecla" x="50" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="18" name="piano-tecla" x="56" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="19" name="piano-tecla" x="62" y="48" width="6" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="20" name="piano-tecla-negra" x="10" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="21" name="piano-tecla-negra" x="16" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="22" name="piano-tecla-negra" x="28" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="23" name="piano-tecla-negra" x="34" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="24" name="piano-tecla-negra" x="40" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="25" name="piano-tecla-negra" x="52" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="26" name="piano-tecla-negra" x="58" y="48" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="27" name="piano-atril" x="0" y="0" width="72" height="48">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="28" name="piano-partitura-zoom" x="22" y="0" width="32" height="40">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

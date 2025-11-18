@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="4" height="11" tilewidth="8" tileheight="8" nextobjectid="7">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-caldera.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="12" columns="12">
+  <image source="bg-collision-masks.png" width="96" height="8"/>
+ </tileset>
+ <layer name="background" width="4" height="11">
+  <data encoding="csv">
+1,1,1,1,
+2,3,4,3,
+5,6,7,6,
+5,8,9,10,
+11,10,12,13,
+11,13,14,1,
+11,10,10,1,
+11,13,13,10,
+11,1,1,13,
+5,1,1,1,
+15,16,17,18
+</data>
+ </layer>
+ <layer name="collision" width="4" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,34,34,34,
+34,41,41,34,
+39,0,0,40
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="16" y="56" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="1" name="door-right" x="22" y="44" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="2" name="deposito" x="8" y="0" width="12" height="76">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="3" name="deposito-panel" x="14" y="56" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="78"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="4" name="deposito-tuberia" x="8" y="54" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="78"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="5" name="deposito-tablilla" x="8" y="76" width="4" height="4">
+   <properties>
+    <property name="depth" type="int" value="78"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="6" name="candle" x="2" y="40" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="74"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

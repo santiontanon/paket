@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="22">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="80" columns="16">
+  <image source="bg-tiles-biblioteca.png" width="128" height="40"/>
+ </tileset>
+ <tileset firstgid="81" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+2,3,4,5,6,7,5,6,7,8,9,10,11,12,
+2,3,13,14,15,16,14,15,3,3,17,18,19,20,
+4,16,21,22,1,2,9,1,2,2,23,24,10,25,
+26,4,27,28,1,2,9,1,2,2,29,1,18,18,
+30,26,31,28,1,9,32,1,32,33,34,35,24,18,
+36,16,37,28,1,8,38,39,9,1,1,1,40,24,
+41,26,42,28,1,43,44,45,2,2,1,1,1,24,
+46,47,42,48,1,50,51,45,2,2,1,1,1,1,
+52,53,54,8,1,56,54,57,1,1,1,1,1,1,
+58,59,8,8,1,61,40,62,63,1,63,62,63,1,
+64,65,1,40,66,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="14" height="11" visible="0">
+  <data encoding="csv">
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,82,82,82,82,82,82,82,82,82,
+82,82,82,82,82,85,89,89,89,89,89,82,82,82,
+82,82,82,82,85,81,93,82,82,82,82,82,82,82,
+82,82,82,82,81,93,82,82,82,82,82,82,82,82,
+82,82,82,82,1,82,82,82,82,82,82,82,82,82,
+82,82,89,81,1,82,82,82,81,81,82,82,82,82,
+82,83,81,81,84,85,81,81,81,81,81,81,88,82,
+82,83,81,81,81,81,81,81,81,81,81,81,81,88
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="80" y="10" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="38"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="10" name="biblioteca-barana-top" x="52" y="32" width="44" height="8">
+   <properties>
+    <property name="depth" type="int" value="41"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="11" name="biblioteca-columna-derecha" x="56" y="16" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="41"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="12" name="biblioteca-columna-left" x="32" y="16" width="8" height="64">
+   <properties>
+    <property name="depth" type="int" value="80"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="13" name="candle" x="102" y="8" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="38"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="14" name="candle-black" x="56" y="33" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="42"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="15" name="biblioteca-escritorio" x="80" y="36" width="20" height="36">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="16" name="biblioteca-ritual" x="76" y="68" width="2" height="2">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="17" name="mural-palabras" x="84" y="40" width="12" height="12">
+   <properties>
+    <property name="depth" type="int" value="74"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="18" name="biblioteca-libros" x="16" y="24" width="16" height="40">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="19" name="biblioteca-puerta-espejo" x="80" y="8" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="40"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="20" name="candle-black" x="80" y="30" width="6" height="16">
+   <properties>
+    <property name="depth" type="int" value="73"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="21" name="biblioteca-pasadizo" x="72" y="48" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

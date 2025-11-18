@@ -1,0 +1,68 @@
+# ------- Player object: -------
+
+player-stop-state("idle", "left")
+# object("player", "paket", "Estoy hecho un paquete..."):
+object("player", "", ""):
+    state("hidden", "left"):
+        image("object-player.png", 0, 0, 6, 28)
+        selection(none)
+
+    state("idle", "left"):
+        image("object-player.png", 0, 0, 6, 28)
+        selection(none)
+
+    state("walking-1", "left"):
+        image("object-player.png", 0, 28, 6, 56)
+        selection(none)
+
+    state("walking-2", "left"):
+        image("object-player.png", 8, 28, 16, 56)
+        selection(none)
+
+    state("walking-3", "left"):
+        image("object-player.png", 16, 28, 24, 56)
+        selection(none)
+
+    state("walking-4", "left"):
+        image("object-player.png", 24, 28, 32, 56)
+        selection(none)
+
+    state("walking-1", "right"):
+        image("object-player.png", 0, 56, 6, 84)
+        selection(none)
+
+    state("walking-2", "right"):
+        image("object-player.png", 8, 56, 14, 84)
+        selection(none)
+
+    state("walking-3", "right"):
+        image("object-player.png", 16, 56, 24, 84)
+        selection(none)
+
+    state("walking-4", "right"):
+        image("object-player.png", 24, 56, 30, 84)
+        selection(none)
+
+    state("walking-1", "down"):
+        image("object-player.png", 0, 84, 6, 112)
+        selection(none)
+
+    state("walking-2", "down"):
+        image("object-player.png", 8, 84, 14, 112)
+        selection(none)
+
+    state("walking-3", "down"):
+        image("object-player.png", 16, 84, 22, 112)
+        selection(none)
+
+    state("walking-4", "down"):
+        image("object-player.png", 24, 84, 30, 112)
+        selection(none)
+
+    state("walking-1", "up"):
+        image("object-player.png", 0, 112, 6, 140)
+        selection(none)
+
+    state("walking-2", "up"):
+        image("object-player.png", 8, 112, 14, 140)
+        selection(none)

@@ -1,0 +1,927 @@
+# ------- Room objects: -------
+
+object("exit-1x4", "salida", "Salida"):
+    state("exit", "front"):
+        empty-image(8, 32)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+# object("crate-desvan", "caja", "Nada interesante."):
+object("crate-desvan", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/desvan-crate.png")
+        collisionmask("0000000000", "0000000000", "1111111111", "1111111111")
+        selection(none)
+
+    # repeating-rule pickup-object($this):
+    #     message("Pesa demasiado.")
+
+# object("cpc", "CPC464", "Un CPC."):
+object("cpc", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/desvan-cpc.png")
+        selection(none)
+
+    # repeating-rule pickup-object($this):
+    #     message("Pesa demasiado.")
+
+# object("lamp-desvan", "bombilla", "Una bombilla encendida."):
+object("lamp-desvan", "bombilla", "Una bombilla encendida."):
+    state("idle", "front"):
+        image("rooms/objects/desvan-lamp.png")
+        selection(none)
+
+    # repeating-rule pickup-object($this):
+    #     message("¡Quema!")
+
+object("shelves-desvan", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/desvan-armario.png")
+        selection(none)
+
+    # repeating-rule pickup-object($this):
+    #     message("Pesa demasiado.")
+
+
+# This candle is much bigger and has a big shine animation around
+# object("candle-corridor", "vela", "Una vela."):
+#     state("closed", "front"):
+#         image("rooms/objects/object-candle-corridor-off.png")
+#         selection(box)
+#     state("open", "front"):
+#         animation(10,  0,1,0,2,0,1):
+#            image("rooms/objects/object-candle-corridor-on-1-3-5.png")
+#            image("rooms/objects/object-candle-corridor-on-2-6.png")
+#            image("rooms/objects/object-candle-corridor-on-4.png")
+#         selection(box)
+
+
+# object("corridor-table", "mesita", "Una mesita sin nada de especial. Mi abuela tenía una igual."):
+#    state("idle", "front"):
+#        image("rooms/objects/object-corridor-table.png")
+#        collisionmask("00000000", "00000000", "00000000", "11111111", "11111111")
+
+
+# object("bust", "busto", "Un busto masculino donde ya encontré una llave dentro."):
+#     state("open", "front"):
+#         image("rooms/objects/object-bust-open.png")
+#         collisionmask("000", "000", "000", "000", "000", "111", "111")
+
+
+# object("painting-castle", "cuadro", "El cuadro representa un castillo en algún lugar de Wallachia."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-painting-castle.png")
+#     repeating-rule pickup-object($this):
+#         message("Está firmemente sujeto a la pared.")
+
+
+object("locked-door-front", "puerta", "Una puerta de madera."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-front.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+    state("exit", "front"):
+        image("rooms/objects/object-door-front-open.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+    repeating-rule use-object($this):
+        message("Está cerrada con llave.")
+
+
+object("leather-couch-right", "butaca", "Parece cómoda, pero ahora no tengo tiempo."):
+    state("idle", "back"):
+        image("rooms/objects/object-leather-couch-back-right.png")
+        collisionmask("000000", "000000", "000000", "000000", "000000", "111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para una siesta.")
+
+
+object("plant", "planta", "Un ficus."):
+    state("idle", "front"):
+        image("rooms/objects/object-plant.png")
+        collisionmask("0000", "0000", "1111", "1111")
+
+
+object("painting-vampire", "gran retrato", "Antiguo retrato."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting-vampire.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+
+object("door-small", "puerta", "Una puerta de madera."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-small-front.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+    state("exit", "front"):
+        image("rooms/objects/object-door-small-front-open.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("door-right", "puerta", "Una puerta de madera."):
+    state("closed", "right"):
+        image("rooms/objects/object-door-right.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+    state("exit", "right"):
+        image("rooms/objects/object-door-right-open.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+
+
+object("door-left", "puerta", "Una puerta de madera."):
+    state("closed", "left"):
+        image("rooms/objects/object-door-left.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+    state("exit", "left"):
+        image("rooms/objects/object-door-left-open.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+
+
+object("entrance-column-right", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-column.png")
+        selection(none)
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000")
+
+
+object("entrance-stairs-handle1", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle1.png")
+        selection(none)
+        collisionmask("000000", "110000", "110000", "110000", "111111", "001111")
+
+
+object("entrance-stairs-handle2", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle2.png")
+        selection(none)
+        collisionmask("1111111111", "1111111111", "0000000000")
+
+
+object("entrance-stairs-handle3", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle3.png")
+        selection(none)
+        collisionmask("00000000")
+
+
+object("candle", "vela", "Una vela encendida."):
+    state("open", "front"):
+        animation(10,  0,1,0,2):
+           image("rooms/objects/object-candle-on-1-3-5.png")
+           image("rooms/objects/object-candle-on-2-6.png")
+           image("rooms/objects/object-candle-on-4.png")
+        selection(box)
+    state("closed", "front"):
+       image("rooms/objects/object-candle-off.png")
+        selection(box)
+    repeating-rule use-object($this):
+        message("No llego para apagarla.")
+
+
+object("couch-small", "butaca", "Parece cómoda, pero ahora no tengo tiempo."):
+    state("idle", "front"):
+        image("rooms/objects/object-couch-small-front.png")
+        collisionmask("000000", "000000", "000000", "000000", "111111", "111111")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para una siesta.")
+
+
+object("painting", "cuadro", "Ni idea de lo que el artista quería representar aquí."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+
+# object("painting-small", "cuadro pequeño", "Un pequeño retrato."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-painting-small.png")
+#     repeating-rule pickup-object($this):
+#         message("Está firmemente sujeto a la pared.")
+
+
+object("exit", "salida", "Salida"):
+    state("exit", "front"):
+        image("rooms/objects/object-1x4-collider.png")
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("escaleras-lamp", "candelabro", "Un pesado candelabro de oro macizo."):
+    state("idle", "front"):
+        image("rooms/objects/escaleras-lamp.png")
+        collisionmask("00000000", "11111111")
+
+
+object("chema", "Chema", ""):
+    state("idle", "front"):
+        image("rooms/objects/escaleras-chema-muerto.png")
+        collisionmask("00000000000000", "00000000000000", "11111111111111", "11111111111111", "00000000000000")
+
+    rule talk-to-object($this) || examine-object($this):
+        if variable-eq(chema-murder-state, 0):
+            start-dialogue("chema")
+            gain-item(item-llave-chema)
+            play-sfx("sfx/puzzle-resuelto.afx")
+            redraw-room()
+            pause(50)
+            message("Ha muerto.")
+            call-script("cutscene-title")
+        else:
+            message("Ha muerto.")
+        endif
+
+
+object("luna", "espíritu", "El espíritu que vi en el desván."):
+    state("hidden", "left"):
+        # empty-image(6, 20)
+        empty-image(8, 20)
+        selection(none)
+    state("idle", "left"):
+        animation(10,  0,1):
+            image("rooms/objects/ghost2-8x20-1.png")
+            image("rooms/objects/ghost2-8x20-2.png")
+        selection(box)
+    state("open", "left"):
+        animation(10,  0,1):
+            image("rooms/objects/ghost-8x20-left-1.png")
+            image("rooms/objects/ghost-8x20-left-2.png")
+        selection(box)
+
+
+object("alan-jorge", "Jorge", "Jorge... Me lo imaginaba más joven. Es pelirrojo y lleva un parche en el ojo."):
+    state("idle", "front"):
+        image("rooms/objects/escaleras-jorge.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "111", "111")
+
+
+object("comedor-mesa", "mesa", "Una enorme mesa sin recoger desde hace mucho"):
+    state("idle", "front"):
+        image("rooms/objects/comedor-table.png")
+        collisionmask("0000000000000000", "0000000000000000", "0000000000000000", "0000000000000000", 
+                      "1111111111111111", "1111111111111111", "1111111111111111", "1111111111111111")
+
+
+object("comedor-chair", "silla", "Una pesada silla de comedor."):
+    state("idle", "back"):
+        image("rooms/objects/comedor-chair-back.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("comedor-cubitera", "cubitera", "Una cubitera con una botella vacía dentro."):
+    state("idle", "front"):
+        image("rooms/objects/object-comedor-cubitera.png")
+        collisionmask("000", "000", "000", "000", "000", "111")
+
+    repeating-rule use-object($this):
+        message("No sirve de nada sin agua, ni hielo, ni bebida!")
+
+
+object("comedor-alacena", "alacena", "Una alacena con piezas de vajilla."):
+    state("idle", "front"):
+        empty-image(24, 44)
+        selection(box)
+
+
+object("comedor-cortinas", "cortinas", "Una cortina recogida con una cuerda resistente."):
+    state("open", "left"):
+        empty-image(8, 48)
+        selection(box)
+
+    state("closed", "left"):
+        image("rooms/objects/comedor-cortina-left.png")
+        selection(none)
+
+    state("open", "right"):
+        empty-image(8, 48)
+        selection(box)
+
+    state("closed", "right"):
+        image("rooms/objects/comedor-cortina-right.png")
+        selection(none)
+
+
+object("comedor-balcon", "balcón", ""):
+    state("exit", "front"):
+        empty-image(8, 24)
+        selection(box)
+
+
+object("comedor-painting", "cuadro", "Está torcido!"):
+    state("open", "front"):
+        image("rooms/objects/comedor-painting-skewed.png")
+    state("closed", "front"):
+        image("rooms/objects/comedor-painting-straight.png")
+
+
+object("llave-plata", "llave", "Una llave ha caído de detrás del cuadro torcido."):
+    state("open", "front"):
+        image("rooms/objects/llave-plata.png")
+        selection(box)
+    state("closed", "front"):
+        empty-image(8, 4)
+
+
+object("alacena-vajilla", "pieza de vajilla", "Piezas de vajilla sin interés."):
+    state("idle", "front"):
+        image("rooms/objects/comedor-alacena-vajilla.png")
+
+
+# object("alacena-botella", "botella de licor", "Orujo de hierbas casero."):
+#     state("idle", "front"):
+#         image("rooms/objects/comedor-alacena-botella.png")
+
+
+object("alacena-taza", "taza", "Una gruesa taza de arcilla."):
+    state("idle", "front"):
+        image("rooms/objects/comedor-alacena-taza.png")
+
+
+object("cocina-fregadero", "fregadero", "Un fregadero de cocina."):
+    state("idle", "front"):
+        image("rooms/objects/cocina-fregadero.png")
+
+
+object("cocina-fogones", "fogones", "Fogones de cocina."):
+    state("idle", "front"):
+        image("rooms/objects/cocina-fogones.png")
+
+
+object("cocina-mesita", "mesa de cocina", "Una mesa con útiles de cocina."):
+    state("idle", "front"):
+        image("rooms/objects/cocina-mesita.png")
+
+
+object("cocina-chimenea", "chimenea", "Una chimenea con fuego de leña encendido."):
+    state("closed", "front"):
+        empty-image(16, 32)
+        selection(box)
+
+    state("open", "front"):
+        animation(10,  0,1,2,1):
+        image("rooms/objects/cocina-chimenea-fuego-1.png")
+        image("rooms/objects/cocina-chimenea-fuego-2.png")
+        image("rooms/objects/cocina-chimenea-fuego-3.png")
+        selection(box)
+
+
+# This is the wood/coal in chimenea.
+object("cocina-chimenea2", "", ""):
+    state("idle", "front"):
+        empty-image(12, 8)
+        selection(none)
+    state("open", "front"):
+        image("rooms/objects/cocina-wood.png")
+        selection(none)
+    state("closed", "front"):
+        image("rooms/objects/cocina-coal.png")
+        selection(none)
+
+# This is the secret passage in chimenea.
+object("cocina-chimenea3", "pasadizo", ""):
+    state("idle", "front"):
+        empty-image(12, 12)
+        selection(none)
+    state("exit", "front"):
+        empty-image(12, 12)
+        selection(box)
+
+
+object("cocina-armario-alto", "armario", "Un armario con utensilios de cocina."):
+    state("idle", "front"):
+        image("rooms/objects/cocina-armario-alto.png")
+
+
+object("cocina-atizador", "atizador", "Un atizador de acero para la chimenea."):
+    state("idle", "front"):
+        image("rooms/objects/cocina-atizador.png")
+
+
+object("cocina-armario-colgado", "armario", ""):
+    state("idle", "front"):
+        image("rooms/objects/cocina-armario-colgado.png")
+        selection(none)
+
+
+object("cocina-lock", "candado", "Un pequeño candado."):
+    state("closed", "front"):
+        image("rooms/objects/cocina-lock-closed.png")
+        selection(box)
+
+    state("open", "front"):
+        image("rooms/objects/cocina-lock-open.png")
+        selection(box)
+
+
+object("deposito", "depósito", "Un enorme depósito sin agua."):
+    state("closed", "front"):
+        image("rooms/objects/caldera-empty.png")
+
+    state("open", "front"):
+        image("rooms/objects/caldera-full.png")
+
+
+object("deposito-tuberia", "tubería", "Le falta una llave de paso."):
+    state("idle", "front"):
+        empty-image(4, 8)
+        selection(box)
+
+    state("open", "front"):
+        image("rooms/objects/caldera-llave-de-paso.png")
+        selection(box)
+
+
+object("deposito-panel", "panel del depósito", "No le llega agua desde la tubería."):
+    state("idle", "front"):
+        empty-image(4, 4)
+        selection(box)
+
+
+object("jardin-ventana", "balcón", ""):
+    state("exit", "front"):
+        empty-image(8, 16)
+        selection(box)
+
+
+object("jardin-carbon", "carbón vegetal", "Carbón vegetal que arde a gran temperatura."):
+    state("idle", "front"):
+        image("rooms/objects/jardin-carbon.png")
+        collisionmask("000000", "000000", "000000", "011110")
+
+
+object("jardin-pozo", "pozo", "Un profundo pozo con agua al fondo."):
+    state("idle", "front"):
+        image("rooms/objects/jardin-pozo.png")
+        collisionmask("000000000", "000000000", "000000000", "000000000",
+                      "000000000", "111111110", "111111110", "111111110")
+        
+object("jardin-cuerda", "cuerda", ""):
+    state("idle", "front"):
+        empty-image(2, 20)
+        selection(none)
+    state("closed", "front"):
+        image("rooms/objects/jardin-cuerda-corta.png")
+        selection(none)
+    state("exit", "front"):
+        image("rooms/objects/jardin-cuerda-larga.png")
+        selection(box)
+
+
+object("pozo-cuerda", "cuerda", ""):
+    state("exit", "front"):
+        image("rooms/objects/pozo-cuerda.png")
+        selection(box)
+
+
+object("pozo-llave-de-paso", "llave de paso", "Una llave de paso que ha quedado inservible."):
+    state("idle", "front"):
+        image("rooms/objects/pozo-llave-de-paso.png")
+        selection(box)
+
+
+object("pozo-cuadro", "cuadrado mágico", "Un panel en forma de cuadrado mágico."):
+    state("idle", "front"):
+        image("rooms/objects/pozo-cuadro.png")
+        selection(box)
+
+
+object("pozo-agua", "agua", "No parece potable"):
+    state("idle", "front"):
+        empty-image(16, 8)
+        selection(box)
+
+
+object("caldera-puzzle-button-l", "flecha izquierda", "Izquierda."):
+    state("idle", "front"):
+        empty-image(4, 8)
+        selection(box)
+
+
+object("caldera-puzzle-button-r", "flecha derecha", "Derecha."):
+    state("idle", "front"):
+        empty-image(4, 8)
+        selection(box)
+
+
+object("deposito-tablilla", "tabla de madera", "Una vieja tablilla con símbolos alquímicos grabados."):
+    state("closed", "front"):
+        empty-image(4, 4)
+        selection(none)
+
+    state("open", "front"):
+        image("rooms/objects/caldera-tablilla.png")
+        selection(box)
+
+
+object("exit-2x4", "salida", "Salida"):
+    state("exit", "front"):
+        empty-image(16, 32)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("despensa-botellas", "botellas", "Varias botellas de vino."):
+    state("idle", "front"):
+        empty-image(12, 16)
+        selection(box)
+
+
+object("despensa-table", "mesa", "Una mesa con objetos inútiles."):
+    state("idle", "front"):
+        image("rooms/objects/despensa-table.png")
+        collisionmask("00000000", "00000000", "00000000", "11111111")
+
+
+object("despensa-barril", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/despensa-barril.png")
+        selection(none)
+        collisionmask("0000", "0000", "1111", "1111")
+
+
+object("despensa-termometro", "termómetro", "El vino está a la temperatura ideal."):
+    state("idle", "front"):
+        image("rooms/objects/despensa-termometro.png")
+
+
+object("despensa-gafas", "gafas UV", "¿Gafas para ver en la oscuridad?"):
+    state("hidden", "front"):
+        empty-image(8, 4)
+        selection(none)
+    state("idle", "front"):
+        image("rooms/objects/despensa-bota-gafas.png")
+
+
+object("despensa-bota", "gran barril", "Un gran barril con una extraña ranura y una inscripción: 'Una moneda del peso exacto del elemento Paketenio 83 es el precio de ver en las sombras'."):
+    state("closed", "front"):
+        image("rooms/objects/despensa-bota-cerrada.png")
+
+    state("open", "front"):
+        # image("rooms/objects/despensa-bota-abierta.png")
+        image("rooms/objects/despensa-bota-abierta-vacia.png")
+
+    # state("idle", "front"):
+    #     image("rooms/objects/despensa-bota-abierta-vacia.png")
+
+
+object("pozo-puzzle-button-left", "flecha izquierda", "Izquierda."):
+    state("idle", "front"):
+        image("rooms/objects/pozo-puzzle-button-left.png")
+        selection(box)
+
+
+object("pozo-puzzle-button-right", "flecha derecha", "Derecha."):
+    state("idle", "front"):
+        image("rooms/objects/pozo-puzzle-button-right.png")
+        selection(box)
+
+
+object("pozo-puerta", "pasadizo", ""):
+    state("exit", "front"):
+        image("rooms/objects/pozo-puerta.png")
+
+
+object("laboratorio-columna", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-columna.png")
+        selection(none)
+
+
+object("laboratorio-trampilla", "losa suelta", "Una de las losas del suelo está suelta"):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-trampilla.png")
+
+
+object("laboratorio-escaleras", "escaleras", ""):
+    state("hidden", "front"):
+        empty-image(8, 8)
+        selection(none)
+    state("exit", "front"):
+        image("rooms/objects/laboratorio-trampilla-abierta.png")
+
+
+object("laboratorio-panel", "mesa de alquimia", ""):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-panel.png")
+
+
+object("laboratorio-nota", "nota", "Una nota con varios símbolos."):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-nota.png")
+
+
+object("laboratorio-puzzle-x", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-puzzle-x.png")
+        selection(box)
+
+
+object("laboratorio-puzzle-v", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-puzzle-v.png")
+        selection(box)
+
+
+object("laboratorio-puzzle-ayuda", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-puzzle-ayuda.png")
+        selection(box)
+
+
+object("laboratorio-puzzle-botella", "frasco", "Un frasco de alquímia vacío."):
+    state("open", "front"):
+        empty-image(8, 16)
+        selection(box)
+
+    state("number", "1"):
+        image("rooms/objects/laboratorio-puzzle-botella-oro.png")
+        selection(box)
+    state("number", "2"):
+        image("rooms/objects/laboratorio-puzzle-botella-plata.png")
+        selection(box)
+    state("number", "3"):
+        image("rooms/objects/laboratorio-puzzle-botella-mercurio.png")
+        selection(box)
+
+
+object("laboratorio-puzzle-reset1", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-puzzle-reset1.png")
+        selection(box)
+
+
+object("laboratorio-puzzle-play", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/laboratorio-puzzle-play.png")
+        selection(box)
+
+
+object("laboratorio-puzzle-particula", "partícula", "Una partícula elemental."):
+    state("idle", "front"):
+        empty-image(8, 8)
+        selection(none)
+    state("open", "front"):
+        animation(10,  0,1):
+           image("rooms/objects/laboratorio-puzzle-elemento-casilla1.png")
+           image("rooms/objects/laboratorio-puzzle-elemento-casilla2.png")
+        selection(box)
+    state("number", "1"):
+        image("rooms/objects/laboratorio-puzzle-elemento-p1.png")
+        selection(box)
+    state("number", "2"):
+        image("rooms/objects/laboratorio-puzzle-elemento-e1.png")
+        selection(box)
+    state("number", "3"):
+        image("rooms/objects/laboratorio-puzzle-elemento-e2.png")
+        selection(box)
+    state("number", "4"):
+        image("rooms/objects/laboratorio-puzzle-elemento-e3.png")
+        selection(box)
+    state("number", "5"):
+        image("rooms/objects/laboratorio-puzzle-elemento-o1.png")
+        selection(box)
+    state("number", "6"):
+        image("rooms/objects/laboratorio-puzzle-elemento-o2.png")
+        selection(box)
+    state("number", "7"):
+        image("rooms/objects/laboratorio-puzzle-elemento-o3.png")
+        selection(box)
+    state("number", "8"):
+        image("rooms/objects/laboratorio-puzzle-elemento-o4.png")
+        selection(box)
+    state("number", "9"):
+        image("rooms/objects/laboratorio-puzzle-elemento-o5.png")
+        selection(box)
+
+
+object("oscuridad", "oscuridad", "No veo nada."):
+    state("idle", "front"):
+        empty-image(112, 88)
+        selection(box)
+
+
+object("oscuridad-12", "oscuridad", "No veo nada."):
+    state("idle", "front"):
+        empty-image(96, 88)
+        selection(box)
+
+
+object("oscuridad-4", "oscuridad", "No veo nada."):
+    state("idle", "front"):
+        empty-image(32, 88)
+        selection(box)
+
+
+object("catacumbas-nota", "nota grabada", "'El camino se revela al que vea en la oscuridad'"):
+    state("idle", "front"):
+        image("rooms/objects/catacumbas-nota.png")
+        selection(box)
+
+
+object("catacumbas-symbols", "", ""):
+    state("hidden", "front"):
+        empty-image(38, 8)
+        selection(none)
+    state("number", "1"):
+        image("rooms/objects/catacumbas-symbols1.png")
+        selection(none)
+    state("number", "2"):
+        image("rooms/objects/catacumbas-symbols2.png")
+        selection(none)
+    state("number", "3"):
+        image("rooms/objects/catacumbas-symbols3.png")
+        selection(none)
+    state("number", "4"):
+        image("rooms/objects/catacumbas-symbols4.png")
+        selection(none)
+
+
+object("catacumbas-final-cerrojo", "cerrojo", "Un cerrojo dorado."):
+    state("idle", "front"):
+        image("rooms/objects/catacumbas-final-cerrojo.png")
+        selection(box)
+
+
+object("rooms-symbols", "", ""):
+    state("hidden", "front"):
+        empty-image(6, 8)
+        selection(none)
+    state("number", "1"):
+        image("rooms/objects/comedor-oscuridad-simbolo.png")
+        selection(none)
+    state("number", "2"):
+        image("rooms/objects/caldera-oscuridad-simbolo.png")
+        selection(none)
+    state("number", "3"):
+        image("rooms/objects/pasillo-oscuridad-simbolo.png")
+        selection(none)
+    state("number", "4"):
+        image("rooms/objects/jorge-oscuridad-simbolo.png")
+        selection(none)
+
+
+object("jorge-sangre", "sangre", "¿Por qué hay sangre aquí?"):
+    state("idle", "front"):
+        image("rooms/objects/jorge-sangre.png")
+
+
+object("jorge-cama", "cama", "Una cama vieja."):
+    state("idle", "front"):
+        image("rooms/objects/jorge-cama.png")
+        collisionmask("0000000000000", "0000000000000", "0000000000000", "0000000000000", "0000000000000", "0000000000000", "1111111111111", "1111111111111", "1111111111111")
+
+
+object("jorge-escritorio", "cómoda", "Una enorme cómoda de madera antigua cerrada con llave."):
+    state("idle", "front"):
+        image("rooms/objects/jorge-escritorio.png")
+        collisionmask("00000", "00000", "00000", "00000", "00000", "00000", "00000", "01111", "01111")
+
+
+object("jorge-cartera", "cartera", "Una cartera."):
+    state("idle", "front"):
+        image("rooms/objects/jorge-cartera.png")
+        selection(box)
+
+
+object("jorge-puzzle-cerrojo", "cerrojo", "Un cerrojo del color de la luna."):
+    state("idle", "front"):
+        image("rooms/objects/jorge-puzzle-cerrojo.png")
+        selection(box)
+
+
+object("jorge-puzzle-placa", "placa", "'El Pez oculta el secreto en el Agua.'"):
+    state("idle", "front"):
+        image("rooms/objects/jorge-puzzle-placa.png")
+        selection(box)
+
+
+# object("jorge-puzzle-symbol", "capricorino", "Un signo del zodíaco."):  # We use the longest name as a placeholder
+object("jorge-puzzle-symbol", "signo", "Un signo del zodíaco."):
+    state("hidden", "front"):
+        empty-image(8, 8)
+        selection(none)
+    state("number", "0"):
+        image("rooms/objects/jorge-puzzle-simbolo-1.png")  # virgo
+        selection(box)
+    state("number", "1"):
+        image("rooms/objects/jorge-puzzle-simbolo-2.png")  # leo
+        selection(box)
+    state("number", "2"):
+        image("rooms/objects/jorge-puzzle-simbolo-3.png")  # cáncer
+        selection(box)
+    state("number", "3"):
+        image("rooms/objects/jorge-puzzle-simbolo-4.png")  # géminis
+        selection(box)
+    state("number", "4"):
+        image("rooms/objects/jorge-puzzle-simbolo-5.png")  # tauro
+        selection(box)
+    state("number", "5"):
+        image("rooms/objects/jorge-puzzle-simbolo-6.png")  # aries
+        selection(box)
+    state("number", "6"):
+        image("rooms/objects/jorge-puzzle-simbolo-7.png")  # acuario
+        selection(box)
+    state("number", "7"):
+        image("rooms/objects/jorge-puzzle-simbolo-8.png")  # capricornio
+        selection(box)
+    state("number", "8"):
+        image("rooms/objects/jorge-puzzle-simbolo-9.png")  # sagitario
+        selection(box)
+    state("number", "9"):
+        image("rooms/objects/jorge-puzzle-simbolo-10.png")  # escorpio
+        selection(box)
+    state("number", "10"):
+        image("rooms/objects/jorge-puzzle-simbolo-11.png")  # libra
+        selection(box)
+    state("number", "11"):
+        image("rooms/objects/jorge-puzzle-simbolo-12.png")  # piscis
+        selection(box)
+
+
+object("catacumbas-final-puzzle-letter", "letra", "Una letra."):
+    state("idle", "front"):
+        empty-image(6, 6)
+        selection(box)
+
+    repeating-rule use-object($this):
+        call-assembler("catabumbas_final_puzzle__press_letter")
+
+
+object("catacumbas-final-puzzle-button-up", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/catacumbas-final-puzzle-button-up.png")
+        selection(box)
+
+
+object("catacumbas-final-puzzle-button-down", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/catacumbas-final-puzzle-button-down.png")
+        selection(box)
+
+
+# puzzzle v1:
+# object("catacumbas-final-puzzle-solution-letter", "", ""):
+#     state("number", "0"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-a.png")
+#         selection(none)
+#     state("number", "1"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-e.png")
+#         selection(none)
+#     state("number", "2"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-l.png")
+#         selection(none)
+#     state("number", "3"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-n.png")
+#         selection(none)        
+#     state("number", "4"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-p.png")
+#         selection(none)
+#     state("number", "5"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-r.png")
+#         selection(none)
+#     state("number", "6"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-s.png")
+#         selection(none)
+#     state("number", "7"):
+#         image("rooms/objects/catacumbas-final-puzzle-letter-u.png")
+#         selection(none)
+
+# AEGILNRU
+object("catacumbas-final-puzzle-solution-letter", "", ""):
+    state("number", "0"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-a.png")
+        selection(none)
+    state("number", "1"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-e.png")
+        selection(none)
+    state("number", "2"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-g.png")
+        selection(none)
+    state("number", "3"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-i.png")
+        selection(none)        
+    state("number", "4"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-l.png")
+        selection(none)
+    state("number", "5"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-n.png")
+        selection(none)
+    state("number", "6"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-r.png")
+        selection(none)
+    state("number", "7"):
+        image("rooms/objects/catacumbas-final-puzzle-letter-u.png")
+        selection(none)
+
+
+object("mural-quetzalcoatl", "mural", "El dios Azteca Quetzalcóatl."):
+    state("idle", "front"):
+        empty-image(16, 32)
+        selection(box)
+
+
+object("final-corpse", "cadaver", "¡Otro cadáver! Este sí se parece al del DNI. Dios mío... ¡Es Jorge!. Entonces el pelirrojo del parche, ¿quién es?"):
+    state("idle", "front"):
+        image("rooms/objects/final-corpse.png")

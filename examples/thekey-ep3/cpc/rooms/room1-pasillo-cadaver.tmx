@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="11" tilewidth="8" tileheight="8" nextobjectid="29">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-pasillo-cadaver.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="13" height="11">
+  <data encoding="csv">
+1,1,2,3,4,3,2,1,1,1,1,1,1,
+1,1,5,6,6,4,5,7,1,1,1,1,1,
+1,8,3,6,9,6,3,10,11,1,1,1,1,
+8,8,3,6,9,6,3,12,13,14,1,1,1,
+8,8,3,6,6,6,3,15,16,17,1,1,1,
+8,8,5,3,6,3,5,18,19,20,21,1,1,
+8,8,22,22,3,23,22,24,25,26,27,1,1,
+8,28,1,29,30,1,1,1,1,29,30,1,1,
+28,31,32,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,29,30,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="13" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,39,33,33,33,33,33,33,33,33,33,40,34,
+39,33,33,33,33,33,33,33,33,33,33,33,40,
+33,33,33,33,33,33,34,41,41,33,33,33,33,
+33,33,33,33,33,33,33,33,33,33,33,33,33
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="24" y="56" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="18" name="plant" x="26" y="44" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="19" name="couch-right" x="14" y="40" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="20" name="final-corpse" x="40" y="68" width="32" height="12">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="21" name="candle-corridor" x="32" y="8" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="56"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="24" name="cuadro-vampiro" x="56" y="24" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="55"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="25" name="cuadro-electrico" x="56" y="24" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="26" name="door-left" x="0" y="32" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="27" name="door-right" x="98" y="32" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="62" name="loro" x="0" y="16" width="8" height="12">
+   <properties>
+    <property name="depth" type="int" value="71"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

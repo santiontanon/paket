@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="7" height="10" tilewidth="8" tileheight="8" nextobjectid="16">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-puzzle-electrico.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="7" height="10">
+  <data encoding="csv">
+2,3,4,5,6,5,7,
+8,9,10,11,12,11,13,
+14,6,14,15,4,14,4,
+16,12,16,17,10,16,10,
+5,18,4,14,19,4,14,
+11,20,10,16,21,10,16,
+5,14,6,6,4,22,4,
+11,16,12,12,10,23,10,
+14,5,22,14,14,4,22,
+16,11,23,16,16,10,23
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="10" name="electrico-positivo" x="0" y="0" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="11" name="electrico-positivo" x="48" y="0" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="12" name="electrico-negativo" x="8" y="32" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="13" name="electrico-negativo" x="32" y="32" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="14" name="electrico-cable-inservible" x="8" y="0" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="15" name="electrico-cables" x="0" y="0" width="56" height="80">
+   <properties>
+    <property name="depth" type="int" value="24"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

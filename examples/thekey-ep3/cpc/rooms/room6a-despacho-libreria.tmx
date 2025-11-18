@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="5" height="7" tilewidth="8" tileheight="8" nextobjectid="18">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-tiles-despacho-libreria.png" width="128" height="8"/>
+ </tileset>
+ <tileset firstgid="17" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="5" height="7">
+  <data encoding="csv">
+1,1,1,1,1,
+1,2,3,4,1,
+1,5,1,6,1,
+1,2,3,7,1,
+1,5,1,8,1,
+1,2,3,9,1,
+1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="10" name="libreria-rojo" x="10" y="12" width="6" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="11" name="libreria-blanco" x="16" y="12" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="12" name="libreria-azul" x="20" y="12" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="13" name="libreria-lila" x="24" y="12" width="6" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="14" name="libreria-amarillo" x="12" y="27" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="15" name="libreria-celeste" x="16" y="27" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="16" name="libreria-naranja" x="20" y="27" width="4" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="17" name="libreria-rosa" x="24" y="27" width="6" height="12">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

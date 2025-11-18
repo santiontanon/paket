@@ -1,0 +1,354 @@
+# ------- Cutscene definitions: -------
+
+script("text-fade-in"):
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,26)
+
+script("text-fade-out"):
+    set-palette(0,0,13)
+    pause(10)
+    set-palette(0,0,1)
+    pause(10)
+    set-palette(0,0,0)
+
+
+cutscene-image("carta-amarilla", "cutscenes/cutscene1-carta-amarilla.tmx", self-contained-tileset, cpc-mode0, palette="base")
+
+cutscene-image("carta-azul", "cutscenes/cutscene1-carta-azul.tmx", self-contained-tileset, cpc-mode0, palette="base")
+
+cutscene-image("carta-roja", "cutscenes/cutscene1-carta-roja.tmx", self-contained-tileset, cpc-mode0, palette="base")
+
+cutscene-image("percha-pista", "cutscenes/cutscene2-sala-estar-percha-pista.tmx", self-contained-tileset, cpc-mode1)
+
+script("cutscene2-sala-estar-percha-pista"):
+    clear-screen(cpc-mode1)
+    draw-cutscene-image(3,9,"percha-pista")
+    print-paragraph(0,0,3,"Una percha para loros con extraños grabados.",224)
+    wait-for-space()
+    clear-screen(cpc-split-mode1-mode0)
+    restore-current-room-palette()
+    redraw-room()
+
+
+# cutscene-image("cutscene3-mapa", "cutscenes/cutscene3-mapa-santi.tmx", self-contained-tileset, cpc-mode1)
+
+# script("cutscene3-mapa"):
+#     clear-screen(cpc-mode1)
+#     draw-cutscene-image(1,3,"cutscene3-mapa")
+#     # print(168,112,0,"CORONA")
+#     # print(168,120,0,"BOREALIS")
+#     print(168,104,0,"Corona")
+#     print(168,112,0,"Borealis")
+#     wait-for-space()
+#     clear-screen(cpc-split-mode1-mode0)
+#     restore-current-room-palette()
+#     redraw-room()
+
+
+script("loro-asustado"):
+    message("¡Lo he asustado!")
+    call-assembler("custom_loro_vuela")  # results in loro being in hidden state
+    set-variable(loro, 1)
+    if variable-eq(miel-percha, 1):
+        lose-item(item-melody-pops)
+        message("Un papiro se ha quedado pegado. ¡Tiene una pequeña llave dentro! Y me he acabado el Melody Pops...")
+        change-object-state(41, "idle")  # papiro
+        set-variable(miel-percha, 2)
+    endif
+
+
+cutscene-image("intro-slide", "cutscenes/cutscene4-intro.tmx", self-contained-tileset, cpc-mode0)
+
+script("cutscene-intro1"):
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(80,80,3,"Anteriormente...")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+
+    clear-screen(cpc-split-mode1-mode0)
+    draw-cutscene-image-rectangle(4, 8, "intro-slide", 0, 2, 4, 6)
+    print-paragraph(0,0,2,"Alan intentó resucitar a su esposa mediante un ritual que exigía una vida, sacrificando sin querer a su hija Luna.",224)
+    wait-for-space()
+    clear-text-area()
+
+    print-paragraph(0,0,2,"Su espíritu quedó atrapado y los compañeros de Alan escondieron sus reliquias para evitar otro intento.",224)
+    wait-for-space()
+    clear-screen()
+
+    draw-cutscene-image-rectangle(4, 7, "intro-slide", 4, 0, 8, 6)
+    print-paragraph(0,0,2,"Un año después, Alan asesina a todos y, fingiendo ser Jorge, te engaña para reunir las reliquias.",224)
+    wait-for-space()
+    clear-screen()
+
+
+script("cutscene-intro2"):
+    draw-cutscene-image-rectangle(5, 8, "intro-slide", 8, 3, 11, 6)
+    print-paragraph(0,0,2,"Debes hallar la última relíquia y el segundo fragmento del Ritual de Paz Eterna para liberar a Luna antes de que Alan te sacrifique.", 224)
+    wait-for-space()
+    clear-screen()
+    skippable-pause(100)
+
+    clear-screen(cpc-mode1)
+    set-palette(0,0,0)
+    print(80,64,3,"Pakete Soft")
+    print(88,80,3,"presenta")
+    call-script("text-fade-in")
+    skippable-pause(200)
+    call-script("text-fade-out")
+    clear-screen(cpc-mode1)
+
+    set-palette(0,0,0)
+    print(84,64,3,"Un juego de")
+    print(80,80,3,"Jordi Sureda")
+    print(72,96,3,"Santiago Ontañón")
+    call-script("text-fade-in")
+    skippable-pause(200)
+    call-script("text-fade-out")
+    clear-screen(cpc-mode1)
+
+    # play-tsv-song("music/beginning-d.tsv", 12)
+    # play-tsv-song("music/episode2-full-v0.tsv", 15)
+    set-palette(0,0,0)
+    print(40,64,3,"The Key - Ep. 03: El Velo Rasgado")
+    play-tsv-song("music/ep3-v4-low-volume.tsv", 12)
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-split-mode1-mode0)
+    set-palette("room_pasillo-cadaver")    
+
+
+# -------------------------------------
+cutscene-image("luna-corpse-zoom", "cutscenes/cutscene5-luna.tmx", self-contained-tileset, cpc-mode0)
+
+script("cutscene5-luna"):
+    clear-screen(cpc-split-mode1-mode0)
+    draw-cutscene-image(5,6,"luna-corpse-zoom")
+    message("El cuerpo de Luna, preparado para el ritual. Alan lo ha mantenido así durante un año. Triste y escalofriante.")
+    wait-for-space()
+    clear-screen(cpc-split-mode1-mode0)
+    set-palette("room_ritual")
+    change-object-state(16, "idle")  # Alan appears
+    redraw-room() 
+
+
+dialogue("ritual-alan1"):
+    state 1:
+        # add-dialogue-option(2, "¡¡ALAN!! ¡No hace falta otro sacrificio, hay una opción mejor!")
+        add-dialogue-option(2, "¡¡ALAN!!", "¡¡ALAN!! ¡No hace falta otro sacrificio, hay una opción mejor!")
+        add-dialogue-option(2, "El ritual de la paz eterna...", "¡¡ALAN!! ¡No hace falta otro sacrificio, hay una opción mejor!")
+    state 2:
+        wait-for-space()
+        clear-text-area()
+        scrolling-message-pause("¡Nada me impedirá resucitar a mi hija, aunque te cueste la vida!")
+        clear-text-area()
+        add-dialogue-option(3, "No pienso entregarte las reliquias...")
+        add-dialogue-option(3, "No te daré las reliquias...")
+    state 3:
+        wait-for-space()
+        clear-text-area()
+        scrolling-message-pause("No te las estoy pidiendo...")
+        goto-dialogue-state(exit)
+
+dialogue("ghost-luna-wakes-you-up"):
+    state 1:
+        scrolling-message-pause("¿Estás bien? ¿Me oyes? Soy Luna.")
+        clear-text-area()
+        scrolling-message-pause("Mi padre te noqueó y ha empezado el Ritual de Resurrección con las reliquias.")
+        clear-text-area()
+        scrolling-message-pause("¡Apresúrate antes de que lo complete!")
+        clear-text-area()
+        goto-dialogue-state(exit)
+
+
+dialogue("ritual-luna-ghost"):
+    state 1:
+        scrolling-message-pause("Es el momento... recita el Ritual de Paz y ayúdame a descansar.")
+        clear-text-area()
+        set-palette("black")
+        add-dialogue-option(2, "BA")
+        add-dialogue-option(8, "SAH")
+        add-dialogue-option(8, "HAPY")
+        add-dialogue-option(8, "Salir")
+    state 2:
+        clear-text-area()
+        scrolling-message("Ba...")
+        add-dialogue-option(8, "AJ")
+        add-dialogue-option(3, "ANDYETY")
+        add-dialogue-option(8, "SAH")
+        add-dialogue-option(8, "Salir")
+    state 3:
+        clear-text-area()
+        scrolling-message("Ba, Andyety...")
+        add-dialogue-option(8, "KA")
+        add-dialogue-option(8, "HAPY")
+        add-dialogue-option(4, "SAH")
+        add-dialogue-option(8, "Salir")
+    state 4:
+        clear-text-area()
+        scrolling-message("Ba, Andyety, Sah...")
+        add-dialogue-option(8, "SAH")
+        add-dialogue-option(5, "ANKH")
+        add-dialogue-option(8, "AJ")
+        add-dialogue-option(8, "Salir")
+    state 5:
+        clear-text-area()
+        scrolling-message("Ba, Andyety, Sah, Ankh...")
+        add-dialogue-option(6, "ATON")
+        add-dialogue-option(8, "SAH")
+        add-dialogue-option(8, "BA")
+        add-dialogue-option(8, "Salir")
+    state 6:
+        clear-text-area()
+        scrolling-message("Ba, Andyety, Sah, Ankh, Aton...")
+        add-dialogue-option(8, "ANDYETY")
+        add-dialogue-option(7, "KA")
+        add-dialogue-option(8, "SAH")
+        add-dialogue-option(8, "Salir")
+    state 7:
+        clear-text-area()
+        scrolling-message-pause("Ba, Andyety, Sah, Ankh, Aton, Ka")
+        set-variable(ritual-complete, 1)
+        set-palette("room_ritual")
+        goto-dialogue-state(exit)
+    state 8:
+        scrolling-message-pause("Algo ha salido mal. Debo consultar el Ritual de Paz.")
+        set-palette("room_ritual")
+        goto-dialogue-state(exit)
+
+
+script("cutscene6-ritual"):
+    gui-off()
+    redraw-room()
+    # Luna ghost leaves:
+    call-script("cutscene6-ritual-flash")
+    call-script("cutscene6-ritual-flash")
+    call-assembler("custom_luna_leaves1")
+    start-dialogue("ritual-luna-leaves")
+    call-assembler("custom_luna_leaves1")
+    change-object-state(19, "hidden")
+    redraw-room()
+
+    # paket gets up, and scene resets:
+    clear-screen(cpc-split-mode1-mode0)
+    pause(50)
+    go-to-room("ritual", 52, 78)
+
+
+script("cutscene6-ritual-flash"):
+    play-sfx("sfx/door-close.afx")
+    set-palette(26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26)
+    pause(20)
+    set-palette("room_ritual")
+    pause(20)
+
+
+dialogue("ritual-luna-leaves"):
+    state 1:
+        clear-text-area()
+        scrolling-message-pause("Adiós papá...")
+        clear-text-area()
+        goto-dialogue-state(exit)
+
+
+dialogue("post-ritual-alan"):
+    state 1:
+        clear-text-area()
+        scrolling-message-pause("¡¡NO!! ¡Has interrumpido mi ritual, maldito entrometido!")
+        add-dialogue-option(2, "Alan...")
+        add-dialogue-option(2, "Era lo mejor...")
+    state 2:
+        clear-text-area()
+        message("Alan, era la única manera, no lo ves?")
+        wait-for-space()
+        stop-song()
+        play-sfx("sfx/door-close.afx")
+        call-assembler("screen_shake")
+        walk-to(60,78)
+        pause(20)
+        play-sfx("sfx/door-close.afx")
+        call-assembler("screen_shake")
+        walk-to(52,78)
+        pause(20)
+        message("Alan, corre, vámonos antes de que esto se derrumbe!")
+        wait-for-space()
+        message("Está totalmente absorto, no entrará en razón.")
+        wait-for-space()
+        walk-to(4,60)
+        walk-to(4,44)
+        custom-assembler-on-update("custom_periodic_screen_shake")
+        go-to-room("biblioteca", 68, 74)
+        goto-dialogue-state(exit)
+
+
+# -------------------------------------
+
+script("ending-drive-back"):
+    clear-screen(cpc-split-mode1-mode0)
+    stop-song()
+    pause(50)
+    play-tsv-song("music/voyage4.tsv", 5)
+    call-assembler("custom_ending_driving_scene")
+    stop-song()
+    clear-screen(cpc-split-mode1-mode0)
+    go-to-room("piso", 64, 74)
+
+
+script("ending-drive-back-auxiliar1"):
+    print(54,0,3,"Gracias por jugar a The Key.")
+
+
+script("ending-drive-back-auxiliar2"):
+    print(54,0,3,"Un juego de Pakete Soft.")
+
+
+script("ending-final"):
+    clear-screen(cpc-mode1)
+    set-palette(0, 0, 0)
+    print(84, 80, 3, "The End")
+    call-script("text-fade-in")
+    wait-for-space()
+    call-script("text-fade-out")
+    clear-screen(cpc-mode1)
+
+    call-assembler("game_start")
+
+
+define-palette("ending_driving",       1, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 23, 25, 26)
+define-palette("ending_driving_fade1", 0, 0, 0, 1, 3,  1,  0,  0,  1,  3,  3,  4, 10, 12, 13)
+
+cutscene-image("ending-driving-bg", "cutscenes/ending-driving-bg.tmx", self-contained-tileset, cpc-mode0, palette="ending_driving")
+
+
+# -------------------------------------
+script("the-key-load-save-game-script"):
+    start-dialogue("load-save-game")
+
+dialogue("load-save-game"):
+    state 1:
+        add-dialogue-option(exit, "- Cancelar")
+        add-dialogue-option(2, "- Grabar a cinta")
+        add-dialogue-option(3, "- Cargar de cinta")
+    state 2:
+        scrolling-message-pause("Inserta una cinta, pulsa REC y luego espacio.")
+        clear-text-area()  # needed, to prevent garbage in the text area when saving to disk
+        save-game()
+        if variable-eq(io-error,0):
+            scrolling-message-pause("Juego guardado.")
+        else:
+            scrolling-message-pause("IO error.")
+        endif
+        goto-dialogue-state(exit)
+    state 3:
+        scrolling-message-pause("Inserta una cinta, pulsa PLAY y luego espacio.")
+        clear-text-area()  # needed, to prevent garbage in the text area when saving to disk
+        load-game()
+        # If we are here, is that there was an error:
+        scrolling-message-pause("IO error.")
+        goto-dialogue-state(exit)
+

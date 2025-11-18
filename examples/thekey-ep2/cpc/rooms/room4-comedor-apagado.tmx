@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="17">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="64" columns="16">
+  <image source="bg-tiles-comedor.png" width="128" height="32"/>
+ </tileset>
+ <tileset firstgid="65" name="collision" tilewidth="8" tileheight="8" tilecount="10" columns="10">
+  <image source="bg-collision-masks.png" width="80" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="14" name="candle" x="50" y="20" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="15" name="oscuridad" x="0" y="0" width="112" height="88">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="16" name="rooms-symbols" x="50" y="0" width="6" height="8">
+   <properties>
+    <property name="depth" type="int" value="52"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

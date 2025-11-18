@@ -1,0 +1,1348 @@
+# ------- Room definitions: -------
+
+# PAKET always starts by loading the first room that has been defined.
+# So, what we do to show some cutscene before the game starts, is to add a
+# "on-room-load-rule" to this room, which will be the very first thing executed
+# by the engine, even before drawing the room.
+room("room-desvan", "rooms/room1-desvan.tmx", 2, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 9)
+    on-room-load-rule variable-eq(intro-custcenes-played, 0):
+        gain-item(item-mechero)
+        gain-item(item-llave-luna)
+        gain-item(item-reliquia-lazo)
+        call-script("cutscene-splash")
+        call-script("cutscene1")
+        # play-tsv-song("music/episode2-full-v0.tsv", 15)
+        # So that if you save game in the first room, intro is not played again:
+        set-variable(intro-custcenes-played, 1)
+
+        # debug:
+        # set-variable(chema-murder-state, 1)
+        # set-variable(chema-murder-state, 2)
+        # set-variable(chema-murder-state, 3)
+        # gain-item(item-llave-chema)
+        # gain-item(item-cuerda)
+        # gain-item(item-cuerda)
+        # gain-item(item-cuerda-larga)
+        # gain-item(item-cubitera)
+        # gain-item(item-llave-plata)
+        # gain-item(item-llave-de-paso)
+        # gain-item(item-tablilla)
+        # gain-item(item-atizador)
+        # gain-item(item-taza)
+        # gain-item(item-taza)
+        # gain-item(item-carbon)
+        # gain-item(item-oro-en-polvo)
+        # gain-item(item-nota-alquimia)
+        # gain-item(item-cubitera-llena)
+        # gain-item(item-taza-oro)
+        # gain-item(item-taza-plata)
+        # gain-item(item-taza-oro-liquido)
+        # gain-item(item-taza-plata-liquida)
+        # gain-item(item-termometro)
+        # gain-item(item-paketenio)
+        # gain-item(item-gafas)
+        # gain-item(item-cartera)
+        # gain-item(item-mapa-estrellas)
+        # gain-item(item-reliquia-foto)
+        # gain-item(item-dni)
+        # go-to-room("pasillo", 42, 68)
+        # go-to-room("escaleras", 48, 86)
+        # go-to-room("comedor", 92, 74)
+        # go-to-room("comedor-alacena")
+        # go-to-room("cocina", 80, 84)
+        # go-to-room("caldera", 16, 84)
+        # go-to-room("jardin", 64, 60)
+        # go-to-room("pozo", 40, 74)
+        # go-to-room("despensa", 36, 80)
+        # go-to-room("laboratorio", 76, 76)
+        # go-to-room("laboratorio-puzzle")
+        # go-to-room("jorge", 58, 66)
+        # go-to-room("jorge-puzzle")
+        # go-to-room("catacumbas1", 14, 74)
+        # go-to-room("catacumbas-final", 16, 76)
+        # go-to-room("catacumbas-final-puzzle")
+        # go-to-room("final", 8, 72)
+
+    repeating-rule exit-through-object(37):
+        call-script("cutscene2-murder1")
+
+    repeating-rule exit-through-object(38):
+        call-script("cutscene2-murder1")
+
+
+room("pasillo", "rooms/room2-pasillo.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 5)
+
+    rule exit-through-object(13):
+        go-to-room("escaleras", 56, 36)
+
+    repeating-rule exit-through-object(1):
+        message("No necesito nada de ahí.")
+
+    rule exit-through-object(36):
+        go-to-room("jorge", 58, 66)
+
+    repeating-rule exit-through-object(62):
+        message("No necesito nada de ahí.")
+
+    rule use-object(48):
+        go-to-room("pasillo-apagado")
+
+    on-room-start-rule variable-eq(chema-murder-state, 0):
+        call-script("cutscene2-murder2")
+
+
+room("pasillo-apagado", "rooms/room2-pasillo-apagado.tmx", 0, 0):
+    
+    repeating-rule use-object(14):
+        message("No puedo encenderla sin más.")
+
+    repeating-rule use-item-with-object(item-mechero, 14):
+        go-to-room("pasillo", 42, 68)
+
+    rule use-item-with-object(item-gafas, 15):
+        change-object-state(16, "number")
+        change-object-direction(16, "3")
+        remove-object(15)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    on-room-start-rule true():
+        message("He apagado la vela y me he quedado a oscuras!")
+
+
+room("escaleras", "rooms/room3-escaleras.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 5)
+
+    # Top door:
+    rule exit-through-object(41) && variable-eq(chema-murder-state, 4):
+        go-to-room("pasillo", 84, 74)
+    rule exit-through-object(41) && variable-eq(chema-murder-state, 2):
+        go-to-room("pasillo", 84, 74)
+    rule exit-through-object(41) && variable-eq(chema-murder-state, 1):
+        message("Debería hablar con Jorge primero.")
+    rule exit-through-object(41) && variable-eq(chema-murder-state, 0):
+        message("Debería mirar a Chema primero.")
+
+    # left door:
+    rule exit-through-object(37) && variable-eq(chema-murder-state, 4):
+        go-to-room("comedor", 92, 74)
+    rule exit-through-object(37) && variable-eq(chema-murder-state, 2):
+        go-to-room("comedor", 92, 74)
+    rule exit-through-object(37) && variable-eq(chema-murder-state, 1):
+        message("Debería hablar con Jorge primero.")
+    rule exit-through-object(37) && variable-eq(chema-murder-state, 0):
+        message("Debería mirar a Chema primero.")
+    rule use-object(37):
+        change-object-state(37, "exit")
+        play-sfx("sfx/door-open.afx")
+        set-variable(escaleras-comedor-door, 1)
+
+    # right door:
+    persistent-rule use-object(12):
+        play-sfx("sfx/door-open.afx")
+    persistent-rule-effect:
+        change-object-state(12, "exit")
+    rule exit-through-object(12):
+        go-to-room("final", 8, 72)
+
+    repeating-rule use-object(36):
+        message("Está cerrada con llave.")
+
+    rule talk-to-object(52):
+        message("Debería mirar a Chema primero.")
+
+    repeating-rule talk-to-object(53):
+        start-dialogue("jorge")
+
+    repeating-rule use-item-with-object(item-dni, 53):
+        message("¿¡Dónde has encontrado esto!? Es una foto antigua, de antes del accidente. ¡Ocúpate de las reliquias!")
+
+    repeating-rule use-item-with-object(item-afilador, 50):
+        if have-item(item-oro-en-polvo):
+            message("Ya tengo suficiente oro.")
+        else:
+            message("He rallado oro del candelabro.")
+            gain-item(item-oro-en-polvo)
+            play-sfx("sfx/puzzle-resuelto.afx")
+        endif
+
+    on-room-start-rule variable-eq(chema-murder-state, 0):
+        call-script("cutscene2-murder3")
+
+    on-room-start-rule variable-eq(chema-murder-state, 3):
+        walk-to(48, 80)
+        message("¿Dónde están Jorge y Chema?")
+        set-variable(chema-murder-state, 4)
+
+    on-room-load-rule variable-eq(chema-murder-state, 0):
+        remove-object(53)  # remove Alan
+
+    on-room-load-rule variable-eq(chema-murder-state, 1):
+        remove-object(52)  # remove Luna
+        change-object-description(51, "Ha muerto.")
+
+    on-room-load-rule variable-eq(chema-murder-state, 2):
+        if have-item(item-dni) && have-item(item-mapa-estrellas) && have-item(item-reliquia-foto):
+            call-script("remove-alan-chema")
+            set-variable(chema-murder-state, 3)
+        else:
+            remove-object(52)  # remove Luna
+            change-object-description(51, "Ha muerto.")
+        endif
+
+    on-room-load-rule variable-eq(chema-murder-state, 4):
+        call-script("remove-alan-chema")
+
+    on-room-load-rule variable-eq(escaleras-comedor-door, 1):
+        change-object-state(37, "exit")
+
+script("remove-alan-chema"):
+    remove-object(51)  # remove Chema
+    remove-object(52)  # remove Luna
+    remove-object(53)  # remove Alan
+    collision-map-clear(40, 80, 88, 88)  # make bottom area walkable again
+    collision-map-clear(40, 76, 64, 80)  # remove a piece of chema that overlaps the stairs
+
+
+room("comedor", "rooms/room4-comedor.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+    rule exit-through-object(1):
+        go-to-room("escaleras", 16, 60)
+
+    rule use-object(2):
+        change-object-state(2, "exit")
+        play-sfx("sfx/door-open.afx")
+        set-variable(comedor-despensa-door, 1)
+
+    rule use-object(11) && variable-eq(silver-key-state, 0):
+        change-object-state(11, "closed")
+        change-object-state(12, "open")
+        message("Lo he enderezado y ha caído algo al suelo.")
+        play-sfx("sfx/llave-loud.afx")
+        set-variable(silver-key-state, 1)
+
+    rule pickup-object(12):
+        remove-object(12)
+        gain-item(item-llave-plata)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(silver-key-state, 2)
+
+    persistent-rule pickup-object(7):
+        gain-item(item-cubitera)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(7)
+
+    repeating-rule use-object(7):
+        message("No sirve de nada sin agua, ni hielo, ni bebida!")
+
+    repeating-rule examine-object(11) && variable-eq(silver-key-state, 1):
+        message("Lo he enderezado.")
+
+    repeating-rule examine-object(11) && variable-eq(silver-key-state, 2):
+        message("Lo he enderezado.")
+
+    # Cortinas (9, 13)
+    rule examine-object(9) && variable-eq(comedor-cortina, 0):
+        message("Una cortina recogida con una cuerda resistente.")
+        change-object-name(9, "cuerda")
+        change-object-name(13, "cuerda")
+        set-variable(comedor-cortina, 1)
+    rule examine-object(9) && variable-eq(comedor-cortina, 1):
+        message("Una resistente cuerda.")
+    rule pickup-object(9) && variable-eq(comedor-cortina, 1):
+        message("La cuerda está tan firmemente atada que solo podría cortarla.")
+    rule use-object(9) && variable-eq(comedor-cortina, 1):
+        message("La cuerda está tan firmemente atada que solo podría cortarla.")
+    rule examine-object(13) && variable-eq(comedor-cortina, 0):
+        message("Una cortina recogida con una cuerda resistente.")
+        change-object-name(13, "cuerda")
+        change-object-name(13, "cuerda")
+        set-variable(comedor-cortina, 1)
+    rule examine-object(13) && variable-eq(comedor-cortina, 1):
+        message("Una resistente cuerda.")
+    rule pickup-object(13) && variable-eq(comedor-cortina, 1):
+        message("La cuerda está tan firmemente atada que solo podría cortarla.")
+    rule use-object(13) && variable-eq(comedor-cortina, 1):
+        message("La cuerda está tan firmemente atada que solo podría cortarla.")
+    persistent-rule use-item-with-object(item-cuchillo, 9) && variable-eq(comedor-cortina, 1):
+        message("He cortado la cuerda.")
+        gain-item(item-cuerda)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        inc-variable(n-cuerdas-cortas)
+    persistent-rule-effect:
+        change-object-state(9, "closed")
+    persistent-rule use-item-with-object(item-cuchillo, 13) && variable-eq(comedor-cortina, 1):
+        message("He cortado la cuerda.")
+        gain-item(item-cuerda)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        inc-variable(n-cuerdas-cortas)
+    persistent-rule-effect:
+        change-object-state(13, "closed")
+
+    rule examine-object(8):
+        go-to-room("comedor-alacena")
+
+    rule exit-through-object(10):
+        go-to-room("jardin", 64, 60)
+
+    repeating-rule exit-through-object(2):
+        go-to-room("cocina", 80, 84)
+
+    repeating-rule use-object(14):
+        go-to-room("comedor-apagado")
+
+    on-room-load-rule variable-eq(comedor-despensa-door, 1):
+        change-object-state(2, "exit")
+
+    on-room-load-rule variable-eq(comedor-cortina, 1):
+        change-object-name(9, "cuerda")
+        change-object-name(13, "cuerda")
+
+    on-room-load-rule variable-eq(silver-key-state, 1):
+        change-object-state(11, "closed")
+        change-object-state(12, "open")
+
+    on-room-load-rule variable-eq(silver-key-state, 2):
+        change-object-state(11, "closed")
+        remove-object(12)
+
+
+room("comedor-apagado", "rooms/room4-comedor-apagado.tmx", 0, 0):
+    
+    repeating-rule use-object(14):
+        message("No puedo encenderla sin más.")
+    repeating-rule examine-object(14):
+        message("Una vela.")
+
+    repeating-rule use-item-with-object(item-mechero, 14):
+        go-to-room("comedor", 52, 56)
+
+    rule use-item-with-object(item-gafas, 15):
+        change-object-state(16, "number")
+        change-object-direction(16, "1")
+        remove-object(15)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    on-room-start-rule true():
+        message("He apagado la vela y me he quedado a oscuras!")
+
+
+room("comedor-alacena", "rooms/room4-comedor-alacena.tmx", 3, 2, subroom):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+    rule click-outside-room-area():
+        go-to-room("comedor", 72, 58)
+
+#    persistent-rule pickup-object(1):
+#        gain-item(item-botella-blanca)
+#        play-sfx("sfx/puzzle-resuelto.afx")
+#    persistent-rule-effect:
+#        remove-object(1)
+
+    persistent-rule pickup-object(2):
+        gain-item(item-taza)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(2)
+
+    persistent-rule pickup-object(4):
+        gain-item(item-taza)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(4)
+
+
+room("cocina", "rooms/room5-cocina.tmx", 1, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 5)
+
+    repeating-rule exit-through-object(1):
+        go-to-room("comedor", 8, 74)
+
+    repeating-rule use-object(4):
+        message("Los grifos no tienen agua.")
+
+    repeating-rule use-object(7):
+        message("No llega gas.")
+
+    rule examine-object(2):
+        go-to-room("cocina-lock")
+
+    repeating-rule use-object(2):
+        if variable-eq(cocina-lock, 1):
+            play-sfx("sfx/door-open.afx")
+            change-object-state(2, "exit")
+            set-variable(cocina-lock, 2)
+        else:
+            go-to-room("cocina-lock")
+        endif
+
+    rule exit-through-object(2):
+        go-to-room("caldera", 16, 84)
+
+    persistent-rule examine-object(8):
+        message("Un armario con utensilios de cocina. He conseguido unas pinzas.")
+        gain-item(item-pinzas)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    persistent-rule examine-object(9):
+        message("Un armario con utensilios de cocina. He conseguido un afilador de cuchillos.")
+        gain-item(item-afilador)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    persistent-rule pickup-object(10):
+        gain-item(item-atizador)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(10)
+
+    rule examine-object(5) && variable-eq(cuchillo-cogido, 0):
+        message("Una mesa con útiles de cocina. He conseguido un cuchillo.")
+        gain-item(item-cuchillo)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(cuchillo-cogido, 1)
+
+    repeating-rule use-item-with-object(item-cubitera, 6):
+        message("Necesito agua.")
+
+    # chimenea: 0 -> encendida
+    # chimenea: 1 -> apagada
+    # chimenea: 2 -> apagada con carbón vegetal
+    # chimenea: 3 -> encendida con carbón vegetal
+    repeating-rule use-item-with-object(item-cubitera-llena, 6) && variable-eq(chimenea, 0):
+        message("He apagado el fuego. ¡Un pasadizo secreto!")
+        lose-item(item-cubitera-llena)
+        gain-item(item-cubitera)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(chimenea, 1)
+        change-object-state(6, "closed")
+        change-object-state(12, "open")  # show wood
+        change-object-state(13, "exit")  # pasadizo
+    repeating-rule use-item-with-object(item-cubitera-llena, 6) && variable-eq(chimenea, 3):
+        message("He apagado el fuego.")
+        lose-item(item-cubitera-llena)
+        gain-item(item-cubitera)
+        set-variable(chimenea, 2)
+        change-object-state(6, "closed")
+        change-object-state(12, "closed")  # show coal
+        change-object-state(13, "exit")  # pasadizo
+
+    repeating-rule exit-through-object(13):
+        go-to-room("despensa", 36, 80)
+    repeating-rule use-object(6) && variable-eq(chimenea, 0):
+        message("¡Quema!")
+    repeating-rule use-object(6) && variable-eq(chimenea, 3):
+        message("¡Quema!")
+    repeating-rule examine-object(6) && variable-eq(chimenea, 1):
+        message("Un pasadizo secreto.")
+    repeating-rule examine-object(6) && variable-eq(chimenea, 2):
+        message("Lista para arder a gran temperatura.")
+    repeating-rule examine-object(6) && variable-eq(chimenea, 3):
+        message("Arde a gran temperatura.")
+
+    rule use-item-with-object(item-carbon, 6) && variable-eq(chimenea, 1):
+        lose-item(item-carbon)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(chimenea, 2)
+        change-object-state(12, "closed")  # show coal
+        message("Lista para arder a gran temperatura.")
+    rule use-item-with-object(item-mechero, 6) && variable-eq(chimenea, 1):
+        set-variable(chimenea, 0)
+        change-object-state(6, "open")
+        change-object-state(12, "idle")  # remove wood/coal
+        change-object-state(13, "idle")  # hide pasadizo
+        message("La he encendido.")
+    rule use-item-with-object(item-mechero, 6) && variable-eq(chimenea, 2):
+        set-variable(chimenea, 3)
+        change-object-state(6, "open")
+        change-object-state(12, "idle")  # remove wood/coal
+        change-object-state(13, "idle")  # hide pasadizo
+        message("Arde a gran temperatura.")
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    repeating-rule use-item-with-object(item-taza-plata, 6) || use-item-with-object(item-taza-oro, 6):
+        message("¡Quema!")
+
+    repeating-rule use-item-with-object(item-taza-plata-pinzas, 6) && variable-eq(chimenea, 0):
+        message("La leña no arde a suficiente temperatura.")
+    repeating-rule use-item-with-object(item-taza-oro-pinzas, 6) && variable-eq(chimenea, 0):
+        message("La leña no arde a suficiente temperatura.")
+    repeating-rule use-item-with-object(item-taza-plata-pinzas, 6) && variable-eq(chimenea, 3):
+        lose-item(item-taza-plata-pinzas)
+        gain-item(item-taza-plata-liquida)
+        gain-item(item-pinzas)
+        message("¡Se ha fundido en la taza!")
+        play-sfx("sfx/puzzle-resuelto.afx")
+    repeating-rule use-item-with-object(item-taza-oro-pinzas, 6) && variable-eq(chimenea, 3):
+        lose-item(item-taza-oro-pinzas)
+        gain-item(item-taza-oro-liquido)
+        gain-item(item-pinzas)
+        message("¡Se ha fundido en la taza!")
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    on-room-load-rule variable-eq(cocina-lock, 2):
+        change-object-state(2, "exit")
+
+    on-room-load-rule variable-eq(chimenea, 1):
+        change-object-state(6, "closed")
+        change-object-state(12, "open")  # show wood
+        change-object-state(13, "exit")  # pasadizo
+    on-room-load-rule variable-eq(chimenea, 2):
+        change-object-state(6, "closed")
+        change-object-state(12, "closed")  # show coal
+        change-object-state(13, "exit")  # pasadizo
+
+
+room("cocina-lock", "rooms/room5-cocina-lock.tmx", 2, 4, subroom):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+    rule click-outside-room-area():
+        go-to-room("cocina", 12, 80)
+
+    repeating-rule use-item-with-object(item-llave-plata, 1):
+        if variable-eq(cocina-lock, 0):
+            play-sfx("sfx/puzzle-resuelto.afx")
+            change-object-state(1, "open")
+            set-variable(cocina-lock, 1)
+        else:
+            message("Ya está abierto.")
+        endif
+
+    repeating-rule use-item-with-object(item-atizador, 1):
+        if variable-eq(cocina-lock, 0):
+            play-sfx("sfx/puzzle-resuelto.afx")
+            change-object-state(1, "open")
+            set-variable(cocina-lock, 1)
+            message("He reventado el candado.")
+        else:
+            message("Ya está abierto.")
+        endif
+
+    on-room-load-rule variable-eq(cocina-lock, 1):
+        change-object-state(1, "open")
+
+
+room("caldera", "rooms/room6-caldera.tmx", 10, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+    rule exit-through-object(1):
+        go-to-room("cocina", 12, 80)
+
+    persistent-rule use-item-with-object(item-llave-de-paso, 4):
+        message("He puesto la llave de paso.")
+        lose-item(item-llave-de-paso)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(caldera-deposito, 1)
+    persistent-rule-effect:
+        change-object-state(4, "open")
+
+    rule use-object(4) && variable-eq(caldera-deposito, 1):
+        message("La llave de paso está abierta.")
+        play-sfx("sfx/puzzle-resuelto.afx")
+        set-variable(caldera-deposito, 2)
+
+    repeating-rule examine-object(4) && variable-eq(caldera-deposito, 1):
+        message("Ya tiene la llave de paso.")
+    repeating-rule examine-object(4) && variable-eq(caldera-deposito, 2):
+        message("La llave de paso está abierta.")
+    repeating-rule examine-object(4) && variable-eq(caldera-deposito, 3):
+        message("La llave de paso está abierta.")
+
+    repeating-rule use-object(3) || examine-object(3):
+        if variable-eq(caldera-deposito, 0) || variable-eq(caldera-deposito, 1):
+            message("No le llega agua desde la tubería.")
+        endif
+        if variable-eq(caldera-deposito, 2):
+            go-to-room("caldera-puzzle")
+        endif
+        if variable-eq(caldera-deposito, 3):
+            message("El depósito está rebosando.")
+        endif
+
+    rule use-item-with-object(item-cubitera, 2):
+        if variable-eq(caldera-deposito, 3):
+            lose-item(item-cubitera)
+            gain-item(item-cubitera-llena)
+            message("He llenado la cubitera con agua.")
+            play-sfx("sfx/puzzle-resuelto.afx")
+        else:
+            message("¡No sé como usar eso!")
+        endif
+
+    rule pickup-object(5):
+        change-object-state(5, "closed")
+        set-variable(caldera-tablilla, 2)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        gain-item(item-tablilla)
+
+    repeating-rule use-object(6):
+        go-to-room("caldera-apagada")
+
+    on-room-load-rule variable-eq(caldera-deposito, 3):
+        change-object-state(2, "open")
+        change-object-description(2, "El depósito está rebosando.")
+
+    on-room-load-rule variable-eq(caldera-tablilla, 1):
+        change-object-state(5, "open")
+
+
+room("caldera-apagada", "rooms/room6-caldera-apagada.tmx", 10, 0):
+    
+    repeating-rule use-object(1):
+        message("No puedo encenderla sin más.")
+    repeating-rule examine-object(1):
+        message("Una vela.")
+
+    repeating-rule use-item-with-object(item-mechero, 1):
+        go-to-room("caldera", 6, 78)
+
+    rule use-item-with-object(item-gafas, 2):
+        change-object-state(3, "number")
+        change-object-direction(3, "2")
+        remove-object(2)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    on-room-start-rule true():
+        message("He apagado la vela y me he quedado a oscuras!")
+
+
+room("caldera-puzzle", "rooms/room6-caldera-puzzle.tmx", 4, 0, subroom):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+    default-verb("use")
+
+    rule click-outside-room-area():
+        go-to-room("caldera", 16, 78)
+
+    repeating-rule use-object(1):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("custom_caldera_puzzle_2_to_1")
+        call-script("caldera-puzzle-check-solution")
+
+    repeating-rule use-object(2):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("custom_caldera_puzzle_1_to_2")
+        call-script("caldera-puzzle-check-solution")
+
+    repeating-rule use-object(3):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("custom_caldera_puzzle_3_to_2")
+        call-script("caldera-puzzle-check-solution")
+
+    repeating-rule use-object(4):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("custom_caldera_puzzle_2_to_3")
+        call-script("caldera-puzzle-check-solution")
+
+    repeating-rule use-object(5):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("custom_caldera_puzzle_3_to_1")
+        call-script("caldera-puzzle-check-solution")
+
+    repeating-rule use-object(6):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("custom_caldera_puzzle_1_to_3")
+        call-script("caldera-puzzle-check-solution")
+
+    on-room-load-rule true():
+        custom-assembler-room-draw("custom_caldera_puzzle_redraw")
+
+    on-room-start-rule true():
+        set-variable(caldera-puzzle-water1, 6)
+        set-variable(caldera-puzzle-water2, 5)
+        set-variable(caldera-puzzle-water3, 1)
+        # call-assembler("custom_caldera_puzzle_redraw")
+
+
+script("caldera-puzzle-check-solution"):
+    if variable-eq(caldera-puzzle-water1, 4) && variable-eq(caldera-puzzle-water2, 4) && variable-eq(caldera-puzzle-water2, 4):
+        # puzzle solucionado!
+        redraw-room()
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("El depósito se ha llenado hasta rebosar y ha caído una tabla de madera que había dentro.")
+        wait-for-space()
+        set-variable(caldera-deposito, 3)
+        set-variable(caldera-tablilla, 1)
+        go-to-room("caldera", 16, 78)
+    endif
+
+
+room("jardin", "rooms/room7-jardin.tmx", 2, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 5)
+    rule exit-through-object(1):
+        go-to-room("comedor", 40, 60)
+
+    rule use-item-with-object(item-cuerda, 3) && variable-eq(jardin-pozo, 0):
+        inc-variable(jardin-pozo)
+        change-object-state(5, "closed")
+        lose-item(item-cuerda)
+        dec-variable(n-cuerdas-cortas)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    rule use-item-with-object(item-cuerda, 3) && variable-eq(jardin-pozo, 1):
+        inc-variable(jardin-pozo)
+        change-object-state(5, "exit")
+        lose-item(item-cuerda)
+        dec-variable(n-cuerdas-cortas)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    rule use-item-with-object(item-cuerda-larga, 3):
+        set-variable(jardin-pozo, 2)
+        change-object-state(5, "exit")
+        lose-item(item-cuerda-larga)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    rule use-item-with-object(item-cubitera-cuerda-larga, 3):
+        set-variable(jardin-pozo, 2)
+        change-object-state(5, "exit")
+        lose-item(item-cubitera-cuerda-larga)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("He llenado la cubitera con agua.")
+        gain-item(item-cubitera-llena)
+    rule use-item-with-object(item-cubitera-cuerda, 3) && variable-eq(jardin-pozo, 0):
+        message("Necesito una cuerda más larga.")
+    rule use-item-with-object(item-cubitera-cuerda, 3) && variable-eq(jardin-pozo, 1):
+        set-variable(jardin-pozo, 2)
+        change-object-state(5, "exit")
+        lose-item(item-cubitera-cuerda)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("He llenado la cubitera con agua.")
+        gain-item(item-cubitera-llena)
+    rule use-item-with-object(item-cubitera, 3) && variable-eq(jardin-pozo, 2):
+        lose-item(item-cubitera)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("He llenado la cubitera con agua.")
+        gain-item(item-cubitera-llena)
+    repeating-rule examine-object(3) && variable-eq(jardin-pozo, 1):
+        message("Un profundo pozo con una cuerda pequeña.")
+    repeating-rule examine-object(3) && variable-eq(jardin-pozo, 2):
+        message("Un pozo con una cuerda larga.")
+
+    repeating-rule use-object(3) && variable-eq(jardin-pozo, 1):
+        message("Necesito una cuerda más larga para bajar.")
+
+    rule use-object(3) && variable-eq(jardin-pozo, 2):
+        go-to-room("pozo", 20, 74)
+    rule exit-through-object(5):
+        go-to-room("pozo", 20, 74)
+
+    persistent-rule pickup-object(2):
+        gain-item(item-carbon)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(2)
+
+    on-room-load-rule variable-eq(jardin-pozo, 1):
+        change-object-state(5, "closed")
+    on-room-load-rule variable-eq(jardin-pozo, 2):
+        change-object-state(5, "exit")
+
+
+room("pozo", "rooms/room8-pozo.tmx", 4, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+
+    repeating-rule exit-through-object(3):
+        go-to-room("jardin", 44, 82)
+
+    repeating-rule pickup-object(5):
+        message("Necesito un cubo para poder coger agua.")
+
+    rule use-item-with-object(item-cubitera, 5):
+        lose-item(item-cubitera)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("He llenado la cubitera con agua.")
+        gain-item(item-cubitera-llena)
+
+    persistent-rule pickup-object(1):
+        gain-item(item-llave-de-paso)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(1)
+
+    rule use-object(4) || examine-object(4):
+        go-to-room("pozo-puzzle")
+
+    rule exit-through-object(6):
+        go-to-room("laboratorio", 76, 76)
+
+    on-room-load-rule variable-eq(pozo-puzzle, 0):
+        remove-object(6)  # doorway
+
+
+room("pozo-puzzle", "rooms/room8-pozo-puzzle.tmx", 3, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+    default-verb("use")
+
+    rule click-outside-room-area():
+        go-to-room("pozo", 48, 74)
+
+    repeating-rule use-object(1):
+        call-assembler("pozo_puzzle_button_left1")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(2):
+        call-assembler("pozo_puzzle_button_right1")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(3):
+        call-assembler("pozo_puzzle_button_left2")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(4):
+        call-assembler("pozo_puzzle_button_right2")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(5):
+        call-assembler("pozo_puzzle_button_left3")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(6):
+        call-assembler("pozo_puzzle_button_right3")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(7):
+        call-assembler("pozo_puzzle_button_left4")
+        call-script("pozo-puzzle-check-solution")
+
+    repeating-rule use-object(8):
+        call-assembler("pozo_puzzle_button_right4")
+        call-script("pozo-puzzle-check-solution")
+
+    on-room-load-rule true():
+        custom-assembler-room-draw("pozo_puzzle_draw_state", only-full-redraw)
+
+    on-room-start-rule true():
+        set-variable(puzzle-pozo-1, 0)
+        set-variable(puzzle-pozo-2, 0)
+        set-variable(puzzle-pozo-3, 0)
+        set-variable(puzzle-pozo-4, 0)
+        # call-assembler("pozo_puzzle_draw_state")
+        message("Hay una inscripción: 'El nombre de la niña es la clave que abre el camino'.")
+
+
+script("pozo-puzzle-check-solution"):
+    play-sfx("sfx/button-press.afx")
+    # 2 - 1 - 10 - 15
+    if variable-eq(puzzle-pozo-1, 1) && variable-eq(puzzle-pozo-2, 0) && variable-eq(puzzle-pozo-3, 9) && variable-eq(puzzle-pozo-4, 14):
+        # puzzle solucionado!
+        set-variable(pozo-puzzle, 1)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        # wait-for-space()
+        go-to-room("pozo", 48, 74)
+    endif
+
+
+room("despensa", "rooms/room9-despensa.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(1):
+        go-to-room("cocina", 32, 76)
+
+    persistent-rule pickup-object(14):
+        play-sfx("sfx/puzzle-resuelto.afx")
+        gain-item(item-termometro)
+    persistent-rule-effect:
+        remove-object(14)
+
+    repeating-rule examine-object(13):
+        if variable-eq(despensa-bota-state, 0):
+            message("Un gran barril con una extraña ranura y una inscripción: 'Una moneda del peso exacto del elemento Paketenio 83 es el precio de ver en las sombras'.")
+        else:
+            message("Un gran barril con un compartimento secreto abierto.")
+        endif
+
+    rule use-item-with-object(item-paketenio, 13):
+        play-sfx("sfx/puzzle-resuelto.afx")
+        lose-item(item-paketenio)
+        message("¡Un compartimento secreto!")
+        set-variable(despensa-bota-state, 1)
+        change-object-state(13, "open")
+        change-object-state(15, "idle")  # show glasses
+
+    repeating-rule pickup-object(15):
+        set-variable(despensa-bota-state, 2)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        change-object-state(15, "hidden")  # hide glasses
+        gain-item(item-gafas)
+
+    on-room-load-rule variable-eq(despensa-bota-state, 1):
+        change-object-state(13, "open")  # abrir barril
+        change-object-state(15, "idle")  # show glasses
+    on-room-load-rule variable-eq(despensa-bota-state, 2):
+        change-object-state(13, "open")  # abrir barril
+
+
+room("laboratorio", "rooms/room10-laboratorio.tmx", 2, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(1):
+        go-to-room("pozo", 48, 74)
+
+    repeating-rule pickup-object(6):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object(6):
+        message("No puedo moverla sin hacer palanca.")
+
+    repeating-rule examine-object(9) || use-object(9):
+        if variable-eq(laboratorio-puzzle-solved, 0):
+            go-to-room("laboratorio-puzzle")
+        else:
+            message("No necesito nada de ahí.")
+        endif
+
+    persistent-rule pickup-object(10):
+        play-sfx("sfx/puzzle-resuelto.afx")
+        gain-item(item-nota-alquimia)
+    persistent-rule-effect:
+        remove-object(10)
+
+    persistent-rule use-item-with-object(item-atizador, 6):
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        change-object-state(7, "exit")
+
+    rule exit-through-object(7):
+        if variable-eq(catacumbas-state, 5):
+            go-to-room("catacumbas-final", 16, 76)
+        else:
+            go-to-room("catacumbas1", 14, 74)
+        endif
+
+
+# laboratorio-puzzle-bottle = 0: empty bottle
+# laboratorio-puzzle-bottle = 1: estaño
+# laboratorio-puzzle-bottle = 2: plata
+# laboratorio-puzzle-bottle = 3: oro
+room("laboratorio-puzzle", "rooms/room10-laboratorio-puzzle.tmx", 2, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+    default-verb("use")
+
+    rule use-object(1):
+        go-to-room("laboratorio", 38, 80)
+
+    repeating-rule use-object(2):
+        start-dialogue("laboratorio-puzzle-ayuda")
+
+    # repeating-rule use-item-with-object(item-cubitera-llena, 3):
+    #     message("No es un metal.")
+    repeating-rule use-item-with-object(item-oro-en-polvo, 3):
+        message("No es líquido.")
+    repeating-rule use-item-with-object(item-taza-oro, 3):
+        message("No es líquido.")
+    repeating-rule use-item-with-object(item-taza-plata, 3):
+        message("No es líquido.")
+
+    repeating-rule use-item-with-object(item-termometro, 3):
+        play-sfx("sfx/puzzle-resuelto.afx")
+        change-object-state(3, "number")
+        change-object-direction(3, "3")
+        set-variable(laboratorio-puzzle-bottle, 1)
+
+    repeating-rule use-item-with-object(item-taza-plata-liquida, 3):
+        play-sfx("sfx/puzzle-resuelto.afx")
+        change-object-state(3, "number")
+        change-object-direction(3, "2")
+        set-variable(laboratorio-puzzle-bottle, 2)
+
+    repeating-rule use-item-with-object(item-taza-oro-liquido, 3):
+        play-sfx("sfx/puzzle-resuelto.afx")
+        change-object-state(3, "number")
+        change-object-direction(3, "1")
+        set-variable(laboratorio-puzzle-bottle, 3)
+
+    repeating-rule examine-object(3) && variable-eq(laboratorio-puzzle-bottle, 1):
+        message("Frasco con mercurio.")
+    repeating-rule examine-object(3) && variable-eq(laboratorio-puzzle-bottle, 2):
+        message("Frasco con plata.")
+    repeating-rule examine-object(3) && variable-eq(laboratorio-puzzle-bottle, 3):
+        message("Frasco con oro.")
+
+    repeating-rule use-object(4):
+        play-sfx("sfx/button-press.afx")
+        change-object-state(3, "open")
+        change-object-direction(3, "front")
+        set-variable(laboratorio-puzzle-bottle, 0)
+        call-assembler("laboratorio_puzzle_reset_button")
+
+    repeating-rule use-object(5) && variable-eq(laboratorio-puzzle-bottle, 0):
+        message("El frasco está vacío.")
+        play-sfx("sfx/error.afx")
+    repeating-rule use-object(5) && variable-eq(laboratorio-puzzle-n-particles, 9):
+        message("Ya tengo 9 partículas.")
+        play-sfx("sfx/error.afx")
+    repeating-rule use-object(5):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("laboratorio_puzzle_add_particle")
+
+    repeating-rule use-object(6):
+        call-assembler("laboratorio_puzzle_reset_tablero")
+
+    repeating-rule use-object(7):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(8):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(9):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(10):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(11):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(12):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(13):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(14):
+        call-assembler("laboratorio_puzzle_select_particle")
+    repeating-rule use-object(15):
+        call-assembler("laboratorio_puzzle_select_particle")
+
+    repeating-rule use-object(16):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(17):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(18):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(19):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(20):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(21):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(22):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(23):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+    repeating-rule use-object(24):
+        call-assembler("laboratorio_puzzle_place_particle")
+        call-script("laboratorio_puzzle_check_solution")
+
+    on-room-start-rule true():
+        call-assembler("laboratorio_puzzle_reset")
+        set-variable(laboratorio-puzzle-bottle, 0)
+        set-variable(laboratorio-puzzle-n-particles, 0)
+
+script("laboratorio_puzzle_check_solution"):
+    if variable-eq(laboratorio-puzzle-solved, 1):
+        redraw-room()
+        lose-item(item-termometro)
+        lose-item(item-taza-plata-liquida)
+        lose-item(item-taza-oro-liquido)
+        gain-item(item-paketenio)
+        play-sfx("sfx/puzzle-resuelto.afx")
+        start-dialogue("laboratorio-puzzle-resuelto")
+        go-to-room("laboratorio", 38, 80)
+    endif
+
+
+# Solution: 3, 1, 3, 2
+room("catacumbas1", "rooms/room11-catacumbas1.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(2) || exit-through-object(3):
+        go-to-room("laboratorio", 70, 84)
+
+    rule exit-through-object(4):  # door 1
+        set-variable(catacumbas-state, 4)
+        go-to-room("catacumbas2", 16, 74)
+    rule exit-through-object(5):  # door 2
+        set-variable(catacumbas-state, 4)
+        go-to-room("catacumbas2", 16, 74)
+    rule exit-through-object(6):  # door 3
+        set-variable(catacumbas-state, 1)  # correct door
+        go-to-room("catacumbas2", 16, 74)
+
+    repeating-rule use-object(7):
+        go-to-room("catacumbas-apagadas")
+
+    on-room-load-rule true():
+        set-variable(catacumbas-state, 0)
+
+
+room("catacumbas2", "rooms/room11-catacumbas2.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(2):  # left door
+        go-to-room("catacumbas1", 72, 74)
+
+    rule exit-through-object(3):  # door 1
+        if variable-eq(catacumbas-state, 1):
+            set-variable(catacumbas-state, 2)  # correct door
+        else:
+            set-variable(catacumbas-state, 4)
+        endif
+        go-to-room("catacumbas2", 16, 74)
+    rule exit-through-object(4):  # door 2
+        if variable-eq(catacumbas-state, 3):
+            set-variable(catacumbas-state, 5)
+            go-to-room("catacumbas-final", 16, 76)
+        else:
+            set-variable(catacumbas-state, 4)
+            go-to-room("catacumbas2", 16, 74)
+        endif
+    rule exit-through-object(5):  # door 3
+        if variable-eq(catacumbas-state, 2):
+            set-variable(catacumbas-state, 3)  # correct door
+        else:
+            set-variable(catacumbas-state, 4)
+        endif
+        go-to-room("catacumbas2", 16, 74)
+
+    repeating-rule use-object(6):
+        go-to-room("catacumbas-apagadas")
+
+
+room("catacumbas-apagadas", "rooms/room11-catacumbas-apagadas.tmx", 0, 0):
+    
+    repeating-rule use-object(1):
+        message("No puedo encenderla sin más.")
+    repeating-rule examine-object(1):
+        message("Una vela.")
+
+    repeating-rule use-item-with-object(item-mechero, 1):
+        if variable-eq(catacumbas-state, 0):
+            go-to-room("catacumbas1", 32, 74)
+        else:
+            go-to-room("catacumbas2", 32, 74)
+        endif
+
+    rule use-item-with-object(item-gafas, 2):
+        call-assembler("catacumbas_apagadas_show_symbols")
+        remove-object(2)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    on-room-start-rule true():
+        message("He apagado la vela y me he quedado a oscuras!")
+        call-assembler("catacumbas_apagadas_init_room_symbols")
+
+
+room("catacumbas-final", "rooms/room12-catacumbas-final.tmx", 4, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(7):
+        go-to-room("laboratorio", 70, 84)        
+
+    rule use-item-with-object(item-llave-chema, 11):
+        if variable-eq(catacumbas-final-puzzle, 0):
+            message("¡Se ha abierto un panel!")
+            wait-for-space()
+            set-variable(catacumbas-final-puzzle, 1)
+            go-to-room("catacumbas-final-puzzle")
+        else:
+            go-to-room("catacumbas-final-puzzle")
+        endif
+
+
+room("catacumbas-final-puzzle", "rooms/room12-catacumbas-final-puzzle.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+    default-verb("use")
+
+    rule use-object(1):
+        go-to-room("catacumbas-final", 38, 60)
+
+    repeating-rule use-object(2):
+        play-sfx("sfx/button-press.afx")
+        call-assembler("catabumbas_final_puzzle__reset")
+
+    repeating-rule use-object(49):
+        play-sfx("sfx/button-press.afx")
+        message("Sigue la palabra del dios.")
+
+    repeating-rule use-object(31):
+        call-assembler("catabumbas_final_puzzle__up_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(32):
+        call-assembler("catabumbas_final_puzzle__down_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(33):
+        call-assembler("catabumbas_final_puzzle__up_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(34):
+        call-assembler("catabumbas_final_puzzle__down_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(35):
+        call-assembler("catabumbas_final_puzzle__up_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(36):
+        call-assembler("catabumbas_final_puzzle__down_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(37):
+        call-assembler("catabumbas_final_puzzle__up_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(38):
+        call-assembler("catabumbas_final_puzzle__down_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(39):
+        call-assembler("catabumbas_final_puzzle__up_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(40):
+        call-assembler("catabumbas_final_puzzle__down_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(41):
+        call-assembler("catabumbas_final_puzzle__up_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+    repeating-rule use-object(42):
+        call-assembler("catabumbas_final_puzzle__down_arrow")
+        call-script("catacumbas-final-puzzle-check-solution")
+
+    on-room-load-rule true():
+        custom-assembler-room-draw("catabumbas_final_puzzle__room_redraw")
+
+script("catacumbas-final-puzzle-check-solution"):
+    if variable-eq(catacumbas-final-puzzle, 2):
+        redraw-dirty()
+        # puzzle solucionado!
+        play-sfx("sfx/puzzle-resuelto.afx")
+        message("¡He conseguido la reliquia de Chema: una foto!")
+        gain-item(item-reliquia-foto)
+        lose-item(item-llave-chema)
+        wait-for-space()
+        go-to-room("catacumbas-final", 38, 60)
+    endif
+
+
+room("jorge", "rooms/room13-jorge.tmx", 2, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(2):
+        go-to-room("pasillo", 18, 66)
+
+    repeating-rule use-object(3):
+        message("No necesito nada de ahí.")
+
+    repeating-rule use-object(4):
+        go-to-room("jorge-apagado")
+
+    rule use-item-with-object(item-llave-luna, 7):
+        if variable-eq(puzzle-jorge, 0):
+            message("¡La llave ha abierto un panel en la cómoda!")
+            play-sfx("sfx/puzzle-resuelto.afx")
+            set-variable(puzzle-jorge, 1)
+        else:
+            message("Ya está abierto.")
+        endif
+
+    rule examine-object(7) && variable-eq(puzzle-jorge, 1):
+        go-to-room("jorge-puzzle")
+
+    rule use-object(7) && variable-eq(puzzle-jorge, 1):
+        go-to-room("jorge-puzzle")
+
+    repeating-rule examine-object(7) && variable-eq(puzzle-jorge, 2):
+        message("No necesito nada de ahí.")
+
+    repeating-rule use-object(7) && variable-eq(puzzle-jorge, 2):
+        message("No necesito nada de ahí.")
+
+    persistent-rule pickup-object(8):
+        gain-item(item-cartera)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    persistent-rule-effect:
+        remove-object(8)
+
+
+room("jorge-apagado", "rooms/room13-jorge-apagado.tmx", 2, 0):
+    repeating-rule use-object(14):
+        message("No puedo encenderla sin más.")
+    repeating-rule examine-object(14):
+        message("Una vela.")
+
+    repeating-rule use-item-with-object(item-mechero, 14):
+        go-to-room("jorge", 44, 66)
+
+    rule use-item-with-object(item-gafas, 15):
+        change-object-state(16, "number")
+        change-object-direction(16, "4")
+        remove-object(15)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    on-room-start-rule true():
+        message("He apagado la vela y me he quedado a oscuras!")
+
+
+room("jorge-puzzle", "rooms/room13-jorge-puzzle.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+    default-verb("use")
+
+    rule use-object(1):
+        go-to-room("jorge", 62, 74)
+
+    repeating-rule use-item-with-object(item-llave-luna, 2):
+        call-assembler("jorge_puzzle_play")
+        if variable-eq(puzzle-jorge, 2):
+            play-sfx("sfx/puzzle-resuelto.afx")
+            message("¡Se ha abierto un compartimento secreto con algo dentro! No es una reliqua, ¿es un mapa?")
+            lose-item(item-llave-luna)
+            gain-item(item-mapa-estrellas)
+            wait-for-space()
+            go-to-room("jorge", 62, 74)
+        endif
+
+    repeating-rule use-object(3):
+        message("'El Pez oculta el secreto en el Agua.'")
+
+    repeating-rule use-object(5):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(6):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(7):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(8):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(9):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(10):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(11):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(12):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(13):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(14):
+        call-assembler("jorge_puzzle_add_symbol")
+    repeating-rule use-object(15):
+        call-assembler("jorge_puzzle_add_symbol")
+
+    repeating-rule use-object(16):
+        message("No puedo moverlo directamente!")
+
+    on-room-start-rule true():
+       call-assembler("jorge_puzzle_reset")
+
+
+room("final", "rooms/room14-final.tmx", 0, 0):
+    palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23, 21)
+
+    rule exit-through-object(9):
+        go-to-room("escaleras", 100, 72)
+
+    repeating-rule use-object(10):
+        message("Está cerrada con llave.")
+
+    rule examine-object(16):  # corpse
+        if have-item(item-fragmento-ritual):
+            message("¡Otro cadáver! Este sí se parece al del DNI. Dios mío... ¡Es Jorge!. Entonces el pelirrojo del parche, ¿quién es?")
+        else:
+            start-dialogue("alan-cadaver")
+            gain-item(item-fragmento-ritual)
+            set-variable(luna-spirit, 1)
+            change-object-state(17, "idle")  # Luna appears
+            # play-sfx("sfx/llave-loud.afx")
+            play-sfx("sfx/puzzle-resuelto.afx")
+        endif
+
+    rule talk-to-object(17):
+        call-script("cutscene5-ending")
+
+    on-room-load-rule variable-eq(luna-spirit, 1):
+       change-object-state(17, "idle")  # Luna appears
+
+
+dialogue("alan-cadaver"):
+    state 1:
+        scrolling-message-pause("¡Otro cadáver! Este sí se parece al del DNI. Dios mío... ¡Es Jorge!. Entonces el pelirrojo del parche, ¿quién es?")
+        scrolling-message-pause("Tiene un manuscrito de papel en la mano.")
+        goto-dialogue-state(exit)

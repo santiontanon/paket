@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="6" tilewidth="8" tileheight="8" nextobjectid="17">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-piano-radio.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="13" height="6">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,1,1,1,
+1,2,3,3,3,3,3,3,3,4,4,1,1,
+1,5,6,7,8,8,8,9,10,11,12,1,1,
+1,13,6,14,15,15,15,16,10,17,18,1,1,
+1,19,6,3,3,3,3,3,3,20,20,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="10" name="radio-nota" x="18" y="20" width="4" height="10">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="11" name="radio-boton" x="90" y="16" width="4" height="6">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="12" name="radio-boton" x="90" y="26" width="4" height="6">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="13" name="radio-flecha" x="8" y="9" width="8" height="6">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="14" name="radio-flecha" x="8" y="33" width="8" height="6">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="15" name="radio-dial1" x="26" y="18" width="2" height="8">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="16" name="radio-dial2" x="32" y="26" width="2" height="4">
+   <properties>
+    <property name="depth" type="int" value="54"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

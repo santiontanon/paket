@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="42">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-sala-estar.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+2,1,1,1,1,1,1,1,1,1,1,1,1,1,
+3,2,1,1,1,1,1,4,5,1,1,1,6,1,
+7,3,8,9,8,8,8,10,11,8,8,8,12,1,
+3,7,8,9,13,13,13,4,14,13,13,13,6,1,
+15,3,13,13,8,13,13,10,16,8,8,8,12,1,
+1,7,1,13,13,17,1,4,18,13,1,13,19,1,
+1,7,1,13,8,13,1,4,20,8,1,8,21,1,
+1,7,1,13,13,13,1,4,22,1,1,13,19,1,
+1,15,1,1,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,17,23,23,1,8,1,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="14" height="11" visible="0">
+  <data encoding="csv">
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,34,34,34,34,34,34,34,34,34,34,34,34,34,
+34,39,42,33,33,33,33,33,33,33,41,41,33,33,
+33,33,33,33,33,33,33,33,33,33,33,33,33,33,
+33,33,33,33,33,33,33,33,33,33,33,33,33,33
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="24" y="56" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="26" name="door-left" x="0" y="40" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="80"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="28" name="gran-retrato" x="84" y="8" width="8" height="22">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="29" name="door-front" x="32" y="32" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="30" name="couch-right" x="62" y="48" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="right"/>
+   </properties>
+  </object>
+  <object id="31" name="couch-left" x="96" y="56" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="80"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="32" name="couch-back" x="74" y="60" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="up"/>
+   </properties>
+  </object>
+  <object id="33" name="chimenea" x="80" y="40" width="16" height="32">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="34" name="chimenea-fuego" x="84" y="48" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="65"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="35" name="mesita-puro" x="56" y="70" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="86"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="36" name="percha-loro" x="16" y="46" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="37" name="tv" x="48" y="40" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="64"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="62" name="loro" x="16" y="38" width="8" height="12">
+   <properties>
+    <property name="depth" type="int" value="71"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="40" name="miel-percha" x="16" y="46" width="6" height="2">
+   <properties>
+    <property name="depth" type="int" value="71"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+  <object id="41" name="papiro" x="18" y="46" width="2" height="4">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

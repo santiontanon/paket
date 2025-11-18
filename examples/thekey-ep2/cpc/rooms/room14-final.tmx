@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="13" height="11" tilewidth="8" tileheight="8" nextobjectid="18">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="35" columns="16">
+  <image source="bg-tiles-final.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="65" name="collision" tilewidth="8" tileheight="8" tilecount="12" columns="12">
+  <image source="bg-collision-masks.png" width="96" height="8"/>
+ </tileset>
+ <layer name="background" width="13" height="11">
+  <data encoding="csv">
+1,1,2,3,4,3,2,1,1,1,1,1,1,
+1,1,5,6,6,4,5,7,1,1,1,1,1,
+1,8,3,6,9,6,3,10,11,1,1,1,1,
+8,8,3,6,9,6,3,12,13,14,1,1,1,
+8,8,3,6,6,6,3,15,16,17,1,1,1,
+8,8,5,3,3,3,5,18,19,20,21,1,1,
+8,8,22,22,3,23,22,24,25,26,27,1,1,
+8,28,1,1,1,1,1,1,1,29,30,1,1,
+28,31,32,1,1,1,1,1,1,1,1,1,1,
+1,1,1,1,1,1,1,1,1,1,29,30,1,
+1,1,1,1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <layer name="collision" width="13" height="11" visible="0">
+  <data encoding="csv">
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,66,66,66,66,66,66,66,66,66,66,66,66,
+66,71,65,65,65,65,65,65,65,65,65,72,66,
+71,65,65,65,65,65,68,66,66,67,65,65,72,
+65,65,65,65,65,65,65,65,65,65,65,65,65,
+65,65,65,65,65,65,65,65,65,65,65,65,65
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="63" name="player" x="8" y="44" width="6" height="28">
+   <properties>
+    <property name="depth" type="int" value="76"/>
+    <property name="direction" value="left"/>
+   </properties>
+  </object>
+  <object id="9" name="door-left" x="0" y="32" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="exit"/>
+   </properties>
+  </object>
+  <object id="10" name="door-right" x="98" y="32" width="6" height="40">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="right"/>
+    <property name="state" value="closed"/>
+   </properties>
+  </object>
+  <object id="11" name="plant" x="16" y="44" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="12" name="couch-small" x="28" y="36" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="13" name="comedor-chair" x="8" y="52" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="84"/>
+    <property name="direction" value="back"/>
+   </properties>
+  </object>
+  <object id="14" name="candle" x="34" y="16" width="4" height="16">
+   <properties>
+    <property name="depth" type="int" value="56"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="open"/>
+   </properties>
+  </object>
+  <object id="15" name="painting" x="56" y="16" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="56"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="16" name="final-corpse" x="44" y="60" width="32" height="12">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="17" name="luna" x="82" y="36" width="8" height="20">
+   <properties>
+    <property name="depth" type="int" value="72"/>
+    <property name="direction" value="left"/>
+    <property name="state" value="hidden"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

@@ -1,0 +1,109 @@
+# ------- Item definition: -------
+
+item(item-rama, "rama", "Una rama seca y débil."):
+  image("items.png", 48, 0, 56, 12)
+
+item(item-mechero, "mechero", "Un mechero a tope de gas."):
+  image("items.png", 0, 0, 8, 12)
+
+item(item-reliquia-lazo, "reliquia lazo", "Una de las 3 relíquias. Un lazo de pelo cuidadosamente conservado."):
+  image("items.png", 8, 0, 16, 12)
+
+item(item-reliquia-foto, "reliquia foto", "La reliquia de Chema. Una Polaroid con una nota detrás 'Auriga'."):
+  image("items.png", 16, 0, 24, 12)
+
+# item(item-mapa-estrellas, "mapa", "No es una relíquia. Es un mapa de constelaciones."):
+#   image("items.png", 24, 0, 32, 12)
+
+item(item-lupa, "lupa", "Permite ver mensajes ocultos en objetos aparentemente normales."):
+  image("items.png", 32, 0, 40, 12)
+  default-use-message("Ningún mensaje oculto.")
+
+item(item-cable, "cable", "Un cable en perfecto estado."):
+  image("items.png", 40, 0, 48, 12)
+
+item(item-fragmento-ritual, "fragmento de ritual", "'Ritual de Paz Eterna'. Está incompleto. Al contrario que el de Resurrección, este no resucita, sino que permite el descanso de los espíritus atrapados."):
+  image("items.png", 56, 0, 64, 12)
+
+item(item-carta-amarilla, "carta estrella amarilla", "carta estrella amarilla"):
+  image("items.png", 64, 0, 72, 12)
+
+item(item-puro, "puro", "Un puro apagado."):
+  image("items.png", 72, 0, 80, 12)
+
+item(item-puro-encendido, "puro", "El puro está encendido. Saca mucho humo."):
+  image("items.png", 80, 0, 88, 12)
+
+item(item-melody-pops, "Melody Pops", "Un Melody Pops."):
+  image("items.png", 88, 0, 96, 12)
+
+item(item-tren, "tren estropeado", "Si consigo abrirlo puedo aprovechar la pila y algún cable."):
+  image("items.png", 96, 0, 104, 12)
+
+item(item-tarro, "tarro de cristal", "Un tarro de cristal vacío."):
+  image("items.png", 104, 0, 112, 12)
+
+item(item-tarro-miel, "tarro con miel", "Un tarro con miel muy pegajosa."):
+  image("items.png", 112, 0, 120, 12)
+
+item(item-llave-pequena, "llave", "Una pequeña llave dorada."):
+  image("items.png", 120, 0, 128, 12)
+  default-use-message("No encaja aquí.")
+
+item(item-papiro-letras, "papiro de las letras", "papiro de las letras"):
+  image("items.png", 0, 12, 8, 24)
+
+item(item-destornillador, "destornillador", "Un destornillador pequeño."):
+  image("items.png", 8, 12, 16, 24)
+
+item(item-bateria, "batería", "Está cargada."):
+  image("items.png", 16, 12, 24, 24)
+
+item(item-carta-azul, "carta sol azul", "carta sol azul"):
+  image("items.png", 24, 12, 32, 24)
+
+item(item-goma, "goma elástica", "Gruesa y resistente."):
+  image("items.png", 32, 12, 40, 24)
+
+item(item-rama2, "rama", "Una resistente rama en forma de Y."):
+  image("items.png", 40, 12, 48, 24)
+
+item(item-tirachinas, "tirachinas", "He fabricado un tirachinas."):
+  image("items.png", 48, 12, 56, 24)
+
+item(item-tirachinas-cargado, "tirachinas con piedra", "Listo para disparar."):
+  image("items.png", 56, 12, 64, 24)
+
+item(item-piedra, "piedra", "Una piedra pequeña pero pesada."):
+  image("items.png", 64, 12, 72, 24)
+
+item(item-carta-roja, "carta luna roja", "carta luna roja"):
+  image("items.png", 72, 12, 80, 24)
+
+item(item-rotulador, "rotulador", "Rotulador blanco permanente."):
+  image("items.png", 80, 12, 88, 24)
+
+item(item-pktd, "PKT device", "Un extraño dispositivo. Le falta la batería."):
+  image("items.png", 88, 12, 96, 24)
+  default-use-message("Le falta la batería.")
+
+item(item-pktd-on, "PKT device", "Un terminal para entrada de códigos en puertos PKTd compatibles."):
+  image("items.png", 88, 12, 96, 24)
+  default-use-message("No hay un puerto PKTd compatible.")
+
+item(item-pentagrama-vacio, "partitura", "Una partitura lista para anotar."):
+  image("items.png", 96, 12, 104, 24)
+
+# item(item-pentagrama-anotado, "partitura", "Una partitura con notas."):
+item(item-pentagrama-anotado, "partitura", "Una partitura con notas: RE SOL SI RE SOL"):
+  image("items.png", 104, 12, 112, 24)
+
+item(item-muneca, "reliquia muñeca", "¡La última reliquia! Tiene una fecha escrita: 12JUN81."):
+  image("items.png", 112, 12, 120, 24)
+
+item(item-fragmento-ritual2, "fragmento de ritual", "'Ritual de Paz Eterna'. Está incompleto. Al contrario que el de Resurrección, este no resucita, sino que permite el descanso de los espíritus atrapados."):
+  image("items.png", 0, 24, 8, 36)
+
+item(item-ritual-completo, "Ritual de Paz Eterna", "Sacrifica las reliquias. Cierra los ojos. Y sin moverte recorre el camino mostrado en el papiro de las letras, empezando por el BA y terminando en el KA."):
+  image("items.png", 120, 12, 128, 24)
+

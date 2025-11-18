@@ -1,0 +1,21 @@
+# ------- Global Definitions: -------
+language("es")
+include("font.pak")
+built-in-texts("¡No puedo coger eso!",
+               "¡No sé cómo usar eso!",
+               "¡No sé qué decirle!",
+               "¡Ya lo tengo!",
+               "¡No llego desde aquí!")
+action-names("Examinar ", "Coger ", "Usar ", "Hablar con ", "Salir por ", " con ")
+frame-around-subrooms(false)
+pointers("pointers.png")
+text-area(0, 0, 14, 5)
+game-area(0, 6, 14, 11)
+gui(0, 17, "gui.png")
+inventory(10, 2)
+pathfinding(on-collision, stop-early, max-path-length:32)
+double-click-on-exit(true)
+use-item-with-item-symmetric(true)
+player-scaling-thresholds(61,67,81)
+load-save-game-script("the-key-load-save-game-script")
+loading-screen("loading-screen.png", cpc-mode1)

@@ -1,0 +1,8 @@
+font("font-custom-santi2.png", 
+     " ¡!º¿$&'()?,-./",
+     "0123456789:;Çüé",
+     "ABCDEFGHIJKLMNO",
+     "PQRSTUVWXYZàçèï",
+     "abcdefghijklmno",
+     "pqrstuvwxyzòáíóú",
+     "ñÑ^ùìÈûÊœîôêÉâ«»Ú")

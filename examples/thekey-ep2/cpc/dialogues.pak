@@ -1,0 +1,68 @@
+# ------- Dialogues: -------
+
+dialogue("chema"):
+    state 1:
+        scrolling-message-pause("... Alan ha venido... nos engañó...")
+        scrolling-message-pause("El Ritual de Resurreción... 3 relíquias... y un SACRIFICIO... no lo sabíamos. Pero hay otra forma...")
+        scrolling-message-pause("Jorge lo encontró... Ritual de Paz Eterna...")
+        scrolling-message-pause("Debes... toma... mi... lla...")
+        goto-dialogue-state(exit)
+
+dialogue("jorge"):
+    state 1:
+        if variable-eq(chema-murder-state, 1):
+            scrolling-message-pause("¿Qué ha pasado?")
+            clear-text-area()
+            add-dialogue-option(2, "Chema ha muerto...")
+            add-dialogue-option(2, "Han matado a Chema...")
+        else:
+            add-dialogue-option(6, "¿Y ahora?")
+            add-dialogue-option(exit, "Adiós")
+        endif
+        if have-item(item-dni):
+            add-dialogue-option(7, "Tu DNI...")
+        endif
+    state 2:
+        scrolling-message-pause("¡¿Cómo?! Cuando he bajado no estaba aquí.")
+        clear-text-area()
+        add-dialogue-option(3, "El espíritu de Lisa...")
+        add-dialogue-option(3, "Has visto al espíritu?")
+    state 3:
+        scrolling-message-pause("¿Lo ha matado el espíritu? ¡Debemos completar el Ritual de Resurrección cuanto antes!")
+        clear-text-area()
+        add-dialogue-option(4, "El Ritual de Paz Eterna...")
+        add-dialogue-option(4, "Chema me ha dicho...")
+    state 4:
+        scrolling-message-pause("¿Cómo sabes eso?... No. El Ritual de Resurrección ES LA ÚNICA MANERA de que el espíritu vuelva al cuerpo. Olvídate del Ritual de Paz Eterna. ¿Tienes las relíquias de Mabus y Chema?")
+        clear-text-area()
+        add-dialogue-option(5, "La llave de Chema...")
+        add-dialogue-option(5, "La reliquia de Chema...")
+    state 5:
+        scrolling-message-pause("¡¿Chema no consiguió su reliquia?! Pues corre a encontrarla. Y también la mía. Yo me quedo a arreglar todo este desastre.")
+        clear-text-area()
+        add-dialogue-option(6, "¿No la has encontrado?")
+        add-dialogue-option(6, "Tu reliquia...")
+    state 6:
+        scrolling-message-pause("Mi reliquia debe estar en la cómoda, arriba. He perdido la llave con tanto ajetreo. Consigue las relíquias que faltan y nos vemos aquí para ir a completar el Ritual de Resurrección.")
+        set-variable(chema-murder-state, 2)
+        goto-dialogue-state(1)
+    state 7:
+        scrolling-message-pause("¿¡Dónde has encontrado esto!? Es una foto antigua, de antes del accidente. ¡Ocúpate de las reliquias!")
+        goto-dialogue-state(exit)
+
+
+# -------------------------------------
+
+dialogue("laboratorio-puzzle-ayuda"):
+    state 1:
+        scrolling-message-pause("1. Coloca un metal líquido en el frasco. Puedes cambiar el metal en cualquier momento.")
+        clear-text-area()
+        scrolling-message-pause("2. Pulsa el botón para procesarlo y generar partículas de los metales según tu receta.")
+        clear-text-area()
+        scrolling-message-pause("3. Coloca 9 partículas en el tablero superior conectando todos sus enlaces.")
+        goto-dialogue-state(exit)
+
+dialogue("laboratorio-puzzle-resuelto"):
+    state 1:
+        scrolling-message-pause("¡La fórmula ha producido una moneda de Paketenio 83!")
+        goto-dialogue-state(exit)

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="7" height="8" tilewidth="8" tileheight="8" nextobjectid="6">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-comedor-alacena.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="10" columns="10">
+  <image source="bg-collision-masks.png" width="80" height="8"/>
+ </tileset>
+ <layer name="background" width="7" height="8">
+  <data encoding="csv">
+1,1,1,1,1,1,1,
+1,2,3,4,5,6,1,
+1,7,8,9,10,11,1,
+1,12,13,14,15,16,1,
+1,17,18,9,19,20,1,
+1,21,22,23,24,25,1,
+1,26,27,27,28,29,1,
+1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="2" name="alacena-taza" x="26" y="26" width="2" height="4">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="4" name="alacena-taza" x="34" y="27" width="2" height="4">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+  <object id="5" name="alacena-vajilla" x="16" y="10" width="24" height="40">
+   <properties>
+    <property name="depth" type="int" value="60"/>
+    <property name="direction" value="front"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

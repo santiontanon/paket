@@ -1,0 +1,966 @@
+# ------- Room objects: -------
+
+object("exit-1x4", "salida", "Salida"):
+    state("exit", "front"):
+        empty-image(8, 32)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("plant", "planta", "Un ficus."):
+    state("hidden", "front"):
+        empty-image(8, 16)
+
+    state("idle", "front"):
+        image("rooms/objects/object-plant.png")
+        collisionmask("0000", "0000", "1111", "1111")
+
+    repeating-rule use-object($this) || pickup-object($this):
+      if have-item(item-rama):
+        message("No necesito nada de ahí.")
+      else:
+        message("He arrancado una rama seca.")
+        gain-item(item-rama)
+        play-sfx("sfx/puzzle-resuelto.afx")
+      endif
+
+
+object("couch-right", "butaca", "Una cómoda butaca."):
+    state("idle", "right"):
+        image("rooms/objects/object-couch-right.png")
+        collisionmask("000000", "000000", "000000", "000000", "111111", "111110")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para esto.")
+
+
+object("couch-left", "butaca", "Una cómoda butaca."):
+    state("hidden", "left"):
+        empty-image(12, 24)
+    state("idle", "left"):
+        image("rooms/objects/object-couch-left.png")
+        collisionmask("000000", "000000", "000000", "000000", "111111", "011111")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para esto.")
+
+
+object("couch-back", "butaca", "Una cómoda butaca."):
+    state("idle", "up"):
+        image("rooms/objects/object-couch-back.png")
+        collisionmask("000000", "000000", "000000", "000000", "111111", "111111")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para esto.")
+
+
+object("couch-back-left", "butaca", "Una cómoda butaca."):
+    state("idle", "up"):
+        image("rooms/objects/object-couch-back-left.png")
+        collisionmask("000000", "000000", "000000", "000000", "111111", "111111")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para esto.")
+
+
+object("chimenea", "chimenea", "Vale, aquí estoy seguro de que NO hay un pasadizo secreto."):
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-chimenea.png")
+
+
+object("chimenea-fuego", "chimenea", "chimenea"):
+    state("idle", "front"):
+        animation(10,  0,1,2,1):
+        image("rooms/objects/sala-estar-fuego1.png")
+        image("rooms/objects/sala-estar-fuego2.png")
+        image("rooms/objects/sala-estar-fuego3.png")
+        selection(none)
+
+object("final-corpse", "cadáver", "El cadáver de Jorge."):
+    state("idle", "front"):
+        image("rooms/objects/final-corpse.png")
+
+
+# This candle is much bigger and has a big shine animation around
+object("candle-corridor", "vela", "Una vela encendida."):
+    state("open", "front"):
+        animation(10, 0,1,0,2,0,1):
+            image("rooms/objects/object-candle-corridor-on-1-3-5.png")
+            image("rooms/objects/object-candle-corridor-on-2-6.png")
+            image("rooms/objects/object-candle-corridor-on-4.png")
+        selection(box)
+    repeating-rule use-object($this):
+        message("¡No pienso soplar una vela más en mi puta vida!")
+
+
+object("cuadro-vampiro", "cuadro", "El retrato de un vampiro."):
+    state("idle", "front"):
+        image("rooms/objects/object-cuadro-vampiro.png")
+
+
+object("cuadro-electrico", "caja eléctrica", "caja eléctrica"):
+    state("idle", "front"):
+        image("rooms/objects/object-cuadro-electrico.png")
+
+
+object("door-right", "puerta", "Una puerta de madera."):
+    state("closed", "right"):
+        image("rooms/objects/object-door-right.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+    state("exit", "right"):
+        image("rooms/objects/object-door-right-open.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+
+
+object("door-left", "puerta", "Una puerta de madera."):
+    state("closed", "left"):
+        image("rooms/objects/object-door-left.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+    state("exit", "left"):
+        image("rooms/objects/object-door-left-open.png")
+        collisionmask("000", "000", "000", "000", "000", "000", "000", "000", "111", "011")
+
+
+object("leather-couch-right", "butaca", "Parece cómoda, pero ahora no tengo tiempo."):
+    state("idle", "back"):
+        image("rooms/objects/object-leather-couch-back-right.png")
+        collisionmask("000000", "000000", "000000", "000000", "000000", "111111")
+
+    repeating-rule pickup-object($this):
+        message("Pesa demasiado.")
+
+    repeating-rule use-object($this):
+        message("No tengo tiempo para esto.")
+
+
+object("gran-retrato", "gran retrato", "Antiguo retrato."):
+    state("idle", "front"):
+        image("rooms/objects/object-painting-vampire.png")
+    repeating-rule pickup-object($this):
+        message("Está firmemente sujeto a la pared.")
+
+
+object("door-front", "puerta", "Una puerta de madera."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-front.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+    state("exit", "front"):
+        image("rooms/objects/object-door-front-open.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("door-small", "puerta", "Una puerta de madera."):
+    state("closed", "front"):
+        image("rooms/objects/object-door-small-front.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+    state("exit", "front"):
+        image("rooms/objects/object-door-small-front-open.png")
+        collisionmask("0000", "0000", "0000", "0000", "0000", "1111")
+
+
+object("pktd-lock", "puerto PKTd", "Puerto PKTd // COLOR."):
+    state("idle", "front"):
+        image("rooms/objects/object-pktd-lock.png")
+
+
+object("entrance-column-right", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-column.png")
+        selection(none)
+        collisionmask("0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000", "0000")
+
+
+object("entrance-stairs-handle1", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle1.png")
+        selection(none)
+        collisionmask("000000", "110000", "110000", "110000", "111111", "001111")
+
+
+object("entrance-stairs-handle2", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle2.png")
+        selection(none)
+        collisionmask("1111111111", "1111111111", "0000000000")
+
+
+object("entrance-stairs-handle3", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/object-entrance-stairs-handle3.png")
+        selection(none)
+        collisionmask("00000000")
+
+
+object("candle", "vela", "Una vela encendida."):
+    state("open", "front"):
+        animation(10,  0,1,0,2):
+           image("rooms/objects/object-candle-on-1-3-5.png")
+           image("rooms/objects/object-candle-on-2-6.png")
+           image("rooms/objects/object-candle-on-4.png")
+        selection(box)
+    repeating-rule use-object($this):
+        message("¡No pienso soplar una vela más en mi puta vida!")
+
+
+object("candle-black", "vela", "Una vela encendida."):
+    state("open", "front"):
+        animation(10,  0,1,0,2):
+           image("rooms/objects/object-candle-opaque-on-1-3-5.png")
+           image("rooms/objects/object-candle-opaque-on-2-6.png")
+           image("rooms/objects/object-candle-opaque-on-4.png")
+        selection(box)
+    repeating-rule use-object($this):
+        message("¡No pienso soplar una vela más en mi puta vida!")
+
+
+object("carta", "carta", "Una carta infantil."):
+    state("idle", "front"):
+        image("rooms/objects/escaleras-carta.png")
+
+
+object("escaleras-pista-pared", "símbolos", "símbolos"):
+    state("idle", "front"):
+        image("rooms/objects/escaleras-pista-pared.png")
+        selection(box)
+
+
+object("mesita-puro", "mesita", "Una mesita auxiliar con un cenicero."):
+    state("open", "front"):
+        image("rooms/objects/sala-estar-mesita-puro.png")
+
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-mesita.png")
+
+
+object("percha-loro", "percha", "Una percha para loros con extraños grabados."):
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-percha.png")
+
+
+object("tv", "monitor", "Un monitor con una extraña entrada para un dispositivo. PKTd // MORSE."):
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-tv.png")
+
+
+object("loro", "loro", "Tiene una especie de papiro agarrado."):
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-loro-papiro.png")
+
+    state("open", "front"):
+       image("rooms/objects/sala-estar-loro-volando1.png")
+
+    state("closed", "front"):
+       image("rooms/objects/sala-estar-loro-volando2.png")
+
+    state("hidden", "front"):
+        image("rooms/objects/sala-estar-loro-papiro.png")  # it will be ignored
+        selection(none)
+
+
+object("miel-percha", "miel", "miel"):
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-miel.png")
+        selection(none)
+    state("hidden", "front"):
+        image("rooms/objects/sala-estar-miel.png")
+        selection(none)
+
+
+object("papiro", "papiro", "El papiro que tenía el loro."):
+    state("idle", "front"):
+        image("rooms/objects/sala-estar-papiro.png")
+        selection(box)
+    state("hidden", "front"):
+        image("rooms/objects/sala-estar-papiro.png")
+        selection(none)
+
+  
+object("poster-alan", "fotografía", "Una fotografía enorme de Alan junto a una librería en su despacho."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-poster.png")
+
+
+object("cubos-juguete", "cubos", "Cubos de colores con letras."):
+    state("hidden", "front"):
+        empty-image(8, 16)
+
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-cubos.png")
+
+
+object("mesa-juguete", "mesa", "Una mesa pequeña."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-mesa.png")
+
+
+object("melody-pops", "melody pops", "Un Melody Pops."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-melodypops.png")
+
+
+object("tren", "tren de juguete", "Un tren eléctrico estropeado."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-tren.png")
+        selection(none)
+
+
+object("locomotora", "tren de juguete", "Un tren eléctrico estropeado."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-locomotora.png")
+        selection(box)
+
+
+object("oso", "peluche", "Un enorme oso de peluche."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-oso.png")
+
+
+object("caballo", "caballito balancín", "Un viejo caballito de madera que apenas se sostiene."):
+    state("hidden", "front"):
+        empty-image(14, 20)
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-caballo.png")
+
+
+object("paquete-cartas", "paquete de cartas", "Un paquete de cartas de símbolos de colores. Faltan 3."):
+    state("idle", "front"):
+        image("rooms/objects/sala-juegos-cartas.png")
+
+
+object("doll", "muñeca", "Una antigua muñeca de trapo."):
+    state("idle", "left"):
+        image("rooms/objects/sala-juegos-nina-left.png")
+    state("idle", "right"):
+        image("rooms/objects/sala-juegos-nina-right.png")
+
+
+# versión vertical:
+# object("embolo", "émbolo", "El émbolo de mi Melody Pops."):
+#     state("open", "front"):
+#         image("rooms/objects/melodypops-embolo1.png")
+#         selection(box)
+#     state("closed", "front"):
+#         image("rooms/objects/melodypops-embolo2.png")
+#         selection(box)
+#     state("hidden", "front"):
+#         image("rooms/objects/melodypops-embolo2.png")
+#         selection(none)
+
+
+# versión horizontal:
+object("embolo", "émbolo", "El émbolo de mi Melody Pops."):
+    state("open", "front"):
+        image("rooms/objects/melodypops-embolo1-h.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/melodypops-embolo2-h.png")
+        selection(box)
+    state("hidden", "front"):
+        image("rooms/objects/melodypops-embolo2-h.png")
+        selection(none)
+
+
+object("regadera", "regadera", "Una regadera oxidada inservible."):
+    state("idle", "front"):
+        image("rooms/objects/invernadero-regadera.png")
+
+
+object("invernadero-rama", "rama", "Una resistente rama en forma de Y."):
+    state("idle", "front"):
+        image("rooms/objects/invernadero-rama.png")
+        selection(box)
+
+
+object("invernadero-carta", "carta", "Una carta infantil."):
+    state("idle", "front"):
+        image("rooms/objects/invernadero-carta.png")
+
+
+object("invernadero-planta", "planta", "planta"):
+    state("idle", "front"):
+        image("rooms/objects/invernadero-planta.png")
+        selection(none)
+
+
+object("despacho-planta", "planta", "planta"):
+    state("idle", "front"):
+        image("rooms/objects/despacho-planta.png")
+        selection(none)
+
+
+object("invernadero-panal", "panal", "Está lleno de miel."):
+    state("idle", "front"):
+        image("rooms/objects/invernadero-panal.png")
+    state("hidden", "front"):
+        image("rooms/objects/invernadero-panal.png")
+        selection(none)
+
+
+object("invernadero-abejas", "", ""):
+    state("idle", "front"):
+        animation(16,  0,1):
+        image("rooms/objects/invernadero-abejas1.png")
+        image("rooms/objects/invernadero-abejas2.png")
+        selection(none)
+
+
+object("balcon", "balcón", "Una noche despejada, ideal para observar estrellas."):
+    state("idle", "front"):
+        empty-image(16, 48)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("telescopio", "telescopio", "telescopio"):
+    state("idle", "front"):
+        image("rooms/objects/despacho-telescopio.png")
+
+
+object("espejo", "espejo", "Un gran espejo."):
+    state("exit", "front"):
+        empty-image(8, 48)
+        selection(box)
+
+    state("idle", "front"):
+        image("rooms/objects/despacho-espejo.png")
+        selection(box)
+
+
+object("espejo-puerto", "puerto PKTd", "Puerto PKTd // NUMÉRICO."):
+    state("idle", "front"):
+        image("rooms/objects/despacho-espejo-puerto.png")
+        selection(box)
+
+
+object("libreria", "librería", "librería"):
+    state("idle", "front"):
+        image("rooms/objects/despacho-libreria.png")
+
+
+object("escritorio", "escritorio", "escritorio"):
+    state("idle", "front"):
+        image("rooms/objects/despacho-escritorio.png")
+        selection(none)
+
+
+object("despacho-carta", "carta", "Una carta infantil."):
+    state("idle", "front"):
+        image("rooms/objects/despacho-carta-roja.png")
+
+
+object("pisapapeles", "pisapapeles", "Una piedra pequeña pero pesada sirve como pisapapeles."):
+    state("idle", "front"):
+        image("rooms/objects/despacho-piedra.png")
+        selection(box)
+
+
+object("despacho-cajon-1", "cajón pequeño", "Un pequeño cajón con una cerradura dorada."):
+    state("idle", "front"):
+        empty-image(8, 8)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("despacho-cajon-2", "cajón superior", "Está vacío."):
+    state("idle", "front"):
+        empty-image(8, 8)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("despacho-cajon-3", "cajón inferior", "Está vacío."):
+    state("idle", "front"):
+        empty-image(8, 8)
+        selection(box)  # Since this object is transparent, it would not be selectable otherwise
+
+
+object("libreria-rojo", "libro rojo", "Un libro rojo."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-rojo-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-rojo-2.png")
+        selection(box)
+
+
+object("libreria-blanco", "libro blanco", "Un libro blanco."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-blanco-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-blanco-2.png")
+        selection(box)
+
+
+object("libreria-azul", "libro azul", "Un libro azul."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-azul-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-azul-2.png")
+        selection(box)
+
+
+object("libreria-lila", "libro lila", "Un libro lila."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-lila-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-lila-2.png")
+        selection(box)
+
+
+object("libreria-amarillo", "libro amarillo", "Un libro amarillo."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-amarillo-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-amarillo-2.png")
+        selection(box)
+
+
+object("libreria-celeste", "libro celeste", "Un libro celeste."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-celeste-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-celeste-2.png")
+        selection(box)
+
+
+object("libreria-naranja", "libro naranja", "Un libro naranja."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-naranja-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-naranja-2.png")
+        selection(box)
+
+
+object("libreria-rosa", "libro rosa", "Un libro rosa."):
+    state("open", "front"):
+        image("rooms/objects/despacho-libreria-rosa-1.png")
+        selection(box)
+    state("closed", "front"):
+        image("rooms/objects/despacho-libreria-rosa-2.png")
+        selection(box)
+
+
+object("electrico-positivo", "positivo", "Polo positivo."):
+    state("idle", "front"):
+        empty-image(8, 16)
+        selection(box)
+
+
+object("electrico-negativo", "negativo", "Polo negativo."):
+    state("idle", "front"):
+        empty-image(8, 16)
+        selection(box)
+
+
+object("electrico-cable-inservible", "cable inservible", "Un cable que ha quedado inservible."):
+    state("idle", "front"):
+        empty-image(8, 16)
+        selection(box)
+
+
+object("electrico-cables", "cable", "Un cable."):
+    state("idle", "front"):
+        empty-image(56, 80)
+        selection(box)
+
+
+object("pktd-boton", "botón", "Un botón."):
+    state("idle", "front"):
+        empty-image(6, 10)
+        selection(box)
+
+
+object("papelera", "papelera", "Una papelera."):
+    state("idle", "front"):
+        image("rooms/objects/piano-papelera.png")
+        selection(box)
+
+
+object("piano-mesita1", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/piano-mesita.png")
+        selection(none)
+
+
+object("piano-mesita2", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/piano-mesa-radio.png")
+        selection(none)
+
+
+object("piano-tarro", "tarro de cristal", "Un tarro de cristal vacío."):
+    state("idle", "front"):
+        image("rooms/objects/piano-tarro.png")
+
+
+object("piano-retrato", "retrato", "Un retrato de Beethoven con una inscripción: '1h15m0s, 60º: sabes las coordenadas. Ve la constelación e interpreta el sonido de sus estrellas.'"):
+    state("idle", "front"):
+        image("rooms/objects/piano-retrato.png")
+
+
+object("piano-radio", "radio", "No le llega la corriente."):
+    state("idle", "front"):
+        image("rooms/objects/piano-radio.png")
+
+
+object("piano", "piano", "piano"):
+    state("idle", "front"):
+        empty-image(24, 16)
+        selection(box)
+
+
+object("radio-nota", "nota", "Sintoniza las coordenadas de la constelación de tu reliquia."):
+    state("idle", "front"):
+        image("rooms/objects/radio-nota.png")
+
+
+object("radio-boton", "botón", "Un botón."):
+    state("open", "front"):
+        image("rooms/objects/radio-boton-rojo.png")
+
+    state("closed", "front"):
+        image("rooms/objects/radio-boton-azul.png")
+
+
+object("radio-flecha", "botón", "Un botón."):
+    state("idle", "front"):
+        empty-image(8, 6)
+        selection(box)
+
+
+object("radio-dial1", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/radio-dial1.png")
+        selection(none)
+
+
+object("radio-dial2", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/radio-dial2.png")
+        selection(none)
+
+
+object("boton-ayuda", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/boton-ayuda.png")
+        selection(box)
+
+
+object("boton-salir", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/boton-x.png")
+        selection(box)
+
+
+object("boton-arriba", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/boton-arriba.png")
+        selection(box)
+
+
+object("boton-abajo", "botón", "Un botón."):
+    state("idle", "front"):
+        image("rooms/objects/boton-abajo.png")
+        selection(box)
+
+
+object("telescopio-lente", "lente", "Tiene 4 pinzas para sujetar un papel."):
+    state("idle", "front"):
+        empty-image(48, 88)
+        selection(box)
+
+
+object("telescopio-pentagrama", "partitura", "No es la constelación que busco."):
+    state("closed", "front"):
+        empty-image(32, 48)
+        selection(none)
+
+    state("open", "front"):
+        image("rooms/objects/telescopio-pentagrama.png")
+        selection(box)
+
+
+object("tv-port", "puerto PKTd", "Puerto PKTd // MORSE."):
+    state("idle", "front"):
+        image("rooms/objects/tv-port.png")
+        selection(box)
+
+
+object("tv-tv", "tv", "Un monitor con una extraña entrada para un dispositivo. PKTd // MORSE."):
+    state("idle", "front"):
+        empty-image(28, 42)
+        selection(box)
+
+
+# object("tv-reflejo", "tv", "tv"):
+#     state("hidden", "front"):
+#         empty-image(12, 18)
+#     state("idle", "front"):
+#         image("rooms/objects/tv-reflejo.png")
+
+
+object("papiro-letras", "letra", "Una letra."):
+    state("idle", "front"):
+        empty-image(56, 88)
+        selection(box)
+
+
+object("piano-partitura", "partitura", "La partitura que anoté en el telescopio."):
+    state("hidden", "front"):
+        empty-image(4, 6)
+        selection(none)
+
+    state("idle", "front"):
+        image("rooms/objects/piano-partitura.png")
+
+
+object("piano-partitura-zoom", "partitura", "La partitura que anoté en el telescopio."):
+    state("hidden", "front"):
+        empty-image(32, 40)
+        selection(none)
+
+    state("idle", "front"):
+        image("rooms/objects/piano-pentagrama-zoom.png")
+
+
+object("piano-tecla", "tecla", "Una tecla blanca."):
+    state("idle", "front"):
+        empty-image(6, 32)
+        selection(box)
+
+
+object("piano-tecla-negra", "tecla", "Una tecla negra."):
+    state("idle", "front"):
+        empty-image(6, 16)
+        selection(box)
+
+
+object("piano-atril", "piano", "Un lujoso piano de cola."):
+    state("idle", "front"):
+        empty-image(72, 48)
+        selection(box)
+
+
+object("biblioteca-barana-top", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/biblioteca-barana-top.png")
+        selection(none)
+
+
+object("biblioteca-columna-derecha", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/biblioteca-columna-derecha.png")
+        selection(none)
+
+
+object("biblioteca-columna-left", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/biblioteca-columna-left.png")
+        selection(none)
+
+
+object("biblioteca-escritorio", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/biblioteca-escritorio.png")
+        selection(none)
+
+object("biblioteca-ritual", "fragmento de ritual", "El otro fragmento del Ritual de Paz Eterna."):
+    state("idle", "front"):
+        image("rooms/objects/biblioteca-ritual.png")
+
+
+object("mural-palabras", "mural", "Mural de las palabras."):
+    state("idle", "front"):
+        empty-image(12, 12)
+        selection(box)
+
+
+object("biblioteca-libros", "libros", "Libros antiguos y algún ejemplar de 'Muy CPC' de Quique."):
+    state("idle", "front"):
+        empty-image(16, 40)
+        selection(box)
+
+
+object("biblioteca-puerta-espejo", "salida", "Cerrada. Ya no puedo volver atrás."):
+    state("idle", "front"):
+        empty-image(8, 24)
+        selection(box)
+    state("exit", "front"):
+        empty-image(8, 24)
+        selection(box)
+
+
+object("tangram-piece1", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece1.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece1-selected.png")
+
+
+object("tangram-piece2", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece2.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece2-selected.png")
+
+
+object("tangram-piece3", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece3.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece3-selected.png")
+
+
+object("tangram-piece4", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece4.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece4-selected.png")
+
+
+object("tangram-piece5", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece5.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece5-selected.png")
+
+
+object("tangram-piece6", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece6.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece6-selected.png")
+
+
+object("tangram-piece7", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece7.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece7-selected.png")
+
+
+object("tangram-piece8", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece8.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece8-selected.png")
+
+
+object("tangram-piece9", "pieza", "Una pieza geométrica."):
+    state("idle", "front"):
+        image("rooms/objects/tangram-piece9.png")
+    state("open", "front"):
+        image("rooms/objects/tangram-piece9-selected.png")
+
+
+object("tangram-board", "mural", "Mural de las palabras."):
+    state("idle", "front"):
+        empty-image(112, 88)
+        selection(box)
+
+
+object("biblioteca-pasadizo", "pasadizo", "Un pasadizo hacia el subsuelo."):
+    state("exit", "front"):
+        image("rooms/objects/biblioteca-pasadizo.png")
+    state("hidden", "front"):
+        image("rooms/objects/biblioteca-pasadizo.png")
+        selection(none)
+
+
+object("ritual-pasadizo", "pasadizo", "Cerrada. Ya no puedo volver atrás."):
+    state("idle", "front"):
+        empty-image(8, 14)
+
+
+object("ritual-manantial", "Manantial de Kah'r Pax", "El manantial del que surge el poder de resurrección."):
+    state("idle", "front"):
+        empty-image(16, 48)
+
+
+object("ritual-luna", "Luna", "El cuerpo de Luna, preparado para el ritual. Alan lo ha mantenido así durante un año. Triste y escalofriante."):
+    state("idle", "front"):
+        image("rooms/objects/ritual-luna.png")
+
+
+object("ritual-alan1", "Alan", "Alan"):
+    state("idle", "front"):
+        image("rooms/objects/ritual-alan1.png")
+    state("hidden", "front"):
+        image("rooms/objects/ritual-alan1.png")
+        selection(none)
+
+
+object("ritual-alan2", "Alan", "¡Está realizando el ritual de resurrección! ¡Debo detenerlo! Pero no puedo levantarme..."):
+    state("idle", "front"):
+        image("rooms/objects/ritual-alan2.png")
+    state("hidden", "front"):
+        image("rooms/objects/ritual-alan2.png")
+        selection(none)
+
+
+object("ritual-luna-ghost", "espíritu", "El espíritu de Luna."):
+    state("hidden", "front"):
+        empty-image(8, 20)
+        selection(none)
+    state("idle", "front"):
+        animation(10,  0,1):
+            image("rooms/objects/ritual-luna-ghost-1.png")
+            image("rooms/objects/ritual-luna-ghost-2.png")
+        selection(box)
+
+
+object("ritual-paket-ko", "", ""):
+    state("idle", "front"):
+        image("rooms/objects/ritual-paket-ko.png")
+        selection(none)
+    state("hidden", "front"):
+        image("rooms/objects/ritual-paket-ko.png")
+        selection(none)
+
+
+# object("mansion", "Mansión Carfax", "¡Se está derrumbando, debería irme de aquí!"):
+#     state("idle", "front"):
+#         empty-image(24, 48)
+#         selection(box)
+# 
+# 
+# object("car1", "coche", "Mi flamante Renault R11."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-car1.png")
+#         collisionmask("0000000000000", "0000000000000",
+#                       "1111111111111", "1111111111110",
+#                       "0000111100000", "0000111000000")
+#         
+# 
+# object("car2", "coche", "Un coche que ya estaba aparcado aquí cuando he llegado."):
+#     state("idle", "front"):
+#         image("rooms/objects/object-car2.png")
+#         collisionmask("11111111", "11111111", "11111111", "11111111")
+
+
+object("alan-ghost", "espíritu", "espíritu"):
+    state("idle", "front"):
+        animation(10,  0,1):
+            image("rooms/objects/alan-ghost-1.png")
+            image("rooms/objects/alan-ghost-2.png")
+        selection(box)
+    state("hidden", "front"):
+        image("rooms/objects/alan-ghost-1.png")
+
+
+object("lisa-ghost", "espíritu", "espíritu"):
+    state("idle", "front"):
+        animation(10,  0,1):
+            image("rooms/objects/lisa-ghost-1.png")
+            image("rooms/objects/lisa-ghost-2.png")
+        selection(box)
+    state("hidden", "front"):
+        image("rooms/objects/lisa-ghost-1.png")
+
+
+object("piso-mesita", "mesita", "mesita"):
+    state("idle", "front"):
+        image("rooms/objects/piso-mesita.png")

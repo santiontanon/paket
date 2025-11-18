@@ -1,0 +1,85 @@
+# ------- Other Global Scripts: -------
+
+
+
+# ------- Global Room Rules: -------
+
+
+# ------- Item rules: -------
+itemRules:
+    rule examine-item(item-tablilla):
+        call-script("cutscene2-tablilla")
+
+    rule examine-item(item-nota-alquimia):
+        call-script("cutscene3-nota-alquimia")
+
+    rule examine-item(item-mapa-estrellas):
+        call-script("cutscene4-mapa")
+
+    rule examine-item(item-cartera):
+        message("La cartera de Jorge. Dentro había el DNI y una nota.")
+        lose-item(item-cartera)
+        gain-item(item-dni)
+        gain-item(item-pista-zodiaco)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-cuerda, item-cuerda) && 
+    	 variable-eq(n-cuerdas-cortas, 2):
+        message("He atado las cuerdas.")
+        set-variable(n-cuerdas-cortas, 0)
+        lose-item(item-cuerda)
+        lose-item(item-cuerda)
+        gain-item(item-cuerda-larga)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-cuerda, item-cubitera):
+        message("He atado la cuerda a la cubitera.")
+        dec-variable(n-cuerdas-cortas)
+        lose-item(item-cuerda)
+        lose-item(item-cubitera)
+        gain-item(item-cubitera-cuerda)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-cuerda-larga, item-cubitera):
+        message("He atado la cuerda a la cubitera.")
+        lose-item(item-cuerda-larga)
+        lose-item(item-cubitera)
+        gain-item(item-cubitera-cuerda-larga)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-cuerda, item-cubitera-cuerda):
+        message("He atado las cuerdas.")
+        dec-variable(n-cuerdas-cortas)
+        lose-item(item-cuerda)
+        lose-item(item-cubitera-cuerda)
+        gain-item(item-cubitera-cuerda-larga)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-afilador, item-cuchillo):
+        message("Ya está afilado.")
+
+    rule use-item-with-item(item-oro-en-polvo, item-taza):
+        lose-item(item-taza)
+        lose-item(item-oro-en-polvo)
+        gain-item(item-taza-oro)
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-llave-plata, item-taza):
+        lose-item(item-taza)
+        lose-item(item-llave-plata)
+        gain-item(item-taza-plata)
+        play-sfx("sfx/puzzle-resuelto.afx")
+    
+    rule use-item-with-item(item-pinzas, item-taza-plata):
+        lose-item(item-pinzas)
+        lose-item(item-taza-plata)
+        gain-item(item-taza-plata-pinzas)
+        message("Así podré fundir materiales.")
+        play-sfx("sfx/puzzle-resuelto.afx")
+
+    rule use-item-with-item(item-pinzas, item-taza-oro):
+        lose-item(item-pinzas)
+        lose-item(item-taza-oro)
+        gain-item(item-taza-oro-pinzas)
+        message("Así podré fundir materiales.")
+        play-sfx("sfx/puzzle-resuelto.afx")

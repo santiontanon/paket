@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="8" tileheight="8" nextobjectid="9">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-tiles-pozo-puzzle.png" width="128" height="8"/>
+ </tileset>
+ <tileset firstgid="17" name="collision" tilewidth="8" tileheight="8" tilecount="10" columns="10">
+  <image source="bg-collision-masks.png" width="80" height="8"/>
+ </tileset>
+ <layer name="background" width="10" height="10">
+  <data encoding="csv">
+1,1,1,1,1,1,1,1,1,1,
+2,3,3,3,4,2,4,1,1,1,
+5,6,6,6,7,5,7,1,1,1,
+2,3,3,3,4,2,4,1,8,9,
+5,6,6,6,7,5,7,1,10,11,
+2,3,3,3,4,2,4,1,1,1,
+5,6,6,6,7,5,7,1,1,1,
+2,3,3,3,4,2,4,1,1,1,
+5,6,6,6,7,5,7,1,1,1,
+1,1,1,1,1,1,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="1" name="pozo-puzzle-button-left" x="42" y="12" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="2" name="pozo-puzzle-button-right" x="56" y="12" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="3" name="pozo-puzzle-button-left" x="42" y="29" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="4" name="pozo-puzzle-button-right" x="56" y="29" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="6" name="pozo-puzzle-button-right" x="56" y="44" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="5" name="pozo-puzzle-button-left" x="42" y="44" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="7" name="pozo-puzzle-button-left" x="42" y="60" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="8" name="pozo-puzzle-button-right" x="56" y="60" width="4" height="8">
+   <properties>
+    <property name="depth" type="int" value="70"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

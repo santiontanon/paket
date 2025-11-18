@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="14" height="11" tilewidth="8" tileheight="8" nextobjectid="22">
+ <tileset firstgid="1" name="tiles" tilewidth="8" tileheight="8" tilecount="32" columns="16">
+  <image source="bg-tiles-mural-palabras.png" width="128" height="16"/>
+ </tileset>
+ <tileset firstgid="33" name="collision" tilewidth="8" tileheight="8" tilecount="16" columns="16">
+  <image source="bg-collision-masks.png" width="128" height="8"/>
+ </tileset>
+ <layer name="background" width="14" height="11">
+  <data encoding="csv">
+1,1,1,2,2,2,2,2,2,2,1,1,1,1,
+1,1,1,3,3,3,3,3,3,3,1,1,1,1,
+1,1,1,2,2,2,2,2,2,2,1,1,1,1,
+1,1,1,3,3,3,3,3,3,3,1,1,1,1,
+1,1,1,2,2,2,2,2,2,2,1,1,1,1,
+1,1,1,3,3,3,3,3,3,3,1,1,1,1,
+1,1,1,2,2,2,2,2,2,2,1,1,1,1,
+1,1,1,3,3,3,3,3,3,3,1,1,1,1,
+1,1,1,2,2,2,2,2,2,2,1,1,1,1,
+1,1,1,3,3,3,3,3,3,3,1,1,1,1,
+1,1,1,2,2,2,2,2,2,2,1,1,1,1
+</data>
+ </layer>
+ <objectgroup name="Objects">
+  <object id="10" name="boton-ayuda" x="16" y="0" width="8" height="10">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="11" name="boton-salir" x="80" y="0" width="6" height="10">
+   <properties>
+    <property name="depth" type="int" value="48"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="12" name="tangram-piece1" x="32" y="16" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="13" name="tangram-piece2" x="28" y="32" width="12" height="8">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="14" name="tangram-piece3" x="28" y="48" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="15" name="tangram-piece4" x="48" y="56" width="8" height="16">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="16" name="tangram-piece5" x="56" y="32" width="12" height="24">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="17" name="tangram-piece6" x="60" y="16" width="12" height="8">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="18" name="tangram-piece7" x="72" y="40" width="8" height="32">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="19" name="tangram-piece8" x="40" y="40" width="8" height="24">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="20" name="tangram-piece9" x="48" y="16" width="8" height="8">
+   <properties>
+    <property name="depth" type="int" value="32"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+  <object id="21" name="tangram-board" x="0" y="0" width="112" height="88">
+   <properties>
+    <property name="depth" type="int" value="24"/>
+    <property name="direction" value="front"/>
+    <property name="state" value="idle"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

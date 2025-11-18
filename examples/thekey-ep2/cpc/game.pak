@@ -1,0 +1,32 @@
+include("palette.pak")
+base-palette(0, 1, 3, 6, 13, 16, 26, 2, 11, 4, 12, 15, 25, 23)
+include("globals.pak")
+include("items.pak")
+include("global-rules.pak")
+include("cutscenes.pak")
+
+additional-assembler-file("custom-functions-intro.asm")
+additional-assembler-file("custom-functions-caldera-puzzle.asm")
+additional-assembler-file("custom-functions-pozo-puzzle.asm")
+additional-assembler-file("custom-functions-laboratorio-puzzle.asm")
+additional-assembler-file("custom-functions-catacumbas.asm")
+additional-assembler-file("custom-functions-jorge-puzzle.asm")
+additional-assembler-file("custom-functions-catacumbas-final-puzzle.asm")
+
+
+# ------- Objects --------
+include("player.pak")
+include("objects.pak")
+
+# ------- Room definitions: -------
+include("rooms.pak")
+
+# ------- Dialogues -------
+include("dialogues.pak")
+
+
+
+# chema-murder-state:
+# 0: start
+# 1: talked to Chema
+# 2: talked to Jorge
