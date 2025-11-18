@@ -10,4 +10,6 @@ Example screenshots of a game developed with PAKET are below (running on an Amst
 <img width="420" height="300" alt="ss2-cpc" src="https://github.com/user-attachments/assets/f3654579-3200-4701-be21-2b41fcfda3fa" />
 
 
-Please check the [wiki](https://github.com/santiontanon/paket/wiki) to learn more about the engine, find documentation, tutorials, and examples.
+Please check the [wiki](https://github.com/santiontanon/paket/wiki) for more information. For example:
+* [Full PAKET Compiler Documentation](https://github.com/santiontanon/paket/wiki#outline)
+* [Tutorials](https://github.com/santiontanon/paket/wiki#tutorials)
