@@ -1347,6 +1347,7 @@ update_command_preview_text_after_pointer_movement_verb_new_text:
     jp draw_preview_text_directly
 
 update_command_preview_text_after_pointer_movement_object:
+    ; Here the selected object is both in 'ix' and 'iy':
     ld a, (iy + OBJECT_STRUCT_ID)
     or #c0  ; object code
     ld hl, current_action_text_id

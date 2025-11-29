@@ -73,16 +73,15 @@ ENDIF
 
 ;-----------------------------------------------
 game_loop:
-IF CAN_TURN_GUI_ON_OFF = 1
-    ld a, (gui_on)
-    or a
-    jr z, game_loop_skip_gui
-ENDIF
-
     call wait_for_next_frame
 
     ; update pointer and inventory the very first thing to avoid flickering:
     push af
+IF CAN_TURN_GUI_ON_OFF = 1
+        ld a, (gui_on)
+        or a
+        jr z, game_loop_skip_gui
+ENDIF
         call clear_pointer
         ld hl, redraw_inventory_signal
         ld a, (hl)
@@ -90,8 +89,8 @@ ENDIF
         or a
         call nz,draw_gui
         call draw_pointer
-    pop af
 game_loop_skip_gui:
+    pop af
 
     ; we update as many times as necessary to update at constant 50Hz:
 game_loop_update_loop:

@@ -1833,7 +1833,7 @@ executeRuleScript_save_game:
 
             ; save data:
             ld ix, savegame_data_buffer
-            ld e, (data_for_savegame_end - data_for_savegame_start) + 4
+            ld e, SAVEGAME_SIZE
             call paket_write_to_media
 IFDEF game_state_variable_io_error
             ; Store success/failure in "io-error"
@@ -1864,7 +1864,7 @@ executeRuleScript_load_game:
 
             ; Load data:
             ld ix, savegame_data_buffer
-            ld e, (data_for_savegame_end - data_for_savegame_start) + 4
+            ld e, SAVEGAME_SIZE
             call paket_read_from_media
             ; Store success/failure in "io-error"
 IFDEF game_state_variable_io_error

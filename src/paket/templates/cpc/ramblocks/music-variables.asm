@@ -4,12 +4,12 @@
 RAMBlock_start:
 
 MUSIC_current_song:                 ds virtual 1  ; 0 if no song, song offset + 1 if a song is playing
+MUSIC_tempo:                        ds virtual 1  ; must be after "MUSIC_current_song", or save/load game would not work
 MUSIC_muted:                        ds virtual 1  ; This is different from "MUSIC_tempo == 0", since we need to track when a music should be playing, but we just have it muted.
 
 IF MUSIC_TYPE_TSV == 1
 
 ; sound variables:
-MUSIC_tempo:                        ds virtual 1
 beginning_of_sound_variables_except_tempo:
 MUSIC_tempo_counter:                ds virtual 1
 MUSIC_instruments:                  ds virtual 3
