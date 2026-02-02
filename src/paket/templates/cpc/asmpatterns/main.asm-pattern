@@ -25,11 +25,15 @@ ENDIF
     xor a
     ld (vsyncs_since_last_frame),a
 
+    ; unload CPC interrupts (we do it directly, rather than calling
+    ; 'switch_to_split_mode1_mode0', since that method would enable the
+    ; interrupts, and we do not want that yet.
+    ld hl, interrupt_callback_split_mode1_mode0
+    ld (#0039), hl
+
     ; Clear the music variables before the new interrupt starts:
 {INIT_SOUND_CODE}
-
-    ; unload CPC interrupts:
-    call switch_to_split_mode1_mode0
+    ei
 
 IF CAN_TURN_GUI_ON_OFF = 1
     inc a
