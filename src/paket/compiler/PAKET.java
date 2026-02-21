@@ -202,7 +202,7 @@ public class PAKET {
 
     
     public static String getFilePath(String file) {
-        if (file.lastIndexOf(File.separator) == -1) return null;
+        if (file.lastIndexOf(File.separator) == -1) return "";
         return file.substring(0, file.lastIndexOf(File.separator));
     }
     
@@ -211,7 +211,7 @@ public class PAKET {
 
         for(String folder:folders) {
             String prefix;
-            if (folder == null) {
+            if (folder == null || folder.isEmpty()) {
                 prefix = "";
             } else {
                 prefix = folder + File.separator;
@@ -228,7 +228,7 @@ public class PAKET {
                 
         for (String folder : folders) {
             String prefix;
-            if (folder == null) {
+            if (folder == null || folder.isEmpty()) {
                 prefix = "";
             } else {
                 prefix = folder + File.separator;
