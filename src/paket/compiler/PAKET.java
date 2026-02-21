@@ -227,8 +227,14 @@ public class PAKET {
         }
                 
         for (String folder : folders) {
-            if (new File(folder + File.separator + file).exists()) {
-                return folder + File.separator + file;
+            String prefix;
+            if (folder == null) {
+                prefix = "";
+            } else {
+                prefix = folder + File.separator;
+            }
+            if (new File(prefix + file).exists()) {
+                return prefix + file;
             }
         }
         config.error("folders: " + folders);
