@@ -210,8 +210,14 @@ public class PAKET {
     public static String getFileName(String file, List<String> folders, PAKETConfig config) throws Exception {
 
         for(String folder:folders) {
-            if (file.startsWith(folder + File.separator)) {
-                file = file.substring(folder.length()+1);
+            String prefix;
+            if (folder == null) {
+                prefix = "";
+            } else {
+                prefix = folder + File.separator;
+            }
+            if (file.startsWith(prefix)) {
+                file = file.substring(prefix.length());
                 break;
             }
         }
