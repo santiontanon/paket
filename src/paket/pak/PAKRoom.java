@@ -402,6 +402,12 @@ public class PAKRoom {
 
     public static PAKRoom fromFile(File file, String folder, List<String> dataFolders, HashMap<String, PAKObjectType> objectTypes, String language, Platform platform, PAKETConfig config) throws Exception
     {
+        String folderPrefix;
+        if (folder == null || folder.isEmpty()) {
+            folderPrefix = "";
+        } else {
+            folderPrefix = folder + File.separatorChar;
+        }
         Element root = new SAXBuilder().build(file).getRootElement();
         int w = Integer.parseInt(root.getAttributeValue("width"));
         int h = Integer.parseInt(root.getAttributeValue("height"));
@@ -411,11 +417,11 @@ public class PAKRoom {
         for(Object tileset_object:root.getChildren("tileset")) {
             Element tileset_xml = (Element)tileset_object;
             if (tileset_xml.getAttributeValue("name").contains("collision")) {
-                String tmp = folder + File.separatorChar + tileset_xml.getChild("image").getAttributeValue("source");
+                String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
                 r.collisionTilesFileName =  PAKET.getFileName(tmp, dataFolders, config);        
                 collisionFirstTileID = Integer.parseInt(tileset_xml.getAttributeValue("firstgid"));
             } else {
-                String tmp = folder + File.separatorChar + tileset_xml.getChild("image").getAttributeValue("source");
+                String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
                 r.tilesFileName =  PAKET.getFileName(tmp, dataFolders, config);        
             }
         }
