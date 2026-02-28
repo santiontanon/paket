@@ -200,6 +200,9 @@ public class MSXMegaROM extends MSX {
             }
         }
         String pageNumbers = "";
+        if (!assemblerVariables.containsKey("CUTSCENE_PTRS_PAGE")) {
+            assemblerVariables.put("CUTSCENE_PTRS_PAGE", "0");
+        }
         pageNumbers += "TEXT_MEGAROM_PAGE: equ " + assemblerVariables.get("TEXT_MEGAROM_PAGE") + "\n";
         pageNumbers += "TILES_MEGAROM_PAGE: equ " + assemblerVariables.get("TILES_MEGAROM_PAGE") + "\n";
         pageNumbers += "OBJECT_TYPE_BANK_PTRS_PAGE: equ " + assemblerVariables.get("OBJECT_TYPE_BANK_PTRS_PAGE") + "\n";

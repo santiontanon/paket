@@ -50,12 +50,12 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.1 beta");
             config.info("Santiago (Popolon) Ontañón (2019)\n");
             config.info("Usage:");
-            config.info("  java -cp:PAKET.jar compiler.PAKET [game definition file] [platform] [language] [destination folder] [options]\n");
+            config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
             config.info("Example:");
-            config.info("  java -cp:PAKET.jar compiler.PAKET data/game.pak cpc es output/cpc\n");
+            config.info("  java -jar PAKET.jar data/game.pak cpc es output/cpc\n");
             config.info("Supported platforms: cpc|cpc6128|msx|msxmegarom|msx-wt|msxmwgarom-wt (see the documentation for more info on each platform)\n");
             config.info("Options:");
             config.info("    -fb [folder]: fallback data folder. If a file cannot be found on the same folder as the game definition file, fallback folders are searched. "
@@ -301,7 +301,13 @@ public class PAKET {
                         config.diggest("processing include " + t2.value);
                         if (path != null) {
                             for(String folder:dataFolders) {
-                                dataFolders2.add(folder + File.separator + path);
+                                if (!folder.isEmpty()) {
+                                    dataFolders2.add(folder + File.separator + path);
+                                } else {
+                                    if (!path.isEmpty()) {
+                                        dataFolders2.add(path);
+                                    }
+                                }
                             }
                         } else {
                             dataFolders2.addAll(dataFolders);
@@ -3010,7 +3016,12 @@ public class PAKET {
         int h = Integer.parseInt(root.getAttributeValue("height"));
         int nameTable[][] = new int[w][h];
         
-        String tmp = folder + File.separatorChar + root.getChild("tileset").getChild("image").getAttributeValue("source");
+        String tmp;
+        if (!folder.isEmpty()) {
+            tmp = folder + File.separatorChar + root.getChild("tileset").getChild("image").getAttributeValue("source");
+        } else {
+            tmp = root.getChild("tileset").getChild("image").getAttributeValue("source");
+        }
         String tilesFileName =  PAKET.getFileName(tmp, dataFolders, config);        
         BufferedImage tiles = ImageIO.read(new File(tilesFileName));
         Element bg_xml = root.getChild("layer");

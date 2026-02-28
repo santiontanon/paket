@@ -295,7 +295,7 @@ rom_mapper_page_to_update_8000:
     ENDM
 
 PKT_SET_PAGE:  MACRO ?p1
-    SETMEGAROMPAGE_8000 p1
+    SETMEGAROMPAGE_8000 ?p1
     ENDM
 
 ; ------------------------------------------------
