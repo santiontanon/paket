@@ -50,7 +50,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.1 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.2 beta");
             config.info("Santiago (Popolon) Ontañón (2019)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
