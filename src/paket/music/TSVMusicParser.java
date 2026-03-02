@@ -162,7 +162,9 @@ public class TSVMusicParser {
                     } else {
                         throw new Exception("Unrecognized file termination for SFX: " + sfxFileName);
                     }
-                    PAKSFX sfx = new PAKSFX("sfx_" + sfxName, songPath + File.separator + sfxFileName, type);
+                    PAKSFX sfx = new PAKSFX("sfx_" + sfxName, 
+                                            ((songPath == null || songPath.isEmpty()) ? sfxFileName:songPath + File.separator + sfxFileName),
+                                            type);
                     sfxs.put(sfxName, sfx);
                     config.info("TSVMusic new sfx: " + sfxName + " -> " + sfxFileName);
                 }
