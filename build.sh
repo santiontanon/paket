@@ -30,7 +30,7 @@ cd src
 jar uf ../target/PAKET.jar paket/templates
 cd ..
 
-# Add the mdl/jdom depenedncies
+# Add the mdl/jdom dependencies
 cd lib
 mkdir tmp
 unzip -q mdl.jar -d tmp

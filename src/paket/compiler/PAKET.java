@@ -202,8 +202,12 @@ public class PAKET {
 
     
     public static String getFilePath(String file) {
-        if (file.lastIndexOf(File.separator) == -1) return "";
-        return file.substring(0, file.lastIndexOf(File.separator));
+        // Make sure it works using Unix-style paths for all platforms:
+        int idx_unix = file.lastIndexOf('\\');
+        int idx_system = file.lastIndexOf(File.separator);
+        int idx = Math.max(idx_unix, idx_system);
+        if (idx == -1) return "";
+        return file.substring(0, idx);
     }
     
 
