@@ -407,6 +407,7 @@ public class DSK {
         // behavior of data types between Java and the original C code:
         int buff[] = new int[0x20000];
         byte buffBytes[] = fi.readAllBytes();
+        fi.close();
         for(int i = 0;i<buffBytes.length;i++) {
             int v = buffBytes[i];
             if (v < 0) v += 256;
@@ -420,7 +421,7 @@ public class DSK {
             e = new StAmsdos(buff, 0);
         }
         if (Lg > 0x10080) {
-            throw new Exception("File is too long: " + Lg);
+            throw new Exception("File " + rawFileName + " is too long: " + Lg);
         }
 
         if (TypeModeImport == MODE_ASCII) {

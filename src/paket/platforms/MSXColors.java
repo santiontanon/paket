@@ -23,7 +23,7 @@ public class MSXColors {
     public static int G_SHIFT = 8;
     public static int B_SHIFT = 0;
     
-    public static int tolerance = 32;
+    public static int tolerance = 64;
     
     /*
     public static int MSX1Palette[][] = {

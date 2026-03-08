@@ -18,7 +18,7 @@ import paket.compiler.PAKETConfig;
  */
 public class CPCColors {
     
-    public static int tolerance = 32;
+    public static int tolerance = 64;
     public static int CPCMode0Palette[][] = {{0,0,0},
                                       {0,0,85},
                                       {0,0,255},
