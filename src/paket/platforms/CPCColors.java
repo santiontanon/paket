@@ -115,12 +115,20 @@ public class CPCColors {
       
 
     public static int findColor(int r, int g, int b, int x, int y, String imageName, PAKETConfig config) {
+        int best = -1;
+        int best_error = 255*3;
         for(int i = 0;i<CPCMode0Palette.length;i++) {
+            int error = Math.abs(r-CPCMode0Palette[i][0]) + Math.abs(g-CPCMode0Palette[i][1]) + Math.abs(b-CPCMode0Palette[i][2]);
             if (Math.abs(r-CPCMode0Palette[i][0]) < tolerance &&
                 Math.abs(g-CPCMode0Palette[i][1]) < tolerance &&
                 Math.abs(b-CPCMode0Palette[i][2]) < tolerance) {
-                return i;
+                if (error < best_error) {
+                    best = i;
+                }
             }
+        }
+        if (best != -1) {
+            return best;
         }
         config.error("CPCColors.findColor: Color not found in "+imageName+"!! " + r +"," + g + "," + b + "  at " + x + ", " + y);
         return -1;

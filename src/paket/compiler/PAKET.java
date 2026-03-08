@@ -6,6 +6,11 @@ package paket.compiler;
 import cl.MDLLogger;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import paket.platforms.CPC;
 import paket.platforms.Platform;
 import paket.platforms.MSX;
@@ -50,7 +55,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.2 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.3 beta");
             config.info("Santiago (Popolon) Ontañón (2019)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -3094,4 +3099,19 @@ public class PAKET {
         }
     }
     
+    
+    public static void moveFile(String sourcePath, String targetPath) throws IOException
+    {
+        Path source = Paths.get(sourcePath);
+        Path target = Paths.get(targetPath);
+        Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+
+    public static void copyFile(String sourcePath, String targetPath) throws IOException
+    {
+        Path source = Paths.get(sourcePath);
+        Path target = Paths.get(targetPath);
+        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
 }

@@ -441,6 +441,13 @@ public class PAKRoom {
         }
         
         if (bg_xml != null) {
+            String encoding = bg_xml.getChild("data").getAttributeValue("encoding");
+            if (!encoding.equals("csv")) {
+                throw new Exception("Background layer format for " + file.getName() +
+                        " is '" + encoding + "', ut should be 'csv'. Please " +
+                        "go to the 'Map Properties' in TILED and select 'CSV' "
+                        + "in the 'Tile Layer Format' option");
+            }
             String bg_data = bg_xml.getChild("data").getValue();
             StringTokenizer st = new StringTokenizer(bg_data, ",");
             for(int i = 0;i<h;i++) {
