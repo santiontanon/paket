@@ -56,9 +56,14 @@ public class PAKRoom {
     public List<PAKRule> rules = new ArrayList<>();
     public List<PAKRule> onLoadRules = new ArrayList<>();
     public List<PAKRule> onStartRules = new ArrayList<>();
-    public String tilesFileName = null;
-    public String collisionTilesFileName = null;
-    public BufferedImage tiles = null;
+    
+    // Tilesets
+    public List<String> tilesFileNames = new ArrayList<>();
+    public List<Integer> tilesFileFirstGids = new ArrayList<>();
+    public List<BufferedImage> tilesetImages = new ArrayList<>();
+//    public String tilesFileName = null;
+//    public String collisionTilesFileName = null;
+//    public BufferedImage tiles = null;
     
     
     public PAKRoom(String a_ID, int a_w, int a_h)
@@ -80,20 +85,20 @@ public class PAKRoom {
     }
     
 
-    public BufferedImage render(Platform targetSystem, PAKETConfig config)
+    public BufferedImage render(Platform targetSystem, PAKETConfig config) throws Exception
     {
         return renderUpToDepthAndObject(Integer.MAX_VALUE, null, true, true, targetSystem, config);
     }
     
     
-    public BufferedImage render(Platform targetSystem, boolean renderBackground, boolean renderObjects, PAKETConfig config)
+    public BufferedImage render(Platform targetSystem, boolean renderBackground, boolean renderObjects, PAKETConfig config) throws Exception
     {
         return renderUpToDepthAndObject(Integer.MAX_VALUE, null, renderBackground, renderObjects, targetSystem, config);
     }
 
 
     public BufferedImage renderUpToDepthAndObject(int depth, PAKObject obj, 
-            boolean renderBackground, boolean renderObjects, Platform targetSystem, PAKETConfig config)
+            boolean renderBackground, boolean renderObjects, Platform targetSystem, PAKETConfig config) throws Exception
     {
         int tw = targetSystem.TILE_WIDTH;
         BufferedImage img = new BufferedImage(width*tw, height*TILE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
@@ -103,8 +108,11 @@ public class PAKRoom {
         if (renderBackground) {
             for(int i = 0;i<height;i++) {
                 for(int j = 0;j<width;j++) {
-                    int tile = originalBackground[j][i];
-                    if (tile > 0) {
+                    int gid = originalBackground[j][i];
+                    if (gid > 0) {
+                        Pair<Integer, Integer> tmp = this.gidToTileIndexAndTilesetFile(gid, true);
+                        int tile = tmp.m_a;
+                        BufferedImage tiles = this.tilesetImages.get(tmp.m_b);
                         int tx = (tile-1)%(tiles.getWidth()/tw);
                         int ty = (tile-1)/(tiles.getWidth()/tw);
                         g.drawImage(tiles,
@@ -141,6 +149,22 @@ public class PAKRoom {
         }
         
         return img;
+    }
+    
+    
+    public Pair<Integer, Integer> gidToTileIndexAndTilesetFile(int gid, boolean strict) throws Exception
+    {
+        for(int i = tilesFileNames.size()-1;i>=0;i--) {
+            if (gid >= tilesFileFirstGids.get(i)) {
+                return new Pair<>(gid - tilesFileFirstGids.get(i), i);
+            }
+        }
+        
+        if (strict) {
+            throw new Exception("TMX file defining room " + ID + " has a tile ID ("+gid+") outside of the range of the tilesets defined in the TMX file!");
+        } else {
+            return null;
+        }
     }
     
     
@@ -321,30 +345,40 @@ public class PAKRoom {
             throw new Exception("calculateCollisionMask: the engine assumes that each tile is either 2 or 4 collision tiles in width, but we have OBJECT_MASK_HORIZONTAL_RESOLUTION = " + platform.OBJECT_MASK_HORIZONTAL_RESOLUTION + " and TILE_WIDTH = " + platform.TILE_WIDTH);
         }
         int mask[] = new int[mask_width*height];
-        
-        if (collisionBackground != null && collisionTilesFileName != null) {
-            BufferedImage collisionTiles = ImageIO.read(new File(collisionTilesFileName));
-            if (collisionTiles == null) {
-                throw new Exception("calculateCollisionMask: Could not load collision tiles: " + collisionTilesFileName);
-            }
-            if (collisionTiles.getHeight() != 8) {
-                throw new Exception("calculateCollisionMask: The PAKET compiler assumes that the collision masks file has all the tiles in a single row: " + collisionTilesFileName);
-            }
+
+        if (collisionBackground != null) {
+//            HashMap<String, BufferedImage> tilesetImages = new HashMap<>();
+//            BufferedImage collisionTiles;
+//            if (collisionTilesFileName != null) {
+//                collisionTiles = ImageIO.read(new File(collisionTilesFileName));
+//            } else {
+//                collisionTiles = ImageIO.read(new File(tilesFileName));
+//            }
+//            if (collisionTiles == null) {
+//                throw new Exception("calculateCollisionMask: Could not load collision tiles: " + collisionTilesFileName);
+//            }
+//            if (collisionTiles.getHeight() != 8) {
+//                throw new Exception("calculateCollisionMask: The PAKET compiler assumes that the collision masks file has all the tiles in a single row: " + collisionTilesFileName);
+//            }
             
             for(int j = 0;j<mask_width;j++) {
                 for(int i = 0;i<height;i++) {
                     for(int x=0,bit=0; x<platform.TILE_WIDTH*collision_tile_multiplier; x+=platform.OBJECT_MASK_HORIZONTAL_RESOLUTION,bit++) {
-                        int tileIdx = collisionBackground[j * collision_tile_multiplier + (x / platform.TILE_WIDTH)][i];
-                        for(int y=0; y<8; y+=platform.OBJECT_MASK_VERTICAL_RESOLUTION) {
-                            // Check if the pixel is white:
-//                            if (tileIdx * platform.TILE_WIDTH + x > collisionTiles.getWidth()) {
-//                                System.out.println("!!!");
-//                            }
-                            int color = collisionTiles.getRGB(tileIdx * platform.TILE_WIDTH + (x % platform.TILE_WIDTH), y);
-                            if (color == 0xffffffff) {
-                                int bit_to_set = (y & 0x04) + (bit&0x03);
-                                int bit_mask = 1 << bit_to_set;
-                                mask[i + j*height] |= bit_mask;
+                        int tilegid = collisionBackground[j * collision_tile_multiplier + (x / platform.TILE_WIDTH)][i];
+                        Pair<Integer, Integer> tmp = gidToTileIndexAndTilesetFile(tilegid, false);
+                        if (tmp != null) {
+                            int tileIdx = tmp.m_a;
+                            for(int y=0; y<8; y+=platform.OBJECT_MASK_VERTICAL_RESOLUTION) {
+                                // Check if the pixel is white:
+    //                            if (tileIdx * platform.TILE_WIDTH + x > collisionTiles.getWidth()) {
+    //                                System.out.println("!!!");
+    //                            }
+                                int color = tilesetImages.get(tmp.m_b).getRGB(tileIdx * platform.TILE_WIDTH + (x % platform.TILE_WIDTH), y);
+                                if (color == 0xffffffff) {
+                                    int bit_to_set = (y & 0x04) + (bit&0x03);
+                                    int bit_mask = 1 << bit_to_set;
+                                    mask[i + j*height] |= bit_mask;
+                                }
                             }
                         }
                     }
@@ -411,24 +445,29 @@ public class PAKRoom {
         Element root = new SAXBuilder().build(file).getRootElement();
         int w = Integer.parseInt(root.getAttributeValue("width"));
         int h = Integer.parseInt(root.getAttributeValue("height"));
-        int collisionFirstTileID = 0;
+//        int collisionFirstTileID = 0;
         PAKRoom r = new PAKRoom(null, w, h);
 
         for(Object tileset_object:root.getChildren("tileset")) {
             Element tileset_xml = (Element)tileset_object;
-            if (tileset_xml.getAttributeValue("name").contains("collision")) {
-                String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
-                r.collisionTilesFileName =  PAKET.getFileName(tmp, dataFolders, config);        
-                collisionFirstTileID = Integer.parseInt(tileset_xml.getAttributeValue("firstgid"));
-            } else {
-                String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
-                r.tilesFileName =  PAKET.getFileName(tmp, dataFolders, config);        
+            if (tileset_xml.getAttributeValue("firstgid") == null ||
+                tileset_xml.getChild("image") == null) {
+                throw new Exception("Cannot load tileset in TMX file " + file + ". Make sure it is an embedded tileset in TILED, and not an externally defined tileset. If you have it as an external tileset, look for the 'embed tileset' button in TILED for this tileset.");
             }
+            String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
+            r.tilesFileNames.add(PAKET.getFileName(tmp, dataFolders, config));
+            r.tilesFileFirstGids.add(Integer.parseInt(tileset_xml.getAttributeValue("firstgid")));
         }
                 
-        File f = new File(r.tilesFileName);
-        config.info("Room " + file.getCanonicalPath() + " tiles file: " + f.getAbsolutePath());
-        r.tiles = ImageIO.read(f);
+        for(String tilesFileName:r.tilesFileNames) {
+            File f = new File(tilesFileName);
+            config.info("Room " + file.getCanonicalPath() + " tiles file: " + f.getAbsolutePath());
+            BufferedImage img = ImageIO.read(f);
+            if (img == null) {
+                throw new Exception("Cannot find tileset image: " + tilesFileName);
+            }
+            r.tilesetImages.add(img);
+        }
         Element bg_xml = null;
         Element collision_xml = null;
         for(Object layer_object:root.getChildren("layer")) {
@@ -467,7 +506,7 @@ public class PAKRoom {
             StringTokenizer st = new StringTokenizer(collision_data, ",");
             for(int i = 0;i<h;i++) {
                 for(int j = 0;j<w;j++) {
-                    r.collisionBackground[j][i] = Integer.parseInt(st.nextToken().trim()) - collisionFirstTileID;
+                    r.collisionBackground[j][i] = Integer.parseInt(st.nextToken().trim());
                     if (r.collisionBackground[j][i] < 0) r.collisionBackground[j][i] = 0;
                 }
             }

@@ -458,9 +458,10 @@ public class PAKETCompiler {
                     if (tile == 0) throw new Exception("Background tile " + j + "," + i + " of room " + room.ID + " is empty!");
                     // check if we have a repeated tile:
                     if (!map.containsKey(tile)) {
-                        int idx = findTileMatch(room.tiles, tile-1, "room_" + room.ID, mergedTiles, platform, room.tilesFileName);
+                        Pair<Integer, Integer> tmp = room.gidToTileIndexAndTilesetFile(tile, true);
+                        int idx = findTileMatch(room.tilesetImages.get(tmp.m_b), tmp.m_a, "room_" + room.ID, mergedTiles, platform, room.tilesFileNames.get(tmp.m_b));
                         if (idx == -1) {
-                            int idx2 = findTileMatch(room.tiles, tile-1, "room_" + room.ID, mergedTilesMirrored, platform, room.tilesFileName);
+                            int idx2 = findTileMatch(room.tilesetImages.get(tmp.m_b), tmp.m_a, "room_" + room.ID, mergedTilesMirrored, platform, room.tilesFileNames.get(tmp.m_b));
                             if (idx2 >= 0) {
                                 // The tile is a mirrored version of a tile we already had!
                                 map.put(tile, idx2 + 1 | MIRRORED_MASK);
@@ -469,7 +470,7 @@ public class PAKETCompiler {
                                 // we have a new tile, add it to the merged image:
                                 map.put(tile, mergedTiles.size() + 1);
 //                                System.out.println("map  : " + tile + " --> " + (mergedTiles.size() + 1));
-                                int tileData[] = addTileToMergedTiles(room.tiles, tile-1, "room_" + room.ID, mergedTiles, platform, room.tilesFileName);
+                                int tileData[] = addTileToMergedTiles(room.tilesetImages.get(tmp.m_b), tmp.m_a, "room_" + room.ID, mergedTiles, platform, room.tilesFileNames.get(tmp.m_b));
                                 int mirroredTiledata[] = platform.mirrorTileDataHorizontally(tileData);
                                 
                                 if (mirroredTiledata == null) {
@@ -516,9 +517,10 @@ public class PAKETCompiler {
                 for(int j = 0;j<room.width;j++) {
                     int tile = room.background[j][i];
                     if (!map.containsKey(tile)) {
-                        int idx = findTileMatch(room.tiles, tile-1, "room_" + room.ID, mergedTiles, platform, room.tilesFileName);
+                        Pair<Integer, Integer> tmp = room.gidToTileIndexAndTilesetFile(tile, true);
+                        int idx = findTileMatch(room.tilesetImages.get(tmp.m_b), tmp.m_a, "room_" + room.ID, mergedTiles, platform, room.tilesFileNames.get(tmp.m_b));
                         if (idx == -1) {
-                            int idx2 = findTileMatch(room.tiles, tile-1, "room_" + room.ID, mergedTilesMirrored, platform, room.tilesFileName);
+                            int idx2 = findTileMatch(room.tilesetImages.get(tmp.m_b), tmp.m_a, "room_" + room.ID, mergedTilesMirrored, platform, room.tilesFileNames.get(tmp.m_b));
                             // The tile is a mirrored version of a tile we already had!
                             map.put(tile, idx2+1 | MIRRORED_MASK);
                         } else {
