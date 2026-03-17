@@ -23,6 +23,7 @@ public class PAKETConfig {
     public boolean run_mdl_optimizers = true;
 //    public boolean run_mdl_optimizers = false;
     public String mdlLoggerFlag = "-diggest";    
+    public boolean printStackTrace = false;
     
     public int sfxChannel = 2;
     public int sfxPlayer = SFX_PLAYER_PAK;

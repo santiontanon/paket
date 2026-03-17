@@ -55,7 +55,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.4 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.5 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -70,6 +70,7 @@ public class PAKET {
             config.info("    -quiet: turns off all console output during compilation of the game.");
             config.info("    -diggest: only prints summary messages during compilation (default).");
             config.info("    -info: prints all messages during compilation.");
+            config.info("    -stacktrace: prints the actual stacktrace when an error occurs (only useful for debugging the compiler, or reporting errors).");
             config.info("    -text-opt [number]: sets the number of optimization passes over text banks (default 0). The larger, the better optimization achieved (diminishing returns with more iterations).");
             config.info("    -object-opt [number]: sets the number of optimization passes over object banks (default 0). The larger, the better optimization achieved (diminishing returns with more iterations).");
             config.info("    -room-opt [number]: sets the number of optimization passes over room banks (default 0). If rooms-per-bank == 1, this parameter has no effect. The larger, the better optimization achieved (diminishing returns with more iterations).");
@@ -116,6 +117,8 @@ public class PAKET {
             } else if (args[i].equals("-info")) {
                 config.logger.setMinLevelToLog(MDLLogger.INFO);
                 config.mdlLoggerFlag = null;
+            } else if (args[i].equals("-stacktrace")) {
+                config.printStackTrace = true;
             } else if (args[i].equals("-text-opt") && i+1<args.length) {
                 config.maxTextOptimizationIterations = Integer.parseInt(args[i+1]);
                 i++;
@@ -166,14 +169,22 @@ public class PAKET {
             }
         }
 
-        Platform platform = getPlatform(args[1], variables, config);        
-        if (platform == null) {
-            config.info("Unknown platform " + args[1]);
-            System.exit(1);
-        }
+        try {
+            Platform platform = getPlatform(args[1], variables, config);        
+            if (platform == null) {
+                config.info("Unknown platform " + args[1]);
+                System.exit(1);
+            }
 
-        PAKET paket = new PAKET();
-        paket.compileGame(args[0], platform, args[2], args[3], dataFolders, config);
+            PAKET paket = new PAKET();
+            paket.compileGame(args[0], platform, args[2], args[3], dataFolders, config);
+        } catch(Exception e) {
+            config.error(e.getMessage());
+            if (config.printStackTrace) {
+                e.printStackTrace();
+            }
+            config.error("Compilation failed.");
+        }
     }
     
     
@@ -251,9 +262,27 @@ public class PAKET {
     }
 
     
-    public static BufferedImage getSubImage(BufferedImage img, int x0, int y0, int x1, int y1) throws Exception
+    public static BufferedImage getSubImage(BufferedImage img, int x0, int y0, int x1, int y1, String imageIdentifier) throws Exception
     {
         if (x0 == -1) return img;
+        if (x1 <= x0) {
+            throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": x1 (=" + x1 + "), should be larger than x0 (=" + x0 + ").");
+        }
+        if (y1 <= y0) {
+            throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": y1 (=" + y1 + "), should be larger than y0 (=" + y0 + ").");
+        }
+        if (x0 > img.getWidth()) {
+            throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": x0 (=" + x0 + "), is outside of the image size, which is: " + img.getWidth() + ", " + img.getHeight());
+        }
+        if (x1 > img.getWidth()) {
+            throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": x1 (=" + x1 + "), is outside of the image size, which is: " + img.getWidth() + ", " + img.getHeight());
+        }
+        if (y0 > img.getHeight()) {
+            throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": y0 (=" + y0 + "), is outside of the image size, which is: " + img.getWidth() + ", " + img.getHeight());
+        }
+        if (y1 > img.getHeight()) {
+            throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": y1 (=" + y1 + "), is outside of the image size, which is: " + img.getWidth() + ", " + img.getHeight());
+        }
         BufferedImage img2 = new BufferedImage(x1-x0, y1-y0, BufferedImage.TYPE_INT_ARGB);        
         img2.getGraphics().drawImage(img, 0, 0, x1-x0, y1-y0, x0, y0, x1, y1, null);
         return img2;
@@ -2586,7 +2615,7 @@ public class PAKET {
     }
     
     
-    public BufferedImage parseImage(PAKETTokenizer tokenizer, List<String> dataFolders, PAKETConfig config) throws Exception
+    public BufferedImage parseImage(PAKETTokenizer tokenizer, String imageID, List<String> dataFolders, PAKETConfig config) throws Exception
     {
         expectSpecificToken(tokenizer, "(", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
         Token t = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_STRING);
@@ -2617,7 +2646,7 @@ public class PAKET {
         }   
         imageFileName = getFileName(imageFileName, dataFolders, config);
         // equivalent to an animation with a single frame:
-        return getSubImage(ImageIO.read(new File(imageFileName)), x0, y0, x1, y1);
+        return getSubImage(ImageIO.read(new File(imageFileName)), x0, y0, x1, y1, imageID + ":" + imageFileName);
     }
     
     
@@ -2683,7 +2712,7 @@ public class PAKET {
                     switch (t.value) {
                         case "image":
                         {
-                            BufferedImage img = parseImage(tokenizer, dataFolders, config);
+                            BufferedImage img = parseImage(tokenizer, objectID + ":state(" + stateName + ")",  dataFolders, config);
                             // equivalent to an animation with a single frame:
                             state.animationTempo = 1;
                             state.animationFrames.clear();
@@ -2724,7 +2753,7 @@ public class PAKET {
                             expectSpecificToken(tokenizer, ":", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
                             for(int i = 0;i<differentFrames.size();i++) {
                                 expectSpecificToken(tokenizer, "image", Token.TOKEN_TYPE_ALPHANUMERIC_SYMBOL);
-                                BufferedImage img = parseImage(tokenizer, dataFolders, config);
+                                BufferedImage img = parseImage(tokenizer, objectID + ":state(" + stateName + ")", dataFolders, config);
                                 state.animationFrames.add(img);
                                 state.checkImageSizes();
                             }
