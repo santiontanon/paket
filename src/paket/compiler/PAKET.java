@@ -264,7 +264,12 @@ public class PAKET {
     
     public static BufferedImage getSubImage(BufferedImage img, int x0, int y0, int x1, int y1, String imageIdentifier) throws Exception
     {
-        if (x0 == -1) return img;
+        if (x0 == -1) {
+            if ((img.getWidth() % 2) != 0) {
+                throw new Exception("Object image '" + imageIdentifier + "' has width " +img.getWidth() + ", but object images width must be an even number.");
+            }
+            return img;
+        }
         if (x1 <= x0) {
             throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": x1 (=" + x1 + "), should be larger than x0 (=" + x0 + ").");
         }
@@ -282,6 +287,9 @@ public class PAKET {
         }
         if (y1 > img.getHeight()) {
             throw new Exception("Coordinates in image '" + imageIdentifier + "' are wrong: " + x0 + ", " + y0 + ", " + x1 + ", " + y1 + ": y1 (=" + y1 + "), is outside of the image size, which is: " + img.getWidth() + ", " + img.getHeight());
+        }
+        if ((x1 - x0) % 2 != 0) {
+            throw new Exception("Object width for image '" + imageIdentifier + "' has width is " + (x1 - x0) + " (resulting from " + x1 + " - " + x0 + "), but object images width must be an even number.");
         }
         BufferedImage img2 = new BufferedImage(x1-x0, y1-y0, BufferedImage.TYPE_INT_ARGB);        
         img2.getGraphics().drawImage(img, 0, 0, x1-x0, y1-y0, x0, y0, x1, y1, null);

@@ -698,7 +698,10 @@ public class CPC extends Platform {
         for(int j = 0;j<imgToUse.getWidth();j+=2) {
             for(int i = 0;i<imgToUse.getHeight();i++) {
                 int c1 = CPCColors.getImageColor(imgToUse, j, i, imageName, config);
-                int c2 = CPCColors.getImageColor(imgToUse, j+1, i, imageName, config);
+                int c2 = 0;
+                if (j + 1 < imgToUse.getWidth()) {
+                    c2 = CPCColors.getImageColor(imgToUse, j+1, i, imageName, config);
+                }
                 bytes.add(CPCColors.Mode02ColorBlockByte(c1, c2, palette));
             }
         }
