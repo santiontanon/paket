@@ -348,9 +348,13 @@ public class CPC extends Platform {
     }
     
     
-    public int[] extractItem(BufferedImage img, int x, int y, int width, int height, String imageName) throws Exception
+    public int[] extractItem(BufferedImage img, int x, int y, int width, int height, String imageName, String itemName) throws Exception
     {
         int sprite[] = new int[width*height];
+        
+        if (width %2 != 0) {
+            throw new Exception("Item width should be even, but is " + width + " for item " + itemName);
+        }
      
         int offs = 0;
         boolean allTransparent = true;
@@ -389,7 +393,7 @@ public class CPC extends Platform {
                            PAKGame game,
                            String imageName) throws Exception
     {
-        itemSprites.add(extractItem(sourceImage, x0, y0, x1-x0, y1-y0, imageName));
+        itemSprites.add(extractItem(sourceImage, x0, y0, x1-x0, y1-y0, imageName, ID));
         PAKItem item = new PAKItem(ID);
         item.inGameNameInLanguage = name;
         item.descriptionInLanguage = description;
