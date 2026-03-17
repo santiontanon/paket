@@ -1,6 +1,6 @@
 # PAKET (Point And Klick Engine Tool) Compiler v1.0
 
-PAKET is a tool designed to create point and click adventure games for 8 bit platforms. PAKET was developed by Santiago Ontañón in 2019, in collaboration with Jordi Sureda, in order to create a series of point and click games for 8 bit platforms. It currently supports generating games for Amstrad CPC 464 and for MSX computers. Any questions about the engine can be addressed to us via email or social media (we should be easy to find), or by creating an issue in this repository.
+PAKET is a tool designed to create point and click adventure games for 8 bit platforms. PAKET was developed by Santiago Ontañón between 2019 and 2026, in collaboration with Jordi Sureda, in order to create a series of point and click games for 8 bit platforms. It currently supports generating games for Amstrad CPC 464 and for MSX computers. Any questions about the engine can be addressed to us via email or social media (we should be easy to find), or by creating an issue in this repository.
 
 PAKET consists of a game definition language, with which all the objects, rooms and scripts of the game are defined, and a compiler that generates the game binary given the game definition.  
 
