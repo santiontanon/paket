@@ -247,10 +247,15 @@ public class PAKETCompiler {
         assemblerVariables.put("PLAYER_HEIGHT", ""+game.playerHeightInPixels);
         assemblerVariables.put("PLAYER_WIDTH", ""+game.playerWidthInPixels);
         assemblerVariables.put("PLAYER_COLLISION_WIDTH", ""+(game.playerWidthInPixels / 2));
-        assemblerVariables.put("PLAYER_WALK_LEFT_N_FRAMES", ""+(game.playerAnimationLengths[PAKObjectType.DIRECTION_LEFT]));
-        assemblerVariables.put("PLAYER_WALK_RIGHT_N_FRAMES", ""+(game.playerAnimationLengths[PAKObjectType.DIRECTION_RIGHT]));
-        assemblerVariables.put("PLAYER_WALK_UP_N_FRAMES", ""+(game.playerAnimationLengths[PAKObjectType.DIRECTION_BACK]));
-        assemblerVariables.put("PLAYER_WALK_DOWN_N_FRAMES", ""+(game.playerAnimationLengths[PAKObjectType.DIRECTION_FRONT]));
+        assemblerVariables.put("PLAYER_WALK_LEFT_N_FRAMES", ""+(game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT]));
+        assemblerVariables.put("PLAYER_WALK_RIGHT_N_FRAMES", ""+(game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_RIGHT]));
+        assemblerVariables.put("PLAYER_WALK_UP_N_FRAMES", ""+(game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_BACK]));
+        assemblerVariables.put("PLAYER_WALK_DOWN_N_FRAMES", ""+(game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_FRONT]));
+        assemblerVariables.put("PLAYER_WALK_LEFT_SPEED", ""+(game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT]));
+        assemblerVariables.put("PLAYER_WALK_RIGHT_SPEED", ""+(game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT]));
+        assemblerVariables.put("PLAYER_WALK_UP_SPEED", ""+(game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK]));
+        assemblerVariables.put("PLAYER_WALK_DOWN_SPEED", ""+(game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT]));
+        
         assemblerVariables.put("PLAYER_OBJECT_ID", ""+config.playerObjectId);
         if (game.resetPlayerStateDirection == null) {
             assemblerVariables.put("RESET_PLAYER_DIRECTION_ON_IDLE", "0");
@@ -408,10 +413,43 @@ public class PAKETCompiler {
                     }
                     game.playerHeightInPixels = o.type.getPixelMaximumHeightConsideringCropping();
                     game.playerWidthInPixels = o.type.getPixelMaximumWidthConsideringCropping();
-                    game.playerAnimationLengths[PAKObjectType.DIRECTION_LEFT] = o.type.getAnimationLength(PAKObjectType.DIRECTION_LEFT);
-                    game.playerAnimationLengths[PAKObjectType.DIRECTION_RIGHT] = o.type.getAnimationLength(PAKObjectType.DIRECTION_RIGHT);
-                    game.playerAnimationLengths[PAKObjectType.DIRECTION_BACK] = o.type.getAnimationLength(PAKObjectType.DIRECTION_BACK);
-                    game.playerAnimationLengths[PAKObjectType.DIRECTION_FRONT] = o.type.getAnimationLength(PAKObjectType.DIRECTION_FRONT);
+                    game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] = o.type.getPlayerAnimationLength(PAKObjectType.DIRECTION_LEFT);
+                    game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_RIGHT] = o.type.getPlayerAnimationLength(PAKObjectType.DIRECTION_RIGHT);
+                    game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_BACK] = o.type.getPlayerAnimationLength(PAKObjectType.DIRECTION_BACK);
+                    game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_FRONT] = o.type.getPlayerAnimationLength(PAKObjectType.DIRECTION_FRONT);
+                    if (game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] != 1 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] != 2 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] != 4) {
+                        throw new Exception("Player walk left animation has " + game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] +
+                                            " frames defined. The engine only supports animations of length: 1, 2 or 4.");
+                    }
+                    if (game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_RIGHT] != 1 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_RIGHT] != 2 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_RIGHT] != 4) {
+                        throw new Exception("Player walk right animation has " + game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] +
+                                            " frames defined. The engine only supports animations of length: 1, 2 or 4.");
+                    }
+                    if (game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_BACK] != 1 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_BACK] != 2 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_BACK] != 4) {
+                        throw new Exception("Player walk up animation has " + game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] +
+                                            " frames defined. The engine only supports animations of length: 1, 2 or 4.");
+                    }
+                    if (game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_FRONT] != 1 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_FRONT] != 2 &&
+                        game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_FRONT] != 4) {
+                        throw new Exception("Player walk down animation has " + game.playerWalkAnimationLengths[PAKObjectType.DIRECTION_LEFT] +
+                                            " frames defined. The engine only supports animations of length: 1, 2 or 4.");
+                    }
+                    for(int i = 0;i<4;i++) {
+                        if (game.playerWalkAnimationSpeeds[i] == 0) {
+                            if (game.playerWalkAnimationLengths[i] == 2) {
+                                game.playerWalkAnimationSpeeds[i] = 4;
+                            } else {
+                                game.playerWalkAnimationSpeeds[i] = 2;
+                            }
+                        }
+                    }
                     found = true;
                     break;
                 }

@@ -113,8 +113,8 @@ public class PAKRoom {
                         Pair<Integer, Integer> tmp = this.gidToTileIndexAndTilesetFile(gid, true);
                         int tile = tmp.m_a;
                         BufferedImage tiles = this.tilesetImages.get(tmp.m_b);
-                        int tx = (tile-1)%(tiles.getWidth()/tw);
-                        int ty = (tile-1)/(tiles.getWidth()/tw);
+                        int tx = (tile)%(tiles.getWidth()/tw);
+                        int ty = (tile)/(tiles.getWidth()/tw);
                         g.drawImage(tiles,
                                     j*tw, i*TILE_HEIGHT, (j+1)*tw, (i+1)*TILE_HEIGHT, 
                                     tx*tw, ty*TILE_HEIGHT, (tx+1)*tw, (ty+1)*TILE_HEIGHT, null);

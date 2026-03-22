@@ -47,10 +47,10 @@ public class PAKObjectType {
         "hidden",};
 
     public static final String directionNames[] = {
-        "back/0",
-        "right/1",
-        "front/2",
-        "left/3",
+        "up",
+        "right",
+        "down",
+        "left",
         "4", "5", "6", "7", "8", "9", "10", "11"
     };
 
@@ -314,17 +314,22 @@ public class PAKObjectType {
         return maxWidth;
     }
 
-    public int getAnimationLength(int direction) {
+    public int getPlayerAnimationLength(int direction) throws Exception {
         int frames = 0;
         for (PAKObjectState s : states) {
             if (s.direction != direction) {
                 continue;
             }
             if (s.state == STATE_WALKING_1
-                    || s.state == STATE_WALKING_2
-                    || s.state == STATE_WALKING_3
-                    || s.state == STATE_WALKING_4) {
+                || s.state == STATE_WALKING_2
+                || s.state == STATE_WALKING_3
+                || s.state == STATE_WALKING_4) {
                 frames += 1;
+                if (s.animationFrameSequence.size() > 1) {
+                    throw new Exception("Player walk animation for direction " + directionNames[direction]
+                            + " was specified with an 'animation' command. Player walk animations cannot use this command and "
+                            + "must be specified frame by frame with the walking-1, walking-2, walking-3 and walking-4 states.");
+                }
             }
         }
         return frames;

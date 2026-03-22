@@ -88,7 +88,8 @@ public class PAKGame {
     public int[] playerScalingThresholds = null;
 
     public int playerHeightInPixels = 0, playerWidthInPixels = 0;
-    public int playerAnimationLengths[] = new int[]{0, 0, 0, 0};
+    public int[] playerWalkAnimationLengths = new int[]{0, 0, 0, 0};
+    public int[] playerWalkAnimationSpeeds = new int[]{0, 0, 0, 0};  // how many pixels correspond to each animation frame. "0" means the default, which is 2 for 4-frame animations, and 4 for 2-frame animations.
     public Integer resetPlayerStateDirection = null;  // if this is != null, when player stops, its state/direction will be reset to this
     
     public List<String> additionalAssemblerFiles = new ArrayList<>();

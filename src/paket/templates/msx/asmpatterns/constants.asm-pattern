@@ -237,6 +237,10 @@ PLAYER_WALK_LEFT_N_FRAMES:              equ {PLAYER_WALK_LEFT_N_FRAMES}
 PLAYER_WALK_RIGHT_N_FRAMES:             equ {PLAYER_WALK_RIGHT_N_FRAMES}
 PLAYER_WALK_UP_N_FRAMES:                equ {PLAYER_WALK_UP_N_FRAMES}
 PLAYER_WALK_DOWN_N_FRAMES:              equ {PLAYER_WALK_DOWN_N_FRAMES}
+PLAYER_WALK_LEFT_SPEED:                 equ {PLAYER_WALK_LEFT_SPEED}
+PLAYER_WALK_RIGHT_SPEED:                equ {PLAYER_WALK_RIGHT_SPEED}
+PLAYER_WALK_UP_SPEED:                   equ {PLAYER_WALK_UP_SPEED}
+PLAYER_WALK_DOWN_SPEED:                 equ {PLAYER_WALK_DOWN_SPEED}
 
 PLAYER_ACTION_DISTANCE_THRESHOLD:    equ 16  ; If the distance from the player to the target object is larger than this, 
                                              ; the player will refuse doing the requested action.

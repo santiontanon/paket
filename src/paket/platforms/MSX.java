@@ -437,7 +437,7 @@ public class MSX extends Platform {
 
         // Render the room, up to the depth of the target object, so that we can grab the background:
         BufferedImage background = targetRoom.renderUpToDepthAndObject(targetObject.depth, targetObject, true, true, this, config);
-        // ImageIO.write(background, "png", new File("tmp"+type.ID+".png"));  // For debugging
+//        ImageIO.write(background, "png", new File("tmp"+type.ID+".png"));  // For debugging
 
         int background_x_start = (targetObject.x) - ox;
 

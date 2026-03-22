@@ -434,13 +434,25 @@ update_player_walking_move_left:
     ; animation frame:
     ld a, (ix + OBJECT_STRUCT_X)
     dec a
-    srl a
     cpl
+IF PLAYER_WALK_LEFT_SPEED == 2
+    srl a
+ELSE
+IF PLAYER_WALK_LEFT_SPEED == 4
+    srl a
+    srl a
+ELSE
+IF PLAYER_WALK_LEFT_SPEED == 8
+    srl a
+    srl a
+    srl a
+ENDIF
+ENDIF
+ENDIF
 IF PLAYER_WALK_LEFT_N_FRAMES == 4
     and #03
 ELSE
 IF PLAYER_WALK_LEFT_N_FRAMES == 2
-    srl a
     and #01
 ELSE
     xor a
@@ -480,16 +492,27 @@ update_player_walking_move_right:
 
     ; animation frame:
     ld a, (ix + OBJECT_STRUCT_X)
-    dec a
+IF PLAYER_WALK_RIGHT_SPEED == 2
     srl a
+ELSE
+IF PLAYER_WALK_RIGHT_SPEED == 4
+    srl a
+    srl a
+ELSE
+IF PLAYER_WALK_RIGHT_SPEED == 8
+    srl a
+    srl a
+    srl a
+ENDIF
+ENDIF
+ENDIF
 IF PLAYER_WALK_RIGHT_N_FRAMES == 4
     and #03
 ELSE
 IF PLAYER_WALK_RIGHT_N_FRAMES == 2
-    srl a
-        and #01
+    and #01
 ELSE
-        xor a
+    xor a
 ENDIF
 ENDIF
     add a,OBJECT_DIRECTION_RIGHT * 16
@@ -534,15 +557,29 @@ update_player_walking_move_up_collision:
     ld b,1
     ; animation frame:
     ld a,(ix+OBJECT_STRUCT_Y)
+    dec a
+    cpl
+IF PLAYER_WALK_UP_SPEED == 2
     srl a
+ELSE
+IF PLAYER_WALK_UP_SPEED == 4
+    srl a
+    srl a
+ELSE
+IF PLAYER_WALK_UP_SPEED == 8
+    srl a
+    srl a
+    srl a
+ENDIF
+ENDIF
+ENDIF
 IF PLAYER_WALK_UP_N_FRAMES == 4
     and #03
 ELSE
 IF PLAYER_WALK_UP_N_FRAMES == 2
-    srl a
-        and #01
+    and #01
 ELSE
-        xor a
+    xor a
 ENDIF
 ENDIF
     add a,OBJECT_DIRECTION_UP*16
@@ -579,15 +616,27 @@ update_player_walking_move_down_collision:
     ld b, 1
     ; animation frame:
     ld a, (ix + OBJECT_STRUCT_Y)
+IF PLAYER_WALK_DOWN_SPEED == 2
     srl a
+ELSE
+IF PLAYER_WALK_DOWN_SPEED == 4
+    srl a
+    srl a
+ELSE
+IF PLAYER_WALK_DOWN_SPEED == 8
+    srl a
+    srl a
+    srl a
+ENDIF
+ENDIF
+ENDIF
 IF PLAYER_WALK_DOWN_N_FRAMES == 4
     and #03
 ELSE
 IF PLAYER_WALK_DOWN_N_FRAMES == 2
-    srl a
-        and #01
+    and #01
 ELSE
-        xor a
+    xor a
 ENDIF
 ENDIF
     add a, OBJECT_DIRECTION_DOWN * 16

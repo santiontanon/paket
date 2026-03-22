@@ -494,6 +494,10 @@ public class PAKET {
                         parsePlayerStopState(tokenizer, game);
                         break;
 
+                    case "player-walk-animation-speeds":
+                        parseWalkAnimationSpeeds(tokenizer, game);
+                        break;
+
                     default:
                         throw new Exception("Unexpected token " + t.value + " in " + tokenizer.currentFile + " line " + tokenizer.getCurrentLine());
                 }
@@ -2897,6 +2901,60 @@ public class PAKET {
         game.resetPlayerStateDirection = state + direction * 16;
     }
     
+    
+    public void parseWalkAnimationSpeeds(PAKETTokenizer tokenizer, PAKGame game) throws Exception
+    {
+        expectSpecificToken(tokenizer, "(", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+        Token t = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_NUMBER);
+        game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK] = Integer.parseInt(t.value);
+        expectSpecificToken(tokenizer, ",", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+        if (game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK] != 1 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK] != 2 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK] != 4 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK] != 8) {
+            throw new Exception("Player walk speed specified in the 'player-walk-animation-speeds' " +
+                    "for direction 'up' is " + game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_BACK] + 
+                    " but only 1, 2, 4 and 8 are valid values.");
+        }
+
+        t = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_NUMBER);
+        game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT] = Integer.parseInt(t.value);
+        expectSpecificToken(tokenizer, ",", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+        if (game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT] != 1 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT] != 2 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT] != 4 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT] != 8) {
+            throw new Exception("Player walk speed specified in the 'player-walk-animation-speeds' " +
+                    "for direction 'right' is " + game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_RIGHT] + 
+                    " but only 1, 2, 4 and 8 are valid values.");
+        }
+
+        t = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_NUMBER);
+        game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT] = Integer.parseInt(t.value);
+        expectSpecificToken(tokenizer, ",", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+        if (game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT] != 1 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT] != 2 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT] != 4 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT] != 8) {
+            throw new Exception("Player walk speed specified in the 'player-walk-animation-speeds' " +
+                    "for direction 'down' is " + game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_FRONT] + 
+                    " but only 1, 2, 4 and 8 are valid values.");
+        }
+
+        t = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_NUMBER);
+        game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT] = Integer.parseInt(t.value);
+        if (game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT] != 1 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT] != 2 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT] != 4 &&
+            game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT] != 8) {
+            throw new Exception("Player walk speed specified in the 'player-walk-animation-speeds' " +
+                    "for direction 'left' is " + game.playerWalkAnimationSpeeds[PAKObjectType.DIRECTION_LEFT] + 
+                    " but only 1, 2, 4 and 8 are valid values.");
+        }
+        
+        expectSpecificToken(tokenizer, ")", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+    }
+
     
     public void parseInitVariable(PAKETTokenizer tokenizer, PAKGame game) throws Exception
     {
