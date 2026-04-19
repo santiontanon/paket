@@ -48,7 +48,7 @@ sound_update_MUSIC_END:
 StopPlayingMusic:
     di
     ld hl, beginning_of_sound_variables_except_tempo
-    ld bc, end_of_sound_variables - beginning_of_sound_variables_except_tempo
+    ld bc, (end_of_sound_variables - beginning_of_sound_variables_except_tempo) - 1
     call clear_memory
 IF MUSIC_USE_INSTRUMENT_SPEED = 1
     ld a, 1
@@ -466,17 +466,17 @@ ENDIF
 
 IF {MUSIC_USE_SET_VOLUME} = 1
 sound_update_set_volume1:
-    ld a, (hl)  ; new speed
+    ld a, (hl)  ; new volume
     ld (MUSIC_volumes), a
     inc hl
     jp sound_update_internal_loop
 sound_update_set_volume2:
-    ld a, (hl)  ; new speed
+    ld a, (hl)  ; new volume
     ld (MUSIC_volumes + 1), a
     inc hl
     jp sound_update_internal_loop
 sound_update_set_volume3:
-    ld a, (hl)  ; new speed
+    ld a, (hl)  ; new volume
     ld (MUSIC_volumes + 2), a
     inc hl
     jp sound_update_internal_loop
