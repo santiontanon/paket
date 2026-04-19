@@ -218,7 +218,8 @@ public class CPC6128 extends CPC {
             if (i != 0) {
                 address = "4000";
             }
-            ConsoleExecution.execute(new String[]{"cp", binaryName + "-dsk-page" + i + ".bin", destinationFolder + "/data" + i + ".bin"}, config);
+            // ConsoleExecution.execute(new String[]{"cp", binaryName + "-dsk-page" + i + ".bin", destinationFolder + "/data" + i + ".bin"}, config);
+            PAKET.copyFile(binaryName + "-dsk-page" + i + ".bin", destinationFolder + "/data" + i + ".bin");
             IDsk.main(new String[]{binaryName + ".dsk", "-i", destinationFolder + "/data" + i + ".bin", "-c", address, "-t", "1"}, config);
             // ConsoleExecution.execute(new String[]{"mv", destinationFolder + "/data" + i + ".bin", binaryName + "-dsk-page" + i + ".bin"}, config);
             PAKET.moveFile(destinationFolder + "/data" + i + ".bin", binaryName + "-dsk-page" + i + ".bin");
