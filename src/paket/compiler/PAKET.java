@@ -55,7 +55,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.0.9 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.1 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -1241,6 +1241,14 @@ public class PAKET {
         room.screen_position_y = start_y;
         room.isSubRoom = isSubRoom;
         room.playerZoom = playerZoom;
+        
+        if (start_x < 0 || start_y < 0 ||
+            start_x + room.width > platform.GAME_AREA_DIMENSIONS[2] ||
+            start_y + room.height > platform.GAME_AREA_DIMENSIONS[3]) {
+            throw new Exception("Room '" + room.ID + "' would occupy coordinates (" + start_x + ", " + start_y + ") to (" +
+                                (start_x + room.width) + ", " + (start_y + room.height) + ") and overflow the gameplay area. Rooms should be within " +
+                                "(0, 0) - (" + platform.GAME_AREA_DIMENSIONS[2] + ", " + platform.GAME_AREA_DIMENSIONS[3] + ").");
+        }
         
         // rules/palette:
         List<Integer> roomPalette = null;

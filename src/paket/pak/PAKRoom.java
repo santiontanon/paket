@@ -517,7 +517,6 @@ public class PAKRoom {
             for(Object o:fg_xml.getChildren("object")) {
                 Element e = (Element)o;
                 int ID = Integer.parseInt(e.getAttributeValue("id"));
-                if (ID>=64) throw new Exception("Object ID in room is larger than 63! That will cause problems with 'current_action_text_id'");
                 String name = e.getAttributeValue("name");
                 int ox = Integer.parseInt(e.getAttributeValue("x"));
                 int oy = Integer.parseInt(e.getAttributeValue("y"));
@@ -531,6 +530,9 @@ public class PAKRoom {
                         Element e2 = (Element)o2;
                         if (e2.getAttributeValue("name").equals("depth")) {
                             depth = Integer.parseInt(e2.getAttributeValue("value"));
+                        }
+                        if (e2.getAttributeValue("name").toLowerCase().equals("id")) {
+                            ID = Integer.parseInt(e2.getAttributeValue("value"));
                         }
                         if (e2.getAttributeValue("name").equals("state")) {
                             String stateStr = e2.getAttributeValue("value");
@@ -570,6 +572,7 @@ public class PAKRoom {
                         }
                     }
                 }
+                if (ID >= 64) throw new Exception("Object ID in room is larger than 63! That will cause problems with 'current_action_text_id'");                
                 PAKObjectType type = objectTypes.get(name);
                 if (type == null) {
                     throw new Exception("Unknown object type '" + name + "' parsing "+file.getName()+"!");
