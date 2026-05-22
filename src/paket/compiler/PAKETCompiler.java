@@ -1492,6 +1492,8 @@ public class PAKETCompiler {
                 "    ld (MUSIC_tempo), a\n" +
                 "    ld (MUSIC_current_song), a\n" +
                 "    ld (MUSIC_muted), a\n" +
+                "    ld hl, 0\n" +
+                "    ld (load_new_song_request), hl\n" +
                 "    call StopPlayingMusic\n"
         );
         
