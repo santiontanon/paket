@@ -822,15 +822,15 @@ public class CPC extends Platform {
         }
         if (TEXT_AREA_DIMENSIONS[0] < 0 || TEXT_AREA_DIMENSIONS[0] + TEXT_AREA_DIMENSIONS[2] > 16 ||
             TEXT_AREA_DIMENSIONS[1] < 0 || TEXT_AREA_DIMENSIONS[1] + TEXT_AREA_DIMENSIONS[3] > 24) {
-            throw new Exception("Text area is not withiin the MSX screen (remember, it is divided into 16x24 PAKET tiles).");
+            throw new Exception("Text area is not within the CPC screen (remember, it is divided into 16x24 PAKET tiles).");
         }
         if (GAME_AREA_DIMENSIONS[0] < 0 || GAME_AREA_DIMENSIONS[0] + GAME_AREA_DIMENSIONS[2] > 16 ||
             GAME_AREA_DIMENSIONS[1] < 0 || GAME_AREA_DIMENSIONS[1] + GAME_AREA_DIMENSIONS[3] > 24) {
-            throw new Exception("Game area is not withiin the MSX screen (remember, it is divided into 16x24 PAKET tiles).");
+            throw new Exception("Game area is not within the CPC screen (remember, it is divided into 16x24 PAKET tiles).");
         }
         if (GUI_DIMENSIONS[0] < 0 || GUI_DIMENSIONS[0] + GUI_DIMENSIONS[2] > 16 ||
             GUI_DIMENSIONS[1] < 0 || GUI_DIMENSIONS[1] + GUI_DIMENSIONS[3] > 24) {
-            throw new Exception("GUI area is not withiin the MSX screen (remember, it is divided into 16x24 PAKET tiles).");
+            throw new Exception("GUI area is not within the CPC screen (remember, it is divided into 16x24 PAKET tiles).");
         }
                 
         

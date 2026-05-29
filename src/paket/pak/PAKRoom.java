@@ -443,8 +443,8 @@ public class PAKRoom {
             folderPrefix = folder + File.separatorChar;
         }
         Element root = new SAXBuilder().build(file).getRootElement();
-        int w = Integer.parseInt(root.getAttributeValue("width"));
-        int h = Integer.parseInt(root.getAttributeValue("height"));
+        int w = PAKET.parseIntSafe(root.getAttributeValue("width"), "Width of room is not an integer in " + file.getName());
+        int h = PAKET.parseIntSafe(root.getAttributeValue("height"), "Height of room is not an integer in " + file.getName());
 //        int collisionFirstTileID = 0;
         PAKRoom r = new PAKRoom(null, w, h);
 
@@ -458,7 +458,7 @@ public class PAKRoom {
             r.tilesFileNames.add(PAKET.getFileName(tmp, dataFolders, config));
             r.tilesFileFirstGids.add(Integer.parseInt(tileset_xml.getAttributeValue("firstgid")));
         }
-                
+
         for(String tilesFileName:r.tilesFileNames) {
             File f = new File(tilesFileName);
             config.info("Room " + file.getCanonicalPath() + " tiles file: " + f.getAbsolutePath());
@@ -518,10 +518,10 @@ public class PAKRoom {
                 Element e = (Element)o;
                 int ID = Integer.parseInt(e.getAttributeValue("id"));
                 String name = e.getAttributeValue("name");
-                int ox = Integer.parseInt(e.getAttributeValue("x"));
-                int oy = Integer.parseInt(e.getAttributeValue("y"));
-                int ow = Integer.parseInt(e.getAttributeValue("width"));
-                int oh = Integer.parseInt(e.getAttributeValue("height"));
+                int ox = PAKET.parseIntSafe(e.getAttributeValue("x"), "Coordinate x of object " + ID + " in " + file.getName() + " is not an integer");
+                int oy = PAKET.parseIntSafe(e.getAttributeValue("y"), "Coordinate y of object " + ID + " in " + file.getName() + " is not an integer");
+                int ow = PAKET.parseIntSafe(e.getAttributeValue("width"), "Width of object " + ID + " in " + file.getName() + " is not an integer");
+                int oh = PAKET.parseIntSafe(e.getAttributeValue("height"), "Height of object " + ID + " in " + file.getName() + " is not an integer");
                 int depth = 0;
                 int state = PAKObjectType.STATE_NONE;
                 int direction = PAKObjectType.DIRECTION_FRONT;
@@ -529,10 +529,10 @@ public class PAKRoom {
                     for(Object o2:e.getChild("properties").getChildren("property")) {
                         Element e2 = (Element)o2;
                         if (e2.getAttributeValue("name").equals("depth")) {
-                            depth = Integer.parseInt(e2.getAttributeValue("value"));
+                            depth = PAKET.parseIntSafe(e2.getAttributeValue("value"), "Depth of object " + ID + " in " + file.getName() + " is not an integer");
                         }
                         if (e2.getAttributeValue("name").toLowerCase().equals("id")) {
-                            ID = Integer.parseInt(e2.getAttributeValue("value"));
+                            ID = PAKET.parseIntSafe(e2.getAttributeValue("value"), "ID property of object " + ID + " in " + file.getName() + " is not an integer");
                         }
                         if (e2.getAttributeValue("name").equals("state")) {
                             String stateStr = e2.getAttributeValue("value");
@@ -568,7 +568,7 @@ public class PAKRoom {
                             }
                         }
                         if (e2.getAttributeValue("name").equals("number")) {
-                            direction = Integer.parseInt(e2.getAttributeValue("value"));
+                            direction = PAKET.parseIntSafe(e2.getAttributeValue("value"), "Value of property number of obejct " + ID + " is not an integer in " + file.getName());
                         }
                     }
                 }

@@ -55,7 +55,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.1.1 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.1.2 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -3216,5 +3216,15 @@ public class PAKET {
         Path source = Paths.get(sourcePath);
         Path target = Paths.get(targetPath);
         Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+    }
+    
+    
+    public static int parseIntSafe(String int_str, String error_message) throws Exception
+    {
+        try {
+            return Integer.parseInt(int_str);
+        }catch(Exception e) {
+            throw new Exception(error_message + ": " + int_str);
+        }
     }
 }
