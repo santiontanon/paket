@@ -198,6 +198,13 @@ public class MSX extends Platform {
             String defaultUseMessage,
             PAKGame game,
             String imageName) throws Exception {
+        
+        int width = x1 - x0;
+        int height = y1 - y0;
+        if (width != 16 || height != 16) {
+            throw new Exception("Item dimensions in MSX should be 16*16, but is " + width + "*" + height + " for item " + ID);
+        }
+        
         List<Integer> item_indexes = tileExtractor.findTiles(sourceImage, x0, y0, x1, y1, TILE_WIDTH, gui_tiles);
         itemTileIndexes.add(item_indexes);
 //        if (ID != itemTileIndexes.size()) throw new Exception("Items entered out of order!");

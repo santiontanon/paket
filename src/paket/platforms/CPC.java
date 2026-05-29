@@ -351,9 +351,9 @@ public class CPC extends Platform {
     public int[] extractItem(BufferedImage img, int x, int y, int width, int height, String imageName, String itemName) throws Exception
     {
         int sprite[] = new int[width*height];
-        
-        if (width %2 != 0) {
-            throw new Exception("Item width should be even, but is " + width + " for item " + itemName);
+                
+        if (width != 8 || height != 12) {
+            throw new Exception("Item dimensions in CPC should be 8*12, but is " + width + "*" + height + " for item " + itemName);
         }
      
         int offs = 0;
@@ -393,6 +393,21 @@ public class CPC extends Platform {
                            PAKGame game,
                            String imageName) throws Exception
     {
+        if (x0 == -1 &&
+            y0 == -1 &&
+            x1 == -1 &&
+            y1 == -1) {
+            x0 = 0;
+            y0 = 0;
+            x1 = sourceImage.getWidth();
+            y1 = sourceImage.getHeight();
+        }
+        if (x0 < 0 ||
+            y0 < 0 ||
+            x1 < 0 ||
+            y1 < 0) {
+            throw new Exception("Some coordinates of item " + ID + " are negative!:" + x0 + ", " + y0 + ", " + x1 + ", " + y1);
+        }
         itemSprites.add(extractItem(sourceImage, x0, y0, x1-x0, y1-y0, imageName, ID));
         PAKItem item = new PAKItem(ID);
         item.inGameNameInLanguage = name;

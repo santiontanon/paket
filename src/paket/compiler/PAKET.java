@@ -55,7 +55,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.1.2 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.1.3 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -1176,6 +1176,12 @@ public class PAKET {
         String fileName = getFileName(itemImage, dataFolders, config);
         platform.addToBasePalette(fileName);
         BufferedImage img = ImageIO.read(new File(fileName));
+        if (x0 >= 0) {
+            if (x0 >= img.getWidth() || x1 > img.getWidth() ||
+                y0 >= img.getHeight() || y1 > img.getHeight()) {
+                throw new Exception("Item image coordinates for " + itemID + " are out of bounds of image " + fileName);
+            }
+        }
         platform.addItemData(img, x0, y0, x1, y1, itemID, itemName, 
                 itemDescription, defaultUseMessage, game, itemImage);
     }
