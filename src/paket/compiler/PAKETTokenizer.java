@@ -96,14 +96,14 @@ public class PAKETTokenizer {
             if (c == '&') {
                 return new Token("&&", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
             } else {
-                throw new Exception("Cannot parse token starting with &" + (char)c);
+                throw new Exception("Cannot parse token starting with &" + (char)c + " in " + currentFile + " line " + getCurrentLine());
             }
         } else if (c == '|') {
             c = nextCharacter();
             if (c == '|') {
                 return new Token("||", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
             } else {
-                throw new Exception("Cannot parse token starting with |" + (char)c);
+                throw new Exception("Cannot parse token starting with |" + (char)c + " in " + currentFile + " line " + getCurrentLine());
             }
         } else if (c == '=') {
             c = nextCharacter();
@@ -155,10 +155,10 @@ public class PAKETTokenizer {
             if (accum.equals("$this")) {
                 return new Token("$this", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
             }
-            throw new Exception("Cannot parse token " + accum);
+            throw new Exception("Cannot parse token " + accum + " in " + currentFile + " line " + getCurrentLine());
         } 
                 
-        throw new Exception("Cannot parse token starting with " + (char)c);
+        throw new Exception("Cannot parse token starting with " + (char)c + " in " + currentFile + " line " + getCurrentLine());
     }
     
     
