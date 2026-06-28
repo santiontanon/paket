@@ -561,7 +561,7 @@ public class CPC2CDT {
         } else {
             // File does not exist, create a new one
             fo = new FileOutputStream(so);
-            System.out.println(Arrays.toString("ZXTape!\032\001\000\040\000\012".getBytes()));
+//            System.out.println(Arrays.toString("ZXTape!\032\001\000\040\000\012".getBytes()));
             fo.write("ZXTape!\032\001\000\040\000\012".getBytes(), 0, 13);
             
             if (flag_initial_pause > 0) {

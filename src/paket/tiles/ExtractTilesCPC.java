@@ -128,9 +128,9 @@ public class ExtractTilesCPC {
             }
         }
         
-        if (lookForMirroredTiles) {
-            System.out.println("Mirrored tiles used: " + n_mirrored);
-        }
+//        if (lookForMirroredTiles) {
+//            System.out.println("Mirrored tiles used: " + n_mirrored);
+//        }
         return indexes;
     }    
 

@@ -623,9 +623,9 @@ public class PAKETCompiler {
                             mask = BYTE_MIRROR_MASK;
                             tileIdx -= BYTE_MIRROR_MASK;
                         }
-                        if (!orderMap.containsKey(tileIdx - 1)) {
-                            System.out.println("tileIdx - 1: " + (tileIdx - 1));
-                        }
+//                        if (!orderMap.containsKey(tileIdx - 1)) {
+//                            System.out.println("tileIdx - 1: " + (tileIdx - 1));
+//                        }
                         row[i] = (orderMap.get(tileIdx - 1) + 1) | mask;
                     }
                 }
