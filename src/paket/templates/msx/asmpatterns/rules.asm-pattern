@@ -422,6 +422,7 @@ executeRuleScript_remove_object:
     inc hl
     push hl
         call remove_room_object
+        call find_player_object_ptr
     pop hl
     jp executeRuleScript_loop
 ENDIF

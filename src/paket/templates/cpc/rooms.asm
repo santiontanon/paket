@@ -1212,7 +1212,7 @@ remove_room_object_found:
     ; remove it
     push ix
     pop bc
-    ld hl, room_buffer + ROOM_STRUCT_OBJECT_DATA+(MAX_OBJECTS_PER_ROOM - 1) * OBJECT_STRUCT_SIZE + 1  ; we add 1 to prevent the amount being 0 for the last object
+    ld hl, room_buffer + ROOM_STRUCT_OBJECT_DATA + (MAX_OBJECTS_PER_ROOM - 1) * OBJECT_STRUCT_SIZE + 1  ; we add 1 to prevent the amount being 0 for the last object
     xor a
     sbc hl, bc
     ld d, b

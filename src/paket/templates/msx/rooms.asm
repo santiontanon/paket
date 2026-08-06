@@ -800,42 +800,42 @@ find_room_object_ptr_by_id_not_found:
 
 
 ;-----------------------------------------------
-; removes te object with id "a"
+; removes the object with id "a"
 remove_room_object:
-    ld ix,room_buffer+ROOM_STRUCT_OBJECT_DATA
-    ld bc,OBJECT_STRUCT_SIZE
+    ld ix, room_buffer + ROOM_STRUCT_OBJECT_DATA
+    ld bc, OBJECT_STRUCT_SIZE
 remove_room_object_loop:
-    cp (ix+OBJECT_STRUCT_ID)
-    jr z,remove_room_object_fouund
-    add ix,bc
+    cp (ix + OBJECT_STRUCT_ID)
+    jr z, remove_room_object_found
+    add ix, bc
     jr remove_room_object_loop
-remove_room_object_fouund:
+remove_room_object_found:
     ; redraw the whole room:
-    ld a,1
-    ld (redraw_whole_room_signal),a
+    ld a, 1
+    ld (redraw_whole_room_signal), a
 
-    ld hl,(last_room_object_ptr)
-    ld bc,-OBJECT_STRUCT_SIZE
-    add hl,bc
-    ld (last_room_object_ptr),hl
+    ld hl, (last_room_object_ptr)
+    ld bc, -OBJECT_STRUCT_SIZE
+    add hl, bc
+    ld (last_room_object_ptr), hl
     
     ; remove it
     push ix
     pop bc
-    ld hl,room_buffer+ROOM_STRUCT_OBJECT_DATA+(MAX_OBJECTS_PER_ROOM-1)*OBJECT_STRUCT_SIZE+1 ; we add 1 to prevent the amount being 0 for the last object
+    ld hl, room_buffer + ROOM_STRUCT_OBJECT_DATA + (MAX_OBJECTS_PER_ROOM - 1) * OBJECT_STRUCT_SIZE + 1  ; we add 1 to prevent the amount being 0 for the last object
     xor a
-    sbc hl,bc
-    ld d,b
-    ld e,c    ; de = pointer to the object to delete
-    ld b,h
-    ld c,l    ; bc = amount of data to move
-    ld h,d
-    ld l,e
+    sbc hl, bc
+    ld d, b
+    ld e, c  ; de = pointer to the object to delete
+    ld b, h
+    ld c, l  ; bc = amount of data to move
+    ld h, d
+    ld l, e
     push bc
-        ld bc,OBJECT_STRUCT_SIZE
-        add hl,bc    ; hl = pointer to the next objec5
+        ld bc, OBJECT_STRUCT_SIZE
+        add hl, bc  ; hl = pointer to the next object
     pop bc
     ldir
-    ld hl,room_buffer+ROOM_STRUCT_N_OBJECTS
+    ld hl, room_buffer + ROOM_STRUCT_N_OBJECTS
     dec (hl)
     ret
