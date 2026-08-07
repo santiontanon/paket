@@ -1104,7 +1104,7 @@ ENDIF
 ; return:
 ; - z: if the pointer is not over any object
 ; - nz: if the pointer is over an object ("iy" the pointer to the object)
-object_under_pointer:    
+object_under_pointer:
     ld a, (room_buffer + ROOM_STRUCT_N_OBJECTS)
     or a
     jr z, object_under_pointer_no_object
