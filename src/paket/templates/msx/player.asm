@@ -894,7 +894,7 @@ ENDIF
 update_player_walking_move_right:
     ; right-most screen limit:
     ld a, (ix + OBJECT_STRUCT_X)
-    cp (MAX_ROOM_WIDTH * 16) - PLAYER_WIDTH
+    cp (MAX_ROOM_WIDTH * MSX_TILES_PER_ENGINE_TILE * 8) - PLAYER_WIDTH
     ret z
     add a, PLAYER_WIDTH / 2 + (PLAYER_COLLISION_WIDTH / 2) + 1
     ld c, a
