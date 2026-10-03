@@ -441,10 +441,8 @@ executeRuleScript_change_object_description:
     inc hl
     jp executeRuleScript_loop
 executeRuleScript_change_object_description_object_not_found:
-executeRuleScript_change_object_name_object_not_found:
     inc hl
 executeRuleScript_change_object_state_not_found:
-executeRuleScript_change_object_direction_not_found:
     inc hl
     jp executeRuleScript_loop
 ENDIF
@@ -473,6 +471,10 @@ executeRuleScript_change_object_name:
         ld (current_action_text_id), a
         call update_command_preview_text_after_pointer_movement
     pop hl
+    jp executeRuleScript_loop
+executeRuleScript_change_object_name_object_not_found:
+    inc hl
+    inc hl
     jp executeRuleScript_loop
 ENDIF
 
@@ -899,6 +901,9 @@ executeRuleScript_change_object_direction:
     and #0f  ; clear the direction
     add a, (hl)  ; add the direction
     jp executeRuleScript_change_object_state_entrypoint_inc_hl
+executeRuleScript_change_object_direction_not_found:
+    inc hl
+    jp executeRuleScript_loop
 ENDIF
 
 

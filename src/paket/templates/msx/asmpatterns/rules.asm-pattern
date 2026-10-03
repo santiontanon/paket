@@ -454,24 +454,58 @@ executeRuleScript_lose_item:
 ENDIF
 
 
-; executeRuleScript_change_object_description:
-;     ld a,(hl)
-;     inc hl
-;     push hl
-;         call find_room_object_ptr_by_id
-;     pop hl
-;     jr nz, executeRuleScript_change_object_description_object_not_found
-;     ld a,(hl)
-;     ld (ix+OBJECT_STRUCT_DESCRIPTION_IDX),a
-;     inc hl
-;     ld a,(hl)
-;     ld (ix+OBJECT_STRUCT_DESCRIPTION_IDX+1),a
-;     inc hl
-;     jp executeRuleScript_loop    
-; executeRuleScript_change_object_description_object_not_found:
-;     inc hl
-;     inc hl
-;     jp executeRuleScript_loop    
+IF {SCRIPT_CHANGE_OBJECT_DESCRIPTION_USED} == 1
+executeRuleScript_change_object_description:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jr nz, executeRuleScript_change_object_description_object_not_found
+    ld a, (hl)
+    ld (ix + OBJECT_STRUCT_DESCRIPTION_IDX), a
+    inc hl
+    ld a, (hl)
+    ld (ix + OBJECT_STRUCT_DESCRIPTION_IDX + 1), a
+    inc hl
+    jp executeRuleScript_loop
+executeRuleScript_change_object_description_object_not_found:
+    inc hl
+executeRuleScript_change_object_state_not_found:
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CHANGE_OBJECT_NAME_USED} == 1
+executeRuleScript_change_object_name:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jr nz, executeRuleScript_change_object_name_object_not_found
+
+    ld c, (hl)
+    inc hl
+    ld a, (hl)
+    inc hl
+    ; This decompresses the new name over the previous one, so, this assumes the
+    ; new name is the same length or less than the previous!
+    ld e, (ix + OBJECT_STRUCT_NAME_PTR)
+    ld d, (ix + OBJECT_STRUCT_NAME_PTR + 1)
+    push hl
+        call get_text_from_bank
+        xor a
+        ld (current_action_text_id), a
+        call update_command_preview_text_after_pointer_movement
+    pop hl
+    jp executeRuleScript_loop
+executeRuleScript_change_object_name_object_not_found:
+    inc hl
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
 
 
 IF {SCRIPT_GO_TO_ROOM_USED} == 1
@@ -829,46 +863,55 @@ executeRuleScript_scrolling_message_pause_space:
 ENDIF
 
 
-; executeRuleScript_increase_number_object:
-;     ld a,(hl)
-;     inc hl
-;     push hl
-;         call find_room_object_ptr_by_id
-;     pop hl
-;     jp nz, executeRuleScript_change_object_description_object_not_found
-;     ld a,(ix+OBJECT_STRUCT_STATE_DIRECTION)
-;     add a,16
-;     cp 16*10
-;     jp c,executeRuleScript_change_object_state_entrypoint
-;     sub 16*10
-;     jp executeRuleScript_change_object_state_entrypoint
+IF {SCRIPT_INCREASE_NUMBER_OBJECT_USED} == 1
+executeRuleScript_increase_number_object:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_loop
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    add a, 16
+    cp 16 * 10
+    jp c, executeRuleScript_change_object_state_entrypoint
+    sub 16 * 10
+    jp executeRuleScript_change_object_state_entrypoint
+ENDIF
 
 
-; executeRuleScript_decrease_number_object:
-;     ld a,(hl)
-;     inc hl
-;     push hl
-;         call find_room_object_ptr_by_id
-;     pop hl
-;     jp nz, executeRuleScript_change_object_description_object_not_found
-;     ld a,(ix+OBJECT_STRUCT_STATE_DIRECTION)
-;     sub 16
-;     jp nc,executeRuleScript_change_object_state_entrypoint
-;     add a,16*10
-;     jp executeRuleScript_change_object_state_entrypoint
+IF {SCRIPT_DECREASE_NUMBER_OBJECT_USED} == 1
+executeRuleScript_decrease_number_object:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_loop
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    sub 16
+    jp nc, executeRuleScript_change_object_state_entrypoint
+    add a, 16 * 10
+    jp executeRuleScript_change_object_state_entrypoint
+ENDIF
 
 
-; executeRuleScript_change_object_direction:
-;     ld a,(hl)
-;     inc hl
-;     push hl
-;         call find_room_object_ptr_by_id
-;     pop hl
-;     jp nz, executeRuleScript_change_object_description_object_not_found
-;     ld a,(ix+OBJECT_STRUCT_STATE_DIRECTION)
-;     and #0f    ; clear the direction
-;     add a,(hl)    ; add the direction
-;     jp executeRuleScript_change_object_state_entrypoint
+IF {SCRIPT_CHANGE_OBJECT_DIRECTION_USED} == 1
+executeRuleScript_change_object_direction:
+    ld a, (hl)
+    inc hl
+    push hl
+        call find_room_object_ptr_by_id
+    pop hl
+    jp nz, executeRuleScript_change_object_direction_not_found
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
+    and #0f  ; clear the direction
+    add a, (hl)  ; add the direction
+    jp executeRuleScript_change_object_state_entrypoint_inc_hl
+executeRuleScript_change_object_direction_not_found:
+    inc hl
+    jp executeRuleScript_loop
+ENDIF
 
 
 IF {SCRIPT_WAIT_FOR_SPACE_USED} == 1
