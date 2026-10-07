@@ -164,7 +164,12 @@ ROOM_STRUCT_START_Y:            equ 4    ; this is ROOM_STRUCT_VIDEO_MEM_START_Y
 ROOM_STRUCT_WIDTH:                equ 5
 ROOM_STRUCT_HEIGHT:                equ 6
 ROOM_STRUCT_N_OBJECTS:            equ 7
-ROOM_STRUCT_BACKGROUND:            equ 8    ; background
+IF {N_TILE_BANKSETS} > 1
+ROOM_STRUCT_BANKSET:            equ 8    ; which bank set does this room use
+ROOM_STRUCT_BACKGROUND:         equ 9    ; background: one byte per tile
+ELSE
+ROOM_STRUCT_BACKGROUND:         equ 8    ; background: one byte per tile
+ENDIF
 ROOM_STRUCT_COLLISION_MASK:        equ ROOM_STRUCT_BACKGROUND + MAX_ROOM_WIDTH*MAX_ROOM_HEIGHT
 ROOM_STRUCT_RULES:                equ ROOM_STRUCT_COLLISION_MASK + MAX_ROOM_COLLISION_WIDTH*MAX_ROOM_HEIGHT
 ROOM_STRUCT_OBJECT_DATA:        equ ROOM_STRUCT_RULES + MAX_ROOM_RULES_SIZE
