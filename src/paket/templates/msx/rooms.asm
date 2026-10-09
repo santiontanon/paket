@@ -595,12 +595,12 @@ draw_room_column_tiles_loop:
     ; draw tile "a":
     exx
         ld bc, (tile_buffer_ptr)
-        add a, a
-        add a, a
-        add a, a  ; * 8
+        add a, a  ; * 2
         ld h, 0
         ld l, a
-        add hl, hl
+        add hl, hl  ; * 4
+        add hl, hl  ; * 8
+        add hl, hl  ; * 16
 IF MSX_TILES_PER_ENGINE_TILE == 2
         add hl, hl
 ENDIF

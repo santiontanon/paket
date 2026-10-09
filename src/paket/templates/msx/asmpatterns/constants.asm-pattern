@@ -159,7 +159,7 @@ ROOM_FLAG_DEFAULT_VERB_USE:        equ 2
 ROOM_STRUCT_VIDEO_MEM_START_X:    equ 0
 ROOM_STRUCT_VIDEO_MEM_START_Y:    equ 1
 ROOM_STRUCT_ROOM_FLAGS:            equ 2  ; 0: "is subroom", 1: "default verb is use", 234: "player scaling (if enabled)".
-ROOM_STRUCT_START_X:            equ 3    ; this is ROOM_STRUCT_VIDEO_MEM_START_X*8*2
+ROOM_STRUCT_START_X:            equ 3    ; this is ROOM_STRUCT_VIDEO_MEM_START_X*8*TILE_WIDTH
 ROOM_STRUCT_START_Y:            equ 4    ; this is ROOM_STRUCT_VIDEO_MEM_START_Y*8
 ROOM_STRUCT_WIDTH:                equ 5
 ROOM_STRUCT_HEIGHT:                equ 6

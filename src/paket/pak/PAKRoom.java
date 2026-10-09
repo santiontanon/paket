@@ -416,6 +416,14 @@ public class PAKRoom {
                 }
                 config.info(str);
             }
+//            config.info("Tile layer:");
+//            for(int i = 0;i<height;i++) {
+//                String str = "";
+//                for(int j = 0;j<width;j++) {
+//                    str += Z80Assembler.toHex8bit(background[j][i], false) + " ";
+//                }
+//                config.info(str);
+//            }
         }
 
         return mask;

@@ -15,6 +15,16 @@ import java.io.InputStreamReader;
  * filesystem
  */
 public class Resources {
+    
+    public static String FILE_SEPARATORS[] = {"\\", "/"};
+    
+    public static String replaceFileSeparators(String path)
+    {
+        for(String separator:FILE_SEPARATORS) {
+            path = path.replace(separator, File.separator);
+        }
+        return path;
+    }
 
     public static boolean exists(String path) {
 

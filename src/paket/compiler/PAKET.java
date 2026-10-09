@@ -41,6 +41,7 @@ import paket.platforms.MSXMegaROM;
 import paket.text.PAKFont;
 import paket.util.Pair;
 import paket.util.Pletter;
+import paket.util.Resources;
 import paket.util.zx0.ZX0;
 
 /**
@@ -227,8 +228,10 @@ public class PAKET {
     }
     
 
-    public static String getFileName(String file, List<String> folders, PAKETConfig config) throws Exception {
-
+    public static String getFileName(String file, List<String> folders, PAKETConfig config) throws Exception 
+    {
+        // Replace platform-speciffic separator by current platform separator:
+        file = Resources.replaceFileSeparators(file);
         for(String folder:folders) {
             String prefix;
             if (folder == null || folder.isEmpty()) {
