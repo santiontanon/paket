@@ -458,13 +458,30 @@ public class PAKRoom {
 
         for(Object tileset_object:root.getChildren("tileset")) {
             Element tileset_xml = (Element)tileset_object;
-            if (tileset_xml.getAttributeValue("firstgid") == null ||
-                tileset_xml.getChild("image") == null) {
-                throw new Exception("Cannot load tileset in TMX file " + file + ". Make sure it is an embedded tileset in TILED, and not an externally defined tileset. If you have it as an external tileset, look for the 'embed tileset' button in TILED for this tileset.");
+            // Case 1, embedded tileset:
+            if (tileset_xml.getAttributeValue("firstgid") != null &&
+                tileset_xml.getChild("image") != null) {
+                // Embedded tileset:
+                String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
+                r.tilesFileNames.add(PAKET.getFileName(tmp, dataFolders, config));
+                r.tilesFileFirstGids.add(Integer.parseInt(tileset_xml.getAttributeValue("firstgid")));
+            } else if (tileset_xml.getAttributeValue("firstgid") != null &&
+                       tileset_xml.getAttributeValue("source") != null &&
+                       tileset_xml.getAttributeValue("source").endsWith(".tsx")) {
+                // .tsx:
+                String tsx_path = folderPrefix + tileset_xml.getAttributeValue("source");
+                Element tsx_root = new SAXBuilder().build(new File(tsx_path)).getRootElement();
+                if (tsx_root.getChild("image") == null) {
+                    throw new Exception("Cannot find <image> tag in " + tsx_path + "!");
+                }
+                String tmp = folderPrefix + tsx_root.getChild("image").getAttributeValue("source");
+                r.tilesFileNames.add(PAKET.getFileName(tmp, dataFolders, config));
+                r.tilesFileFirstGids.add(Integer.parseInt(tileset_xml.getAttributeValue("firstgid")));
+            } else {
+                throw new Exception("Cannot load tileset in TMX file " + file + ". "
+                        + "PAKET supports embedded tilesets, or .tsx files. Make sure the tileset is defined as one of those.");
             }
-            String tmp = folderPrefix + tileset_xml.getChild("image").getAttributeValue("source");
-            r.tilesFileNames.add(PAKET.getFileName(tmp, dataFolders, config));
-            r.tilesFileFirstGids.add(Integer.parseInt(tileset_xml.getAttributeValue("firstgid")));
+            
         }
 
         for(String tilesFileName:r.tilesFileNames) {
