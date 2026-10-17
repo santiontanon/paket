@@ -56,7 +56,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.1.8 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.0 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -702,24 +702,33 @@ public class PAKET {
         }
         String loadingScreenFile = t.value;
         int mode_or_screen = -1;  // -1 means "default"
+        int display_time = 5;  // by default, 5 seconds
         t = tokenizer.nextToken();
-        if (t.value.equals(",")) {
-            t = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_ALPHANUMERIC_SYMBOL);
-            if (t.value.equalsIgnoreCase("cpc-mode0")) {
-                mode_or_screen = 0;
-            } else if (t.value.equalsIgnoreCase("cpc-mode1")) {
-                mode_or_screen = 1;
+        while(!t.value.equals(")")) {
+            if (t.value.equals(",")) {
+                t = tokenizer.nextToken();
+                if (t.type == Token.TOKEN_TYPE_NUMBER) {
+                    display_time = Integer.parseInt(t.value);
+                } else if (t.type == Token.TOKEN_TYPE_ALPHANUMERIC_SYMBOL) {
+                    if (t.value.equalsIgnoreCase("cpc-mode0")) {
+                        mode_or_screen = 0;
+                    } else if (t.value.equalsIgnoreCase("cpc-mode1")) {
+                        mode_or_screen = 1;
+                    } else {
+                        throw new Exception("Unrecognized option " + t.value + " in " + tokenizer.currentFile + " line " + tokenizer.getCurrentLine());
+                    }
+                } else {
+                    throw new Exception("Expected a number of a symbol after ',' in " + tokenizer.currentFile + " line " + tokenizer.getCurrentLine());
+                }
             } else {
-                throw new Exception("Unrecognized option " + t.value + " in " + tokenizer.currentFile + " line " + tokenizer.getCurrentLine());
+                throw new Exception("Expected ',' or ')' after the loading screen file name in " + tokenizer.currentFile + " line " + tokenizer.getCurrentLine());
             }
-            expectSpecificToken(tokenizer, ")", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);            
-        } else if (!t.value.equals(")")) {
-            throw new Exception("Expected ',' or ')' after the loading screen file name in " + tokenizer.currentFile + " line " + tokenizer.getCurrentLine());
+            t = tokenizer.nextToken();
         }
 
         config.info("PAKET Compiler: generating loading screen...");
         
-        platform.addLoadingScreen(getFileName(loadingScreenFile, dataFolders, config), mode_or_screen, destinationFolder);
+        platform.addLoadingScreen(getFileName(loadingScreenFile, dataFolders, config), mode_or_screen, display_time, destinationFolder);
     }
     
 

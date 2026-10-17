@@ -9,7 +9,7 @@
 get_text_from_bank:
     push af
 IF IS_MEGAROM == 1
-    SETMEGAROMPAGE_8000 TEXT_MEGAROM_PAGE
+    SETMEGAROMPAGE_8000 TEXT_TABLES_MEGAROM_PAGE
 ENDIF
     pop af
     ld hl, textBankPointers
@@ -20,8 +20,15 @@ ENDIF
         ld e, (hl)
         inc hl
         ld d, (hl)
-        ex de, hl  ; hl has the pointer of the text bank
+
         push af
+IF IS_MEGAROM == 1
+            ld hl, textBankPages
+            add hl, bc
+            ld a, (hl)
+            SETMEGAROMPAGE_8000_A
+ENDIF
+            ex de, hl  ; hl has the pointer of the text bank
             ld de, text_decompression_buffer  ; this is somewhere in the general buffer, in a safe spot
             call PAKET_UNPACK
         pop af

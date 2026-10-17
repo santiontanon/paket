@@ -168,7 +168,7 @@ public abstract class Platform {
     
     public abstract void screenVariables(int gui_width, int gui_height, int max_room_height, PAKGame game) throws Exception;
     
-    public abstract void addLoadingScreen(String fileName, int mode_or_screen, String destinationFolder) throws Exception;
+    public abstract void addLoadingScreen(String fileName, int mode_or_screen, int display_time, String destinationFolder) throws Exception;
     public abstract void generateBinary(PAKGame game, String destinationFolder) throws Exception;
             
     public abstract Pair<Integer, Integer> generateCutsceneImageData(PAKCutsceneImage image, String destinationFolder) throws Exception;

@@ -758,7 +758,7 @@ public class MSX extends Platform {
     }
 
     @Override
-    public void addLoadingScreen(String fileName, int mode_or_screen, String destinationFolder) throws Exception {
+    public void addLoadingScreen(String fileName, int mode_or_screen, int display_time, String destinationFolder) throws Exception {
         config.info("MSX: addLoadingScreen not supported, ignoring...");
     }
 

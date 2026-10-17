@@ -23,7 +23,7 @@ inventory(10, 2)
 pointers("pointers.png")
 pathfinding(on-click, stop-early)
 player-scaling-thresholds(66, 75, 84)
-loading-screen("loading-screen.png", cpc-mode0)
+loading-screen("loading-screen.png", 0, cpc-mode0)  # wait for user pressing space to continue loading
 
 additional-assembler-file("custom-assembler.asm")
 

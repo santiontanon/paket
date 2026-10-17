@@ -120,44 +120,46 @@ wait_bc_halts:
     ret
 
 
+IF {DSK_LOADER_NEEDS_WAIT_FOR_SPACE} > 0
 ;-----------------------------------------------
 ; Reads a keyboard row
 ; code from: http://www.cpcwiki.eu/index.php/Programming:Keyboard_scanning
 ; input:
 ; - a: keyboard line
-; read_keyboard_line:
-;     di
-;     ld d, 0
-;     ld bc, #f782  ; PPI port A out / C out 
-;     out (c), c 
-;     ld bc, #f40e  ; Select Ay reg 14 on ppi port A 
-;     out (c), c 
-;     ld bc, #f6c0  ; This value is an AY index (R14) 
-;     out (c), c 
-;     out (c), d  ; Validate!! out (c),0
-;     ld bc, #f792  ; PPI port A in / C out 
-;     out (c), c 
-;     dec b 
-;     out (c), a  ; Send KbdLine on reg 14 AY through ppi port A
-;     ld b, #f4  ; Read ppi port A 
-;     in a, (c)  ; e.g. AY R14 (AY port A) 
-;     ld bc, #f782  ; PPI port A out / C out 
-;     out (c), c 
-;     dec b  ; Reset PPI Write 
-;     out (c), d  ; out (c),0
-;     ei
-;     ret
+read_keyboard_line:
+    di
+    ld d, 0
+    ld bc, #f782  ; PPI port A out / C out 
+    out (c), c 
+    ld bc, #f40e  ; Select Ay reg 14 on ppi port A 
+    out (c), c 
+    ld bc, #f6c0  ; This value is an AY index (R14) 
+    out (c), c 
+    out (c), d  ; Validate!! out (c),0
+    ld bc, #f792  ; PPI port A in / C out 
+    out (c), c 
+    dec b 
+    out (c), a  ; Send KbdLine on reg 14 AY through ppi port A
+    ld b, #f4  ; Read ppi port A 
+    in a, (c)  ; e.g. AY R14 (AY port A) 
+    ld bc, #f782  ; PPI port A out / C out 
+    out (c), c 
+    dec b  ; Reset PPI Write 
+    out (c), d  ; out (c),0
+    ei
+    ret
 
 
 ;-----------------------------------------------
 ; Waits until the player presses space
-; wait_for_space:
-;     ld a, #45
-;     call read_keyboard_line
-;     bit 7, a
-;     ret z
-;     halt
-;     jr wait_for_space
+wait_for_space:
+    ld a, #45
+    call read_keyboard_line
+    bit 7, a
+    ret z
+    halt
+    jr wait_for_space
+ENDIF
 
 
 ;;------------------------------------------------------------------------

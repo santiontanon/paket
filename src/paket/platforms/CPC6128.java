@@ -134,10 +134,12 @@ public class CPC6128 extends CPC {
 
         // Generate the loader:
         config.info("PAKETCompiler: generating loader...");
+        variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "0");
         String DSK_LOADING_SCREEN_FILENAMES = "";
         String DSK_LOADING_SCREEN_CODE = "";
         if (LOADING_SCREEN_SIZES != null) {
             for (int i = 0; i < LOADING_SCREEN_SIZES.size(); i++) {
+                int display_time = LOADING_SCREEN_DISPLAY_TIMES.get(i);
                 DSK_LOADING_SCREEN_FILENAMES += "filename_img" + i + ":\n"
                         + "    db \"screen" + i + ".bin\"\n"
                         + "end_filename_img" + i + ":\n\n";
@@ -148,9 +150,14 @@ public class CPC6128 extends CPC {
                         + "    call setup_colors_mode" + LOADING_SCREEN_MODES.get(i) + "\n"
                         + "    ld b, end_filename_img" + i + " - filename_img" + i + "\n"
                         + "    ld hl, filename_img" + i + "\n"
-                        + "    call load_block\n"
-                        + "    ld bc, 50*5*6  ; 5 second pause\n"
-                        + "    call wait_bc_halts\n\n";
+                        + "    call load_block\n";
+                if (display_time > 0) {
+                    DSK_LOADING_SCREEN_CODE += "    ld bc, "+display_time+"*50*6  ; "+display_time+" second pause\n"
+                            + "    call wait_bc_halts\n\n";
+                } else {
+                    DSK_LOADING_SCREEN_CODE += "    call wait_for_space\n\n";
+                    variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "1");
+                }
 
             }
         }
@@ -287,12 +294,28 @@ public class CPC6128 extends CPC {
         int paketdsk_size = 4096;  // it's less than this, but just to be safe
         blocksToAllocate.add(new SpaceAllocator.Block("paketdsk", paketdsk_include_code, "", paketdsk_size, "PAKETDSK_PAGE"));
 
+        // Old implementation of text data:
+//        int textDataSize = game.textBankSizes.size() * 2;  // pointers
+//        for (int s : game.textBankSizes) {
+//            textDataSize += s;
+//        }
+//        blocksToAllocate.add(new SpaceAllocator.Block("text data", assemblerVariables.get("TEXT_BANKS"), "", textDataSize, "TEXT_PAGE"));
+
         // Text banks:
-        int textDataSize = game.textBankSizes.size() * 2;  // pointers
-        for (int s : game.textBankSizes) {
-            textDataSize += s;
+        // In the 6128 version, each text bank could be in a different page. So,
+        // We allocate different blocks: one for the ptr/page tables, and then one 
+        // for each bank.
+        int textDataTablesSize = game.textBankSizes.size() * 3;  // pointers + pages
+        String textPagesAssembler = "textBankPages:\n";
+        for(int i = 0;i<game.textBankSizes.size();i++) {
+            textPagesAssembler+="    db {TEXT_BANK"+i+"_PAGE}  ; textBank"+i+"\n";
         }
-        blocksToAllocate.add(new SpaceAllocator.Block("text data", assemblerVariables.get("TEXT_BANKS"), "", textDataSize, "TEXT_PAGE"));
+        String textDataTablesAssembler = assemblerVariables.get("TEXT_PTRS_TABLE") + textPagesAssembler + "\n";
+        blocksToAllocate.add(new SpaceAllocator.Block("text tables data", textDataTablesAssembler, "", textDataTablesSize, "TEXT_TABLES_PAGE"));
+        for(int i = 0;i<game.textBankSizes.size();i++) {
+            String bankAssembler = "textBank" + i + ":\n    incbin \"data/textBank" + i + "."+PAKETConfig.compressorExtension[config.compressor]+"\"\n";
+            blocksToAllocate.add(new SpaceAllocator.Block("text bank data " + i, bankAssembler, "", game.textBankSizes.get(i), "TEXT_BANK"+i+"_PAGE"));
+        }
 
         // Tile banks:
         String tileContent = assemblerVariables.get("TILE_BANKS");
@@ -411,7 +434,8 @@ public class CPC6128 extends CPC {
             }
         }
         String pageNumbers = "";
-        pageNumbers += "TEXT_PAGE: equ " + assemblerVariables.get("TEXT_PAGE") + "\n";
+//        pageNumbers += "TEXT_PAGE: equ " + assemblerVariables.get("TEXT_PAGE") + "\n";
+        pageNumbers += "TEXT_TABLES_PAGE: equ " + assemblerVariables.get("TEXT_TABLES_PAGE") + "\n";
         pageNumbers += "TILES_PAGE: equ " + assemblerVariables.get("TILES_PAGE") + "\n";
         pageNumbers += "OBJECT_TYPE_BANK_PTRS_PAGE: equ " + assemblerVariables.get("OBJECT_TYPE_BANK_PTRS_PAGE") + "\n";
         pageNumbers += "ROOMBANK_PTRS_PAGE: equ " + assemblerVariables.get("ROOMBANK_PTRS_PAGE") + "\n";

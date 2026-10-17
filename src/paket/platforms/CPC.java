@@ -60,6 +60,7 @@ public class CPC extends Platform {
     public static List<Integer> LOADING_SCREEN_SIZES = null;
     public static List<Integer> LOADING_SCREEN_SIZES_RLE = null;
     public static List<Integer> LOADING_SCREEN_MODES = null;
+    public static List<Integer> LOADING_SCREEN_DISPLAY_TIMES = null;
     
     public static boolean use_rle_for_loading_screens = false;
     
@@ -68,7 +69,7 @@ public class CPC extends Platform {
     public int SCREEN_HEIGHT_IN_TILES = 21;
     public int STACK_ADDRESS = 0xc000;
     
-    public String LOADING_SCREEN_PAUSE = "5-sec";
+//    public String LOADING_SCREEN_PAUSE = "5-sec";
 //    public String LOADING_SCREEN_PAUSE = "keypress";
     
     
@@ -911,7 +912,7 @@ public class CPC extends Platform {
     
     
     @Override
-    public void addLoadingScreen(String fileName, int mode_or_screen, String destinationFolder) throws Exception
+    public void addLoadingScreen(String fileName, int mode_or_screen, int display_time, String destinationFolder) throws Exception
     {
         if (mode_or_screen == -1) mode_or_screen = 0;
         int palette_size = 16;
@@ -985,6 +986,7 @@ public class CPC extends Platform {
             LOADING_SCREEN_SIZES = new ArrayList<>();
             LOADING_SCREEN_SIZES_RLE = new ArrayList<>();
             LOADING_SCREEN_MODES = new ArrayList<>();
+            LOADING_SCREEN_DISPLAY_TIMES = new ArrayList<>();
         }
         
         List<Integer> finalDataList = new ArrayList<>();
@@ -1011,6 +1013,7 @@ public class CPC extends Platform {
         LOADING_SCREEN_MODES.add(mode_or_screen);
         LOADING_SCREEN_PALETTES.add(LOADER_PALETTE_STRING);
         LOADING_SCREEN_DSK_PALETTE_INDEXES.add(DSK_LOADER_PALETTE_INDEXES_STRING);
+        LOADING_SCREEN_DISPLAY_TIMES.add(display_time);
         variables.put("LOADING_SCREEN_ADDRESS","" + startAddress);
         // RAW:
         {
@@ -1299,6 +1302,7 @@ public class CPC extends Platform {
         
         // Generate the loader:
         config.info("PAKETCompiler: generating loader...");
+        variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "0");
         
         String loading_code = "";        
         String DSK_LOADING_SCREEN_FILENAMES = "";
@@ -1317,22 +1321,34 @@ public class CPC extends Platform {
                                 "    ld a, #ff		; synchronization byte\n" +
                                 "    call topoload\n";
                 if (i < LOADING_SCREEN_SIZES.size() - 1) {
-                    switch(LOADING_SCREEN_PAUSE) {
-                        case "5-sec":
-                            // 5 second pause for all but the last screen:
-                            loading_code += "    ld bc, 50*5*6  ; 5 second pause\n" +
-                                            "    ei\n" +
-                                            "    call wait_bc_halts\n"+
-                                            "    di\n\n";
-                            break;
-                        case "keypress":
-                            loading_code += "    ei\n" +
-                                            "    call wait_for_space\n"+
-                                            "    di\n\n";
-                            break;
-                        default:
-                            throw new Exception("Unsupported loading screen pause mode: " + LOADING_SCREEN_PAUSE);
+                    int display_time = LOADING_SCREEN_DISPLAY_TIMES.get(i);
+                    if (display_time > 0) {
+                        loading_code += "    ld bc, "+display_time+"*50*6  ; "+display_time+" second pause\n" +
+                                        "    ei\n" +
+                                        "    call wait_bc_halts\n"+
+                                        "    di\n\n";
+                    } else {
+                        loading_code += "    ei\n" +
+                                        "    call wait_for_space\n"+
+                                        "    di\n\n";
+                        variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "1");
                     }
+//                    switch(LOADING_SCREEN_PAUSE) {
+//                        case "5-sec":
+//                            // 5 second pause for all but the last screen:
+//                            loading_code += "    ld bc, 50*5*6  ; 5 second pause\n" +
+//                                            "    ei\n" +
+//                                            "    call wait_bc_halts\n"+
+//                                            "    di\n\n";
+//                            break;
+//                        case "keypress":
+//                            loading_code += "    ei\n" +
+//                                            "    call wait_for_space\n"+
+//                                            "    di\n\n";
+//                            break;
+//                        default:
+//                            throw new Exception("Unsupported loading screen pause mode: " + LOADING_SCREEN_PAUSE);
+//                    }
                 }
                 DSK_LOADING_SCREEN_FILENAMES += "filename_img" + i + ":\n" + 
                                                 "    db \"screen" + i + ".bin\"\n" +
@@ -1345,17 +1361,25 @@ public class CPC extends Platform {
                                            "    ld b, end_filename_img" + i + " - filename_img" + i + "\n" +
                                            "    ld hl, filename_img" + i + "\n" +
                                            "    call load_block\n";
-                switch(LOADING_SCREEN_PAUSE) {
-                    case "5-sec":
-                        DSK_LOADING_SCREEN_CODE += "    ld bc, 50*5*6  ; 5 second pause\n" +
+                    int display_time = LOADING_SCREEN_DISPLAY_TIMES.get(i);
+                    if (display_time > 0) {
+                        DSK_LOADING_SCREEN_CODE += "    ld bc, "+display_time+"*50*6  ; "+display_time+" second pause\n" +
                                                    "    call wait_bc_halts\n\n";
-                        break;
-                    case "keypress":
+                    } else {
                         DSK_LOADING_SCREEN_CODE += "    call wait_for_space\n\n";
-                        break;
-                    default:
-                        throw new Exception("Unsupported loading screen pause mode: " + LOADING_SCREEN_PAUSE);
-                }
+                        variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "1");
+                    }
+//                switch(LOADING_SCREEN_PAUSE) {
+//                    case "5-sec":
+//                        DSK_LOADING_SCREEN_CODE += "    ld bc, 50*5*6  ; 5 second pause\n" +
+//                                                   "    call wait_bc_halts\n\n";
+//                        break;
+//                    case "keypress":
+//                        DSK_LOADING_SCREEN_CODE += "    call wait_for_space\n\n";
+//                        break;
+//                    default:
+//                        throw new Exception("Unsupported loading screen pause mode: " + LOADING_SCREEN_PAUSE);
+//                }
             }
         }
                 

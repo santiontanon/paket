@@ -8,7 +8,7 @@
 ; - de: pointer to immediately after the text
 get_text_from_bank:
 IF IS_6128 == 1
-    SET_128K_PAGE_4000_PUSHING_PREVIOUS TEXT_PAGE
+    SET_128K_PAGE_4000_PUSHING_PREVIOUS TEXT_TABLES_PAGE
 ENDIF
     ld hl, textBankPointers
     ld b, 0
@@ -18,8 +18,15 @@ ENDIF
         ld e, (hl)
         inc hl
         ld d, (hl)
-        ex de, hl  ; hl has the pointer of the text bank
+
         push af
+IF IS_6128 == 1
+            ld hl, textBankPages
+            add hl, bc
+            ld a, (hl)
+            SET_128K_PAGE_4000_A
+ENDIF
+            ex de, hl  ; hl has the pointer of the text bank
             ld de, general_buffer + ROOM_LOAD_BUFFER_ALLOCATED_SPACE  ; we add this offset to be safe during room loading
             call PAKET_UNPACK
         pop af

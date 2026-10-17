@@ -787,10 +787,15 @@ public class PAKETCompiler {
         for(int s:game.textBankSizes) {
             if (s > max_text_bank_size) max_text_bank_size = s;
         }
+        // Text data variables:
+        // TEXT_PTRS_TABLE: assembler code for the text bank pointers
+        // TEXT_BANKS: assembler code for the whole thing (TEXT_PTRS_TABLE + each of the banks)
+        
         String textBankData = "textBankPointers:\n";
         for(int i = 0;i<game.textBankSizes.size();i++) {
             textBankData+="    dw textBank" + i + "\n";
         }
+        assemblerVariables.put("TEXT_PTRS_TABLE", textBankData + "\n");
         textBankData+="\n";
         for(int i = 0;i<game.textBankSizes.size();i++) {
             textBankData+="textBank" + i + ":\n    incbin \"data/textBank" + i + "."+PAKETConfig.compressorExtension[config.compressor]+"\"\n";

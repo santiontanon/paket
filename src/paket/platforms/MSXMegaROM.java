@@ -76,12 +76,34 @@ public class MSXMegaROM extends MSX {
         }
 
         // Text banks:
-        int textDataSize = game.textBankSizes.size() * 2;  // pointers
-        for (int s : game.textBankSizes) {
-            textDataSize += s;
-        }
-        blocksToAllocate.add(new SpaceAllocator.Block("text data", assemblerVariables.get("TEXT_BANKS"), "", textDataSize, "TEXT_MEGAROM_PAGE"));
+//        int textDataSize = game.textBankSizes.size() * 2;  // pointers
+//        for (int s : game.textBankSizes) {
+//            textDataSize += s;
+//        }
+//        blocksToAllocate.add(new SpaceAllocator.Block("text data", assemblerVariables.get("TEXT_BANKS"), "", textDataSize, "TEXT_MEGAROM_PAGE"));
 
+//        int textDataSize = game.textBankSizes.size() * 2;  // pointers
+//        for (int s : game.textBankSizes) {
+//            textDataSize += s;
+//        }
+//        blocksToAllocate.add(new SpaceAllocator.Block("text data", assemblerVariables.get("TEXT_BANKS"), "", textDataSize, "TEXT_PAGE"));
+
+        // Text banks:
+        // In the MEgaROM version, each text bank could be in a different page. So,
+        // We allocate different blocks: one for the ptr/page tables, and then one 
+        // for each bank.
+        int textDataTablesSize = game.textBankSizes.size() * 3;  // pointers + pages
+        String textPagesAssembler = "textBankPages:\n";
+        for(int i = 0;i<game.textBankSizes.size();i++) {
+            textPagesAssembler+="    db {TEXT_BANK"+i+"_PAGE}  ; textBank"+i+"\n";
+        }
+        String textDataTablesAssembler = assemblerVariables.get("TEXT_PTRS_TABLE") + textPagesAssembler + "\n";
+        blocksToAllocate.add(new SpaceAllocator.Block("text tables data", textDataTablesAssembler, "", textDataTablesSize, "TEXT_TABLES_MEGAROM_PAGE"));
+        for(int i = 0;i<game.textBankSizes.size();i++) {
+            String bankAssembler = "textBank" + i + ":\n    incbin \"data/textBank" + i + "."+PAKETConfig.compressorExtension[config.compressor]+"\"\n";
+            blocksToAllocate.add(new SpaceAllocator.Block("text bank data " + i, bankAssembler, "", game.textBankSizes.get(i), "TEXT_BANK"+i+"_PAGE"));
+        }
+        
         // Tile banks:
         int tileDataSize = game.tileBankSizes.size() * 2;  // pointers
         for (int s : game.tileBankSizes) {
@@ -203,7 +225,7 @@ public class MSXMegaROM extends MSX {
         if (!assemblerVariables.containsKey("CUTSCENE_PTRS_PAGE")) {
             assemblerVariables.put("CUTSCENE_PTRS_PAGE", "0");
         }
-        pageNumbers += "TEXT_MEGAROM_PAGE: equ " + assemblerVariables.get("TEXT_MEGAROM_PAGE") + "\n";
+        pageNumbers += "TEXT_TABLES_MEGAROM_PAGE: equ " + assemblerVariables.get("TEXT_TABLES_MEGAROM_PAGE") + "\n";
         pageNumbers += "TILES_MEGAROM_PAGE: equ " + assemblerVariables.get("TILES_MEGAROM_PAGE") + "\n";
         pageNumbers += "OBJECT_TYPE_BANK_PTRS_PAGE: equ " + assemblerVariables.get("OBJECT_TYPE_BANK_PTRS_PAGE") + "\n";
         pageNumbers += "ROOMBANK_PTRS_PAGE: equ " + assemblerVariables.get("ROOMBANK_PTRS_PAGE") + "\n";

@@ -146,7 +146,7 @@ public class SpaceAllocator {
                 }
             }
             if (!allocated) {
-                throw new Exception("No space for " + b.name + " (size " + b.size + ") in the cartridge!");
+                throw new Exception("No space for " + b.name + " (size " + b.size + ") in the cartridge/disk/RAM!");
             }
         }
     }
@@ -181,7 +181,7 @@ public class SpaceAllocator {
                 }
             }
             if (!allocated) {
-                throw new Exception("No space for " + b.name + " (size " + b.size + ") in the cartridge!");
+                throw new Exception("No space for " + b.name + " (size " + b.size + ") in the cartridge/disk/RAM!");
             }
             nextPage++;
         }
