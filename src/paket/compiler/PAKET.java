@@ -56,7 +56,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.0 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.1 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -499,6 +499,10 @@ public class PAKET {
 
                     case "player-walk-animation-speeds":
                         parseWalkAnimationSpeeds(tokenizer, game);
+                        break;
+
+                    case "wyz-instruments-file":
+                        parseWyzInstrumentsFile(tokenizer, game);
                         break;
 
                     default:
@@ -2489,7 +2493,7 @@ public class PAKET {
                     game.getOrCreateSong(s.songToPlay, PAKSong.TYPE_WYZ);
                     break;                    
                 }
-                
+                                
                 case "stop-song":
                 {
                     expectSpecificToken(tokenizer, "(", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
@@ -3244,5 +3248,13 @@ public class PAKET {
         }catch(Exception e) {
             throw new Exception(error_message + ": " + int_str);
         }
+    }
+
+    public void parseWyzInstrumentsFile(PAKETTokenizer tokenizer, PAKGame game) throws Exception
+    {
+        expectSpecificToken(tokenizer, "(", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+        Token t2 = expectSpecificToken(tokenizer, null, Token.TOKEN_TYPE_STRING);
+        expectSpecificToken(tokenizer, ")", Token.TOKEN_TYPE_PRIMITIVE_SYMBOL);
+        game.wyzInstrumentsFilename = t2.value;
     }
 }

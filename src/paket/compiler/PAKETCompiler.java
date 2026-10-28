@@ -1598,19 +1598,37 @@ public class PAKETCompiler {
         SONG_DATA_TABLE += "; WYZ Music data\n";
 
         PAKET.createFoldersIfNecessary(destinationFolder + "/src/data/songs");
+
+        // instruments file:
+        String instrumentsPath = null;
+        if (game.wyzInstrumentsFilename != null) {
+            instrumentsPath = game.wyzInstrumentsFilename;
+        } else {
+            if (game.songs.size() != 1) {
+                throw new Exception("More than one WYZ song specified without using the 'wyz-instruments-file' command!");
+            }
+            instrumentsPath = game.songs.get(0).fileName + ".asm";
+        }
+        instrumentsPath = instrumentsPath.replace("\\", "/");  // make sure it's unix style
+        String instrumentsFileName = instrumentsPath + "";
+        while (instrumentsFileName.contains("/")) {
+            instrumentsFileName = instrumentsFileName.substring(instrumentsFileName.indexOf("/") + 1);
+        }
+        instantiateAsmPatternFromPath(instrumentsPath, destinationFolder+"/src/data/songs/" + instrumentsFileName, dataFolders, assemblerVariables, platform, config);
+        SONG_DATA_INSTRUMENTS += "    include \"data/songs/" + instrumentsFileName + "\"\n";
+        
         for(int i = 0;i<game.songs.size();i++) {
             PAKSong song = game.songs.get(i);
             // Copy over files:
             String fileName = song.fileName;
-            fileName = fileName.replace("\\", "/");  // make sure it's unx style
+            fileName = fileName.replace("\\", "/");  // make sure it's unix style
             if (fileName.contains("/")) {
                 fileName = fileName.substring(fileName.indexOf("/") + 1);
             }
-            instantiateAsmPatternFromPath(song.fileName + ".asm", destinationFolder+"/src/data/songs/" + fileName + ".asm", dataFolders, assemblerVariables, platform, config);
+//            instantiateAsmPatternFromPath(song.fileName + ".asm", destinationFolder+"/src/data/songs/" + fileName + ".asm", dataFolders, assemblerVariables, platform, config);
             Files.copy(new File(PAKET.getFileName(song.fileName, dataFolders, config)).toPath(),
                        new File(destinationFolder+"/src/data/songs/" + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
             
-            SONG_DATA_INSTRUMENTS += "    include \"data/songs/" + fileName + ".asm\"\n";
             SONG_DATA_TABLE += "WYZ_SONG_"+i+":\n";
             SONG_DATA_TABLE += "    incbin \"data/songs/" + fileName + "\"\n";
         }

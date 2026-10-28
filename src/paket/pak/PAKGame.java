@@ -40,6 +40,7 @@ public class PAKGame {
     public List<PAKDialogue> dialogues = new ArrayList<>();
     public List<PAKSFX> sfxs = new ArrayList<>();
     public List<PAKSong> songs = new ArrayList<>();
+    public String wyzInstrumentsFilename = null;
 
     // Global rules:
     public List<PAKRule> itemRules = new ArrayList<>();
