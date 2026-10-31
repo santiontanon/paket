@@ -418,7 +418,7 @@ ENDIF
 
 IF {SCRIPT_REMOVE_OBJECT_USED} == 1
 executeRuleScript_remove_object:
-    ld a,(hl)
+    ld a, (hl)
     inc hl
     push hl
         call remove_room_object
@@ -430,12 +430,12 @@ ENDIF
 
 IF {SCRIPT_GAIN_ITEM_USED} == 1
 executeRuleScript_gain_item:
-    ld a,(hl)
+    ld a, (hl)
     inc hl
     push hl
         call add_item_to_inventory
-        ld hl,redraw_inventory_signal
-        ld (hl),1
+        ld hl, redraw_inventory_signal
+        ld (hl), 1
     pop hl
     jp executeRuleScript_loop
 ENDIF
@@ -572,32 +572,32 @@ ENDIF
 
 IF {SCRIPT_CHANGE_OBJECT_STATE_USED} == 1
 executeRuleScript_change_object_state:
-    ld a,(hl)
+    ld a, (hl)
     inc hl
     push hl
         call find_room_object_ptr_by_id
     pop hl
     jp nz, executeRuleScript_change_object_state_not_found
-    ld a,(ix+OBJECT_STRUCT_STATE_DIRECTION)
+    ld a, (ix + OBJECT_STRUCT_STATE_DIRECTION)
     and #f0  ; clear the state
-    add a,(hl)  ; add the state
+    add a, (hl)  ; add the state
 executeRuleScript_change_object_state_entrypoint_inc_hl:
     inc hl
 executeRuleScript_change_object_state_entrypoint:
-    ld (ix+OBJECT_STRUCT_STATE_DIRECTION),a
+    ld (ix + OBJECT_STRUCT_STATE_DIRECTION), a
     ; inc hl
-    ld a,1
-    ld (redraw_whole_room_signal),a
+    ld a, 1
+    ld (redraw_whole_room_signal), a
     ; make sure the pointer will be updated even if it is over this object:
     xor a
-    ld (current_action_text_id),a
-    ld (ix+OBJECT_STRUCT_ANIMATION_STEP),a
-    ld a,(ix+OBJECT_STRUCT_ANIMATION_TIMER)
+    ld (current_action_text_id), a
+    ld (ix + OBJECT_STRUCT_ANIMATION_STEP), a
+    ld a, (ix + OBJECT_STRUCT_ANIMATION_TIMER)
     inc a
     ; if it's #ff, reset it to 0, otherwise, do not change it, to keep the
     ; objects out of animation sync if possible:
     jp nz, executeRuleScript_loop    
-    ld (ix+OBJECT_STRUCT_ANIMATION_TIMER),a
+    ld (ix + OBJECT_STRUCT_ANIMATION_TIMER), a
     jp executeRuleScript_loop
 
 IF {SCRIPT_CHANGE_OBJECT_DESCRIPTION_USED} == 0
@@ -660,7 +660,7 @@ executeRuleScript_if_then_else:
 executeRuleScript_if_then_else_entry_point:
     pop hl
     jr nz, executeRuleScript_if_then_else_else
-    inc hl
+    inc hl  ; skip triggers offset
     ld a,(hl)
     push hl
         ADD_HL_A_VIA_BC
@@ -764,7 +764,7 @@ ENDIF
 
 IF {SCRIPT_GOTO_DIALOGUE_STATE_USED} == 1
 executeRuleScript_goto_dialogue_state:
-    ld a,(hl)
+    ld a, (hl)
     ld (dialogue_goto_state), a
     inc hl
     inc hl
@@ -960,6 +960,39 @@ IF {SCRIPT_CLEAR_TEXT_AREA_USED} == 1
 executeRuleScript_clear_text_area:
     push hl
         call clear_text_area_for_scroll
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_CLEAR_ROOM_AREA_USED} == 1
+executeRuleScript_clear_room_area:
+    push hl
+        call clear_game_area
+        ; ld hl, NAMTBL2 + FIRST_SCREEN_ROOM_ROW * 32
+        ; ld bc, GAME_AREA_HEIGHT_IN_TILES * 32
+        ; ld hl, NAMTBL2 + FIRST_SCREEN_ROOM_ROW * 32
+        ; ld bc, GAME_AREA_HEIGHT_IN_TILES * 32
+        ; xor a
+        ; call FILVRM
+    pop hl
+ENDIF
+
+
+IF {SCRIPT_REDRAW_ROOM_USED} == 1
+executeRuleScript_redraw_room:
+    push hl
+IF CAN_TURN_GUI_ON_OFF = 1
+        ld a, (gui_on)
+        or a
+        push af
+            call nz, draw_gui
+        pop af
+        call z, clear_gui
+ELSE
+        call draw_gui
+ENDIF
+        call draw_room
     pop hl
     jp executeRuleScript_loop
 ENDIF
@@ -1515,6 +1548,104 @@ IF {SCRIPT_CUSTOM_ASSEMBLER_ON_UPDATE_USED} == 1
     ld de, 0
     ld (custom_assembler_on_update), de
 ENDIF
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_GUI_OFF_USED} == 1
+executeRuleScript_gui_off:
+    xor a
+    ld (gui_on), a
+    push hl
+        call clear_pointer
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_GUI_ON_USED} == 1
+executeRuleScript_gui_on:
+    ld a,1
+    ld (gui_on), a
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_COLLISION_MAP_CLEAR_USED} == 1
+executeRuleScript_collision_map_clear:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    push hl
+executeRuleScript_collision_map_clear_loop_y:
+        push bc
+        push de
+executeRuleScript_collision_map_clear_loop_x:
+            push de
+                call collision_mask_ptr_and_mask
+                ld a, e
+                cpl
+                and (hl)  ; clear the bit
+                ld (hl), a  ; write it back
+            pop de
+            ; increment the "x" coordinate
+            inc c
+            inc c
+            dec e
+            jr nz, executeRuleScript_collision_map_clear_loop_x
+        pop de
+        pop bc
+        ; increment the "y" coordinate:
+        ld a, 4
+        add a, b
+        ld b, a
+        dec d
+        jr nz, executeRuleScript_collision_map_clear_loop_y
+    pop hl
+    jp executeRuleScript_loop
+ENDIF
+
+
+IF {SCRIPT_COLLISION_MAP_SET_USED} == 1
+executeRuleScript_collision_map_set:
+    ld c, (hl)
+    inc hl
+    ld b, (hl)
+    inc hl
+    ld e, (hl)
+    inc hl
+    ld d, (hl)
+    inc hl
+    push hl
+executeRuleScript_collision_map_set_loop_y:
+        push bc
+        push de
+executeRuleScript_collision_map_set_loop_x:
+            push de
+                call collision_mask_ptr_and_mask
+                ld a, e
+                or (hl)  ; set the bit
+                ld (hl), a  ; write it back
+            pop de
+            ; increment the "x" coordinate
+            inc c
+            inc c
+            dec e
+            jr nz, executeRuleScript_collision_map_set_loop_x
+        pop de
+        pop bc
+        ; increment the "y" coordinate:
+        ld a, 4
+        add a, b
+        ld b, a
+        dec d
+        jr nz, executeRuleScript_collision_map_set_loop_y
+    pop hl    
     jp executeRuleScript_loop
 ENDIF
 

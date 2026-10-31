@@ -17,6 +17,15 @@ ENDIF
     ld bc, GUI_N_TILES * 8 * MSX_TILES_PER_ENGINE_TILE
     jp fast_LDIRVM
 
+IF CAN_TURN_GUI_ON_OFF = 1
+;-----------------------------------------------
+clear_gui:
+    ld hl, GUI_VDP_PTR
+    ld bc, (GUI_HEIGHT - 1) * 32 + GUI_WIDTH * MSX_TILES_PER_ENGINE_TILE
+    xor a
+    jp FILVRM
+ENDIF
+
 
 ;-----------------------------------------------
 ; draws the complete gui in the video memory

@@ -118,6 +118,10 @@ public class PAKETTokenizer {
             int previousC = c;
             c = nextCharacter();
             while((c != '\"') || (c=='\"' && previousC == '\\')) {
+                if (c == '\n') {
+                    // New line reached inside a string!
+                    throw new Exception("Unclosed string constant in " + currentFile + " line " + (getCurrentLine() - 1));
+                }
                 if (c == -1) {
                     // End of file reached inside of a string!
                     throw new Exception("End of file reached inside of a string in " + currentFile + " line " + getCurrentLine());

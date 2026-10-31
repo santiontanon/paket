@@ -47,10 +47,10 @@ ELSE
     call reset_pointer
 ENDIF
     xor a
-    ld (player_current_action),a  ; PLAYER_ACTION_IDLE
+    ld (player_current_action), a  ; PLAYER_ACTION_IDLE
     inc a
-    ld (force_update_pointer),a  ; ensure we update the pointer type when
-                                 ; starting a new room.
+    ld (force_update_pointer), a  ; ensure we update the pointer type when
+                                  ; starting a new room.
 
     call draw_room
 IF FRAME_AROUND_SUBROOMS == 1

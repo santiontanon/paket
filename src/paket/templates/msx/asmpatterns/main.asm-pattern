@@ -48,6 +48,11 @@ execute:
 
 {INIT_SOUND_CODE}
 
+IF CAN_TURN_GUI_ON_OFF = 1
+    inc a
+    ld (gui_on), a
+ENDIF
+
     call setup_custom_interrupt
 
     jp {GAME_START_LABEL}
@@ -337,6 +342,10 @@ text_scrolling_next_row:            ds virtual 1    ; The row at which the new l
 IF DOUBLE_CLICK_ON_EXIT == 1
 double_click:                       ds virtual 1
 time_since_last_space_click:        ds virtual 1
+ENDIF
+
+IF CAN_TURN_GUI_ON_OFF == 1
+gui_on:                             ds virtual 1
 ENDIF
 
 ; Overloaded variables used at different points during execution:

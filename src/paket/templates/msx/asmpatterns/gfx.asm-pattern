@@ -201,9 +201,13 @@ ENDIF
 
     ; we clear the buffer of already loaded tiles:
     ld hl, general_buffer
-    ld bc, MAX_TILES_PER_ROOM
     ld a, #ff
+IF MAX_TILES_PER_ROOM > 1
+    ld bc, MAX_TILES_PER_ROOM
     call clear_memory_to_a
+ELSE
+    ld (general_buffer), a
+ENDIF
 
     ld a, 0
     ld (next_tile_idx), a

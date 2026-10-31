@@ -68,7 +68,13 @@ game_loop:
 game_loop_update_loop:
     push af
         call update_keyboard_buffers
+IF CAN_TURN_GUI_ON_OFF = 1
+        ld a, (gui_on)
+        or a
+        call nz, update_pointer
+ELSE
         call update_pointer
+ENDIF
 IF N_PLAYER_SPRITES > 0
         call update_player
 ENDIF
