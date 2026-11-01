@@ -767,8 +767,8 @@ executeRuleScript_goto_dialogue_state:
     ld a, (hl)
     ld (dialogue_goto_state), a
     inc hl
-    inc hl
-    inc hl
+    ; inc hl
+    ; inc hl
     jp executeRuleScript_loop
 ENDIF
 
@@ -969,13 +969,8 @@ IF {SCRIPT_CLEAR_ROOM_AREA_USED} == 1
 executeRuleScript_clear_room_area:
     push hl
         call clear_game_area
-        ; ld hl, NAMTBL2 + FIRST_SCREEN_ROOM_ROW * 32
-        ; ld bc, GAME_AREA_HEIGHT_IN_TILES * 32
-        ; ld hl, NAMTBL2 + FIRST_SCREEN_ROOM_ROW * 32
-        ; ld bc, GAME_AREA_HEIGHT_IN_TILES * 32
-        ; xor a
-        ; call FILVRM
     pop hl
+    jp executeRuleScript_loop
 ENDIF
 
 

@@ -167,7 +167,8 @@ clear_game_area:
     ; attribute tables in the game area to 0:
     xor a
     ld hl, CLRTBL2 + 32 * FIRST_SCREEN_ROOM_ROW * 8
-    ld bc, ((GUI_VDP_PTR - NAMTBL2) - (FIRST_SCREEN_ROOM_ROW * 32)) * 8
+    ; ld bc, ((GUI_VDP_PTR - NAMTBL2) - (FIRST_SCREEN_ROOM_ROW * 32)) * 8
+    ld bc, MAX_ROOM_HEIGHT * 32 * 8
     jp FILVRM
 
 
