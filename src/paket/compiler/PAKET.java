@@ -56,7 +56,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.2 beta");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.3 beta");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -83,6 +83,7 @@ public class PAKET {
             config.info("    -sfx-player [pak/ayfx]: selects which sfx player to use in the generated binary (default 'pak'). See documentation for differences.");
             config.info("    -partial-localization: use this flag if the localization file for the language you are compiling for only specifies changes for a subset of text strings, instead of all of them. By default, if a text string is missing in the localization file, compilation will stop with an error.");
             config.info("    -page0-data [amount]: [cpc6128/msxmegarom platforms only] In some platforms, by default, the compiler uses RAM/MegaROM page 0 for code only, but there might be space left (it is hard to determine how much before compiling the game, hence no data is allocated there by default). If you set this to > 0, the compiler will try to use that space if there are any blocks that fit.");
+            config.info("    -rle-ls: (CPC only flag) use RLE to encode the loading screens in the .cdt and .dsk files so that they use less space.");
             
             System.exit(1);
         }
@@ -165,6 +166,8 @@ public class PAKET {
             } else if (args[i].equals("-page0-data") && i+1<args.length) {
                 config.spaceForDataInPage0 = Integer.parseInt(args[i+1]);
                 i++;
+            } else if (args[i].equals("-rle-ls")) {
+                config.use_rle_for_loading_screens = true;
             } else {
                 throw new Exception("Unrecognized flag " + args[i]);
             }

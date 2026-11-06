@@ -1,17 +1,15 @@
 ;; Adapted from: http://www.cpcwiki.eu/index.php/Programming:An_example_loader
 
-scr_set_mode:        equ #bc0e
-scr_set_border:        equ #bc38
-scr_set_ink:        equ #bc32    
-cas_in_open:        equ #bc77
-cas_in_direct:        equ #bc83
-cas_in_close:        equ #bc7a
-mc_start_program:    equ #bd16
-kl_rom_walk:        equ #bccb
+scr_set_mode: equ #bc0e
+scr_set_border: equ #bc38
+scr_set_ink: equ #bc32    
+cas_in_open: equ #bc77
+cas_in_direct: equ #bc83
+cas_in_close: equ #bc7a
+mc_start_program: equ #bd16
+kl_rom_walk: equ #bccb
 
 ;;---------------------------------------------------------------------------
-
-
     org #a400
 
 ;;------------------------------------------------------------------------
@@ -21,20 +19,21 @@ kl_rom_walk:        equ #bccb
     ld (drive + 1), a
 
 ;;------------------------------------------------------------------------
-    ld c, #ff                    ;; disable all roms
-    ld hl, start                    ;; execution address for program
-    call mc_start_program        ;; start it
+    ld c, #ff                   ;; disable all roms
+    ld hl, start                ;; execution address for program
+    call mc_start_program       ;; start it
 
 ;;------------------------------------------------------------------------
 
 start:
     call kl_rom_walk            ;; enable all roms 
 
+
 ;;------------------------------------------------------------------------
 ;; when AMSDOS is enabled, the drive reverts back to drive 0!
 ;; This will restore the drive number to the drive the loader was run from
 drive:
-     ld a, 0
+    ld a, 0
     ld hl, (#be7d)
     ld (hl), a
 
@@ -92,6 +91,41 @@ ENDIF
     jp #f000
 ELSE
     jp #0040  ; run the game!!!
+ENDIF
+
+
+IF {USE_RLE} == 1
+;;------------------------------------------------------------------------
+;; BC = image size
+decode_rle:
+    ld hl, #6000
+    ld de, #c000
+decode_rle_loop:
+    ld a, (hl)
+    inc hl
+    cp #ff
+    jr z, decode_rle_loop_meta
+    ld (de), a
+    inc de
+    dec bc
+    jr decode_rle_loop_continue
+decode_rle_loop_meta:
+    ld a, (hl)  ; how many bytes to write
+    ld iyl, a
+    inc hl
+    ld a, (hl)  ; actual value to write
+    inc hl
+decode_rle_loop_meta_loop:
+    ld (de), a
+    inc de
+    dec bc
+    dec iyl
+    jr nz, decode_rle_loop_meta_loop
+decode_rle_loop_continue:
+    ld a, c
+    or b
+    jr nz, decode_rle_loop
+    ret
 ENDIF
 
 
@@ -217,10 +251,12 @@ ENDIF
 {DSK_LOADING_SCREEN_FILENAMES}
 
 
+; First binary, loaded at #0040 and is of size {BINARY1_DSK_SIZE}
 filename1:
     db {BINARY_FILENAME1}
 end_filename1:
 
+; First binary, loaded at #d000 and is of size {BINARY2_DSK_SIZE}
 filename2:
     db {BINARY_FILENAME2}
 end_filename2:

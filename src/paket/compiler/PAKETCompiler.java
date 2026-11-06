@@ -586,6 +586,7 @@ public class PAKETCompiler {
         // Clear the TILE_BANKS variable just in case:
         platform.variables.remove("TILE_BANKS");
         game.tile_data_size = 0;
+        game.tileBankSizes = new ArrayList<>();
         for(int bankSet_idx = 0;bankSet_idx<game.bankSets.size();bankSet_idx++) {
             TileBankSet bankset = game.bankSets.get(bankSet_idx);
             List<int []> bankSetMergedTiles = new ArrayList<>();

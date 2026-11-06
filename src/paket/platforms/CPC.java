@@ -46,6 +46,7 @@ import paket.util.idsk.IDsk;
  * @author santi
  */
 public class CPC extends Platform {
+    public static int MAX_AMSDOS_DISK_SIZE = 178 * 1024;
     public static int TAPE_LOADER_START_ADDRESS = 0xa400;
     public static int DSK_LOADER_START_ADDRESS = 0xa400;
     public static final String END_OF_RAM_TAG = "end_of_RAM:";
@@ -58,20 +59,15 @@ public class CPC extends Platform {
 
     public static List<Integer> LOADING_SCREEN_START_ADDRESSES = null;
     public static List<Integer> LOADING_SCREEN_SIZES = null;
-    public static List<Integer> LOADING_SCREEN_SIZES_RLE = null;
+    public static List<Integer> LOADING_SCREEN_SIZES_RLE16 = null;
+    public static List<Integer> LOADING_SCREEN_SIZES_RLE256 = null;
     public static List<Integer> LOADING_SCREEN_MODES = null;
     public static List<Integer> LOADING_SCREEN_DISPLAY_TIMES = null;
-    
-    public static boolean use_rle_for_loading_screens = false;
-    
+        
     public static final int TILES_PER_BANK = 16;
     
     public int SCREEN_HEIGHT_IN_TILES = 21;
-    public int STACK_ADDRESS = 0xc000;
-    
-//    public String LOADING_SCREEN_PAUSE = "5-sec";
-//    public String LOADING_SCREEN_PAUSE = "keypress";
-    
+    public int STACK_ADDRESS = 0xc000;    
     
     public List<Integer> basePalette = new ArrayList<>();
     public HashMap<String, List<Integer>> palettes = new HashMap<>();
@@ -563,10 +559,6 @@ public class CPC extends Platform {
         int accumulatedSize = 0;
         String tileBanksCode1 = "tileBanksPointers_"+bankSet_idx+":\n";
         int nbanks = (mergedTiles.size() + TILES_PER_BANK - 1)/TILES_PER_BANK;
-        if (game != null) {
-            game.tileBankSizes = new ArrayList<>();
-            game.tile_data_size = 0;
-        }
         for(int i = 0;i<nbanks;i++) {
             int size = TileBankCPC.generateAndCompressTilesAssemblerFileByColumns(mergedTiles, 
                                                             i*TILES_PER_BANK, (i+1)*TILES_PER_BANK, 
@@ -984,7 +976,8 @@ public class CPC extends Platform {
         if (LOADING_SCREEN_START_ADDRESSES == null) {
             LOADING_SCREEN_START_ADDRESSES = new ArrayList<>();
             LOADING_SCREEN_SIZES = new ArrayList<>();
-            LOADING_SCREEN_SIZES_RLE = new ArrayList<>();
+            LOADING_SCREEN_SIZES_RLE16 = new ArrayList<>();
+            LOADING_SCREEN_SIZES_RLE256 = new ArrayList<>();
             LOADING_SCREEN_MODES = new ArrayList<>();
             LOADING_SCREEN_DISPLAY_TIMES = new ArrayList<>();
         }
@@ -996,49 +989,66 @@ public class CPC extends Platform {
             }
         }
         
-        // Skip all the initial/final bytes that are 0 to save some loading time:
         int startAddress = 0xc000;
-        while(finalDataList.get(0) == 0) {
-            startAddress++;
-            finalDataList.remove(0);
-        }
-        while(finalDataList.get(finalDataList.size()-1) == 0) {
-            finalDataList.remove(finalDataList.size()-1);
-        }
+        // Skip all the initial/final bytes that are 0 to save some loading time:
+//        while(finalDataList.get(0) == 0) {
+//            startAddress++;
+//            finalDataList.remove(0);
+//        }
+//        while(finalDataList.get(finalDataList.size()-1) == 0) {
+//            finalDataList.remove(finalDataList.size()-1);
+//        }
         int screen_index = LOADING_SCREEN_SIZES.size();
         
         LOADING_SCREEN_START_ADDRESSES.add(startAddress);
         LOADING_SCREEN_SIZES.add(finalDataList.size());
-        LOADING_SCREEN_SIZES_RLE.add(finalDataList.size());
         LOADING_SCREEN_MODES.add(mode_or_screen);
         LOADING_SCREEN_PALETTES.add(LOADER_PALETTE_STRING);
         LOADING_SCREEN_DSK_PALETTE_INDEXES.add(DSK_LOADER_PALETTE_INDEXES_STRING);
         LOADING_SCREEN_DISPLAY_TIMES.add(display_time);
         variables.put("LOADING_SCREEN_ADDRESS","" + startAddress);
-        // RAW:
-        {
-            FileWriter fw = new FileWriter(destinationFolder + "/src/data/screen" + screen_index + ".asm");
-            Z80Assembler.dataBlockToAssembler(finalDataList, "loadingScreen_block", fw, 80);
-            fw.close();
-            PAKETCompiler.callMDL(new String[]{destinationFolder + "/src/data/screen" + screen_index + ".asm", "-bin", destinationFolder + "/src/data/screen" + screen_index + ".bin"}, config);
-        }
+        if (config.use_rle_for_loading_screens) {
+            // RLE (for tape):
+            List<Integer> finalDataListRLE16 = encodeDataUsingRLE(finalDataList, 16);
+            LOADING_SCREEN_SIZES_RLE16.add(finalDataListRLE16.size());
+            {
+                FileWriter fw = new FileWriter(destinationFolder + "/src/data/screenRLE16_" + screen_index + ".asm");
+                Z80Assembler.dataBlockToAssembler(finalDataListRLE16, "loadingScreen_block", fw, 80);
+                fw.close();
+                PAKETCompiler.callMDL(new String[]{destinationFolder + "/src/data/screenRLE16_" + screen_index + ".asm", "-bin", destinationFolder + "/src/data/screenRLE16_" + screen_index + ".bin"}, config);
+            }
 
-        // RLE:
-        List<Integer> finalDataListRLE = encodeDataUsingRLE(finalDataList);
-        {
-            FileWriter fw = new FileWriter(destinationFolder + "/src/data/screenRLE" + screen_index + ".asm");
-            Z80Assembler.dataBlockToAssembler(finalDataListRLE, "loadingScreen_block", fw, 80);
-            fw.close();
-            PAKETCompiler.callMDL(new String[]{destinationFolder + "/src/data/screenRLE" + screen_index + ".asm", "-bin", destinationFolder + "/src/data/screenRLE" + screen_index + ".bin"}, config);
+            // RLE (for dsk):
+            List<Integer> finalDataListRLE256 = encodeDataUsingRLE(finalDataList, 256);
+            LOADING_SCREEN_SIZES_RLE256.add(finalDataListRLE16.size());
+            {
+                FileWriter fw = new FileWriter(destinationFolder + "/src/data/screen" + screen_index + ".asm");
+                Z80Assembler.dataBlockToAssembler(finalDataListRLE256, "loadingScreen_block", fw, 80);
+                fw.close();
+                PAKETCompiler.callMDL(new String[]{destinationFolder + "/src/data/screen" + screen_index + ".asm", "-bin", destinationFolder + "/src/data/screen" + screen_index + ".bin"}, config);
+            }
+        } else {
+            // RAW:
+            LOADING_SCREEN_SIZES_RLE16.add(finalDataList.size());
+            LOADING_SCREEN_SIZES_RLE256.add(finalDataList.size());
+            {
+                FileWriter fw = new FileWriter(destinationFolder + "/src/data/screen" + screen_index + ".asm");
+                Z80Assembler.dataBlockToAssembler(finalDataList, "loadingScreen_block", fw, 80);
+                fw.close();
+                PAKETCompiler.callMDL(new String[]{destinationFolder + "/src/data/screen" + screen_index + ".asm", "-bin", destinationFolder + "/src/data/screen" + screen_index + ".bin"}, config);
+            }
         }
     }   
     
     
-    public List<Integer> encodeDataUsingRLE(List<Integer> data) 
+    public List<Integer> encodeDataUsingRLE(List<Integer> data, int maxSequence) 
     {
+        /*
+            - sequence: #ff, count, byte
+            - single byte: byte
+        */
         List<Integer> encoded = new ArrayList<>();
         int meta = 0xff;
-        int maxSequence = 16;
         int previousValue = -1;
         int count = 0;
         for(int i = 0;i<data.size();i++) {
@@ -1047,7 +1057,7 @@ public class CPC extends Platform {
                 count++;
             } else {
                 while(count > 0) {
-                    if (count<3 && previousValue != meta) {
+                    if (count < 3 && previousValue != meta) {
                         for(int j = 0;j<count;j++) {
                             encoded.add(previousValue);
                         }
@@ -1072,7 +1082,6 @@ public class CPC extends Platform {
                 }
                 count = 0;
             } else {
-                encoded.add(meta);
                 int n = Math.min(maxSequence, count);
                 encoded.add(meta);
                 encoded.add(n);
@@ -1314,11 +1323,11 @@ public class CPC extends Platform {
                                 "    di\n" +
                                 "    ld hl, loader_palette_" + (i + 1) + "\n" +
                                 "    call set_palette_mode_" + LOADING_SCREEN_MODES.get(i) + "\n" +
-                                "    ld a, "+(use_rle_for_loading_screens ? 1:0)+"\n" +
+                                "    ld a, "+(config.use_rle_for_loading_screens ? 1:0)+"\n" +
                                 "    ld (use_rle), a\n" +
-                                "    ld ix, "+LOADING_SCREEN_START_ADDRESSES.get(i)+"		; load the loading screen\n" +
-                                "    ld de, "+(use_rle_for_loading_screens ? LOADING_SCREEN_SIZES_RLE.get(i):LOADING_SCREEN_SIZES.get(i))+"		; size to load\n" +
-                                "    ld a, #ff		; synchronization byte\n" +
+                                "    ld ix, "+LOADING_SCREEN_START_ADDRESSES.get(i)+"  ; load the loading screen\n" +
+                                "    ld de, "+(config.use_rle_for_loading_screens ? LOADING_SCREEN_SIZES_RLE16.get(i):LOADING_SCREEN_SIZES.get(i))+"		; size to load\n" +
+                                "    ld a, #ff  ; synchronization byte\n" +
                                 "    call topoload\n";
                 if (i < LOADING_SCREEN_SIZES.size() - 1) {
                     int display_time = LOADING_SCREEN_DISPLAY_TIMES.get(i);
@@ -1333,22 +1342,6 @@ public class CPC extends Platform {
                                         "    di\n\n";
                         variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "1");
                     }
-//                    switch(LOADING_SCREEN_PAUSE) {
-//                        case "5-sec":
-//                            // 5 second pause for all but the last screen:
-//                            loading_code += "    ld bc, 50*5*6  ; 5 second pause\n" +
-//                                            "    ei\n" +
-//                                            "    call wait_bc_halts\n"+
-//                                            "    di\n\n";
-//                            break;
-//                        case "keypress":
-//                            loading_code += "    ei\n" +
-//                                            "    call wait_for_space\n"+
-//                                            "    di\n\n";
-//                            break;
-//                        default:
-//                            throw new Exception("Unsupported loading screen pause mode: " + LOADING_SCREEN_PAUSE);
-//                    }
                 }
                 DSK_LOADING_SCREEN_FILENAMES += "filename_img" + i + ":\n" + 
                                                 "    db \"screen" + i + ".bin\"\n" +
@@ -1361,25 +1354,18 @@ public class CPC extends Platform {
                                            "    ld b, end_filename_img" + i + " - filename_img" + i + "\n" +
                                            "    ld hl, filename_img" + i + "\n" +
                                            "    call load_block\n";
-                    int display_time = LOADING_SCREEN_DISPLAY_TIMES.get(i);
-                    if (display_time > 0) {
-                        DSK_LOADING_SCREEN_CODE += "    ld bc, "+display_time+"*50*6  ; "+display_time+" second pause\n" +
-                                                   "    call wait_bc_halts\n\n";
-                    } else {
-                        DSK_LOADING_SCREEN_CODE += "    call wait_for_space\n\n";
-                        variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "1");
-                    }
-//                switch(LOADING_SCREEN_PAUSE) {
-//                    case "5-sec":
-//                        DSK_LOADING_SCREEN_CODE += "    ld bc, 50*5*6  ; 5 second pause\n" +
-//                                                   "    call wait_bc_halts\n\n";
-//                        break;
-//                    case "keypress":
-//                        DSK_LOADING_SCREEN_CODE += "    call wait_for_space\n\n";
-//                        break;
-//                    default:
-//                        throw new Exception("Unsupported loading screen pause mode: " + LOADING_SCREEN_PAUSE);
-//                }
+                if (config.use_rle_for_loading_screens) {
+                    DSK_LOADING_SCREEN_CODE += "    ld bc, "+LOADING_SCREEN_SIZES.get(i)+"\n";
+                    DSK_LOADING_SCREEN_CODE += "    call decode_rle\n";
+                }
+                int display_time = LOADING_SCREEN_DISPLAY_TIMES.get(i);
+                if (display_time > 0) {
+                    DSK_LOADING_SCREEN_CODE += "    ld bc, "+display_time+"*50*6  ; "+display_time+" second pause\n" +
+                                               "    call wait_bc_halts\n\n";
+                } else {
+                    DSK_LOADING_SCREEN_CODE += "    call wait_for_space\n\n";
+                    variables.put("DSK_LOADER_NEEDS_WAIT_FOR_SPACE", "1");
+                }
             }
         }
                 
@@ -1418,6 +1404,7 @@ public class CPC extends Platform {
             variables.put("N_LOADING_SCREENS", "0");
         }
         variables.put("DSK_LOADING_SCREEN_CODE", DSK_LOADING_SCREEN_CODE);
+        variables.put("USE_RLE", (config.use_rle_for_loading_screens ? "1":"0"));
         
         String LOADER_PALETTES_STRING = "";
         for(int i = 0;i<LOADING_SCREEN_PALETTES.size();i++) {
@@ -1439,10 +1426,12 @@ public class CPC extends Platform {
         }
         if (binary_size > max_first_binary_piece_size_dsk) {
             variables.put("BINARY_FILENAME2", "\"data2.bin\"");
+            variables.put("BINARY1_DSK_SIZE", "" + max_first_binary_piece_size_dsk);
             variables.put("BINARY2_DSK_SIZE", "" + (binary_size - max_first_binary_piece_size_dsk));
             variables.put("LOADER_DSK_SECOND_BLOCK", "1");
         } else {
             variables.put("BINARY_FILENAME2", "\"\"");
+            variables.put("BINARY1_DSK_SIZE", "" + binary_size);
             variables.put("BINARY2_DSK_SIZE", "0");
             variables.put("LOADER_DSK_SECOND_BLOCK", "0");
         }
@@ -1459,8 +1448,8 @@ public class CPC extends Platform {
         CPC2CDT.main(new String[] {"-n", "-b", "1000", "-x", "41984", "-l", "41984", "-r", "pac", "-p", "5000", "-ip", "5000", loaderName+".bin", binaryName+".cdt"}); 
         if (LOADING_SCREEN_SIZES != null) {
             for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
-                if (use_rle_for_loading_screens) {
-                    CPC2CDT.main(new String[] {"-m", "zxraw", "-p", "3000",  destinationFolder+"/src/data/screenRLE"+i+".bin", binaryName+".cdt"});
+                if (config.use_rle_for_loading_screens) {
+                    CPC2CDT.main(new String[] {"-m", "zxraw", "-p", "3000",  destinationFolder+"/src/data/screenRLE16_"+i+".bin", binaryName+".cdt"});
                 } else {
                     CPC2CDT.main(new String[] {"-m", "zxraw", "-p", "3000",  destinationFolder+"/src/data/screen"+i+".bin", binaryName+".cdt"});
                 }
@@ -1475,16 +1464,19 @@ public class CPC extends Platform {
         
         // Generate the DSK:
         PAKETCompiler.callMDL(new String[]{destinationFolder + "/src/loader-dsk-autogenerated.asm", "-bin", loaderName+"-dsk.bin", "-st", loaderName+"-dsk.sym"}, config);
-        int dsk_loader_size = (int)(new File(loaderName+"-.bin").length());
+        int dsk_loader_size = (int)(new File(loaderName + "-dsk.bin").length());
         config.info("    DSK loader size: " + dsk_loader_size);
-        PAKET.moveFile(loaderName+"-dsk.bin", "pac.bin");
-        IDsk.main(new String[] {binaryName+".dsk", "-n", "-i", "pac.bin", "-e", "a400", "-c", "a400", "-t", "1"}, config); 
+        PAKET.moveFile(loaderName + "-dsk.bin", "pac.bin");
+        IDsk.main(new String[] {binaryName + ".dsk", "-n", "-i", "pac.bin", "-e", "a400", "-c", "a400", "-t", "1"}, config); 
+        PAKET.moveFile("pac.bin", loaderName + "-dsk.bin");
 
-        PAKET.moveFile("pac.bin", loaderName+"-dsk.bin");
         if (LOADING_SCREEN_SIZES != null) {
             for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
-                IDsk.main(new String[] {binaryName+".dsk", "-i", destinationFolder+"/src/data/screen"+i+".bin", "-c", Z80Assembler.toHex16bit(LOADING_SCREEN_START_ADDRESSES.get(i), false), "-t", "1"}, config); 
-                IDsk.main(new String[] {binaryName+".dsk", "-i", destinationFolder+"/src/data/screen"+i+".bin", "-c", Z80Assembler.toHex16bit(LOADING_SCREEN_START_ADDRESSES.get(i), false), "-t", "1"}, config); 
+                if (config.use_rle_for_loading_screens) {
+                    IDsk.main(new String[] {binaryName + ".dsk", "-i", destinationFolder + "/src/data/screen" + i + ".bin", "-c", Z80Assembler.toHex16bit(0x6000, false), "-t", "1"}, config); 
+                } else {
+                    IDsk.main(new String[] {binaryName + ".dsk", "-i", destinationFolder + "/src/data/screen" + i + ".bin", "-c", Z80Assembler.toHex16bit(LOADING_SCREEN_START_ADDRESSES.get(i), false), "-t", "1"}, config); 
+                }
             }
         }
         if (binary_size > max_first_binary_piece_size_dsk) {
@@ -1500,8 +1492,50 @@ public class CPC extends Platform {
             IDsk.main(new String[] {binaryName+".dsk", "-i", "data.bin", "-c", "40", "-t", "1"}, config); 
             PAKET.moveFile("data.bin", loaderName+".bin");
         }
+        
+        checkDskIsNotTooLarge(dsk_loader_size, binary_size, max_first_binary_piece_size_dsk);
+
 
         calculateUsedAndFreeSpace(binaryName+".bin", binaryName+".sym", this, game);
+    }
+    
+    
+    public void checkDskIsNotTooLarge(
+            int dsk_loader_size,
+            int binary_size,
+            int max_first_binary_piece_size_dsk) throws Exception
+    {
+        // Make sure the DSK is not too large:
+        // 178 KB is the limit, and data is clustered in sectors of 512 bytes:
+        // loader + binaries + loading screens
+        int data_size_in_dsk = 0;
+        data_size_in_dsk += sizeOccupiedInDsk(dsk_loader_size);
+        if (binary_size > max_first_binary_piece_size_dsk) {
+            data_size_in_dsk += sizeOccupiedInDsk(max_first_binary_piece_size_dsk);
+            data_size_in_dsk += sizeOccupiedInDsk(binary_size - max_first_binary_piece_size_dsk);
+        } else {
+            data_size_in_dsk += sizeOccupiedInDsk(binary_size);
+        }
+        if (config.use_rle_for_loading_screens) {
+            for(int i = 0;i<LOADING_SCREEN_SIZES_RLE256.size();i++) {
+                data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES_RLE256.get(i));
+            }
+        } else {
+            for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
+                data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES.get(i));
+            }
+        }
+        if (data_size_in_dsk > MAX_AMSDOS_DISK_SIZE) {
+            int size_in_kb = (data_size_in_dsk + 1023) / 1024;
+            throw new Exception("AMSDOS disks can only store 178kb per side, and the game uses " + size_in_kb + "kb!");
+        }        
+    }
+    
+    
+    public int sizeOccupiedInDsk(int size)
+    {
+        int n_sectors = (size + 512) / 512;
+        return n_sectors * 512;
     }
             
     
@@ -1568,9 +1602,10 @@ public class CPC extends Platform {
         
         if (game.loadSaveGameScript != null) {
             for(String f_name:saveGameCodeFileNames().m_b) {
-                URL f_url = classLoader.getResource("paket/templates/cpc/" + f_name);
-                String f_path = f_url.getPath();
-                addRAMBlock(f_name, f_path, blocks, outputFolder, game);
+//                URL f_url = classLoader.getResource("paket/templates/cpc/" + f_name);
+//                String f_path = f_url.getPath();
+//                addRAMBlock(f_name, f_path, blocks, outputFolder, game);
+                addRAMBlock(f_name, "paket/templates/cpc/" + f_name, blocks, outputFolder, game);
             }
         }
     

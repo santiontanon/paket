@@ -40,6 +40,7 @@ public class PAKETConfig {
     public int maxTileOptimizationIterations = 0;
     public int roomsPerBank = 1;
     public boolean attemptToSplitSongs = true;
+    public boolean use_rle_for_loading_screens = false;  // CPC-only flag
     
     public int playerObjectId = 63;
     public String guiFileName = "gui.png";

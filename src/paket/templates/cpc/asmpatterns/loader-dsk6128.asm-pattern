@@ -1,13 +1,13 @@
 ;; Adapted from: http://www.cpcwiki.eu/index.php/Programming:An_example_loader
 
-scr_set_mode:      equ #bc0e
-scr_set_border:    equ #bc38
-scr_set_ink:       equ #bc32    
-cas_in_open:       equ #bc77
-cas_in_direct:     equ #bc83
-cas_in_close:      equ #bc7a
-mc_start_program:  equ #bd16
-kl_rom_walk:       equ #bccb
+scr_set_mode: equ #bc0e
+scr_set_border: equ #bc38
+scr_set_ink: equ #bc32    
+cas_in_open: equ #bc77
+cas_in_direct: equ #bc83
+cas_in_close: equ #bc7a
+mc_start_program: equ #bd16
+kl_rom_walk: equ #bccb
 
 ;;---------------------------------------------------------------------------
     org #a400
@@ -51,6 +51,41 @@ drive:
     pop af  ; recover the drive number, so that the game has it.
     di
     jp #0040  ; run the game!!!
+
+
+IF {USE_RLE} == 1
+;;------------------------------------------------------------------------
+;; BC = image size
+decode_rle:
+    ld hl, #6000
+    ld de, #c000
+decode_rle_loop:
+    ld a, (hl)
+    inc hl
+    cp #ff
+    jr z, decode_rle_loop_meta
+    ld (de), a
+    inc de
+    dec bc
+    jr decode_rle_loop_continue
+decode_rle_loop_meta:
+    ld a, (hl)
+    ld iyl, a
+    inc hl
+    ld a, (hl)
+    inc hl
+decode_rle_loop_meta_loop:
+    ld (de), a
+    inc de
+    dec bc
+    dec iyl
+    jr nz, decode_rle_loop_meta_loop
+decode_rle_loop_continue:
+    ld a, c
+    or b
+    jr nz, decode_rle_loop
+    ret
+ENDIF
 
 
 ;;------------------------------------------------------------------------

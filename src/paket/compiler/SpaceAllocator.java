@@ -137,7 +137,7 @@ public class SpaceAllocator {
                     spaces.get(page).spaceLeft >= b.size) {
                     spaces.get(page).spaceLeft -= b.size;
                     spaces.get(page).rawContent += b.assembler1 + "\n\n";
-                    config.info("allocateBlocksIntoPages allocation: '" + b.name + "' (" + b.size + " bytes) allocated to page " + page);
+                    config.info("allocateBlocksIntoPages allocation: '" + b.name + "' (" + b.size + " bytes) allocated to page " + page + " (space left: " + spaces.get(page).spaceLeft + ")");
                     if (b.spaceVariable != null) {
                         assemblerVariables.put(b.spaceVariable, "" + spaces.get(page).page);
                     }
