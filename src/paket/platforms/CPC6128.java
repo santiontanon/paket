@@ -256,13 +256,15 @@ public class CPC6128 extends CPC {
         for(int i = 0;i<pageSizes.size();i++) {
             data_size_in_dsk += sizeOccupiedInDsk(pageSizes.get(i));
         }
-        if (config.use_rle_for_loading_screens) {
-            for(int i = 0;i<LOADING_SCREEN_SIZES_RLE256.size();i++) {
-                data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES_RLE256.get(i));
-            }
-        } else {
-            for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
-                data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES.get(i));
+        if (LOADING_SCREEN_SIZES != null) {
+            if (config.use_rle_for_loading_screens) {
+                for(int i = 0;i<LOADING_SCREEN_SIZES_RLE256.size();i++) {
+                    data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES_RLE256.get(i));
+                }
+            } else {
+                for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
+                    data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES.get(i));
+                }
             }
         }
         if (data_size_in_dsk > MAX_AMSDOS_DISK_SIZE) {

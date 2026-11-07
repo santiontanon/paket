@@ -1516,19 +1516,21 @@ public class CPC extends Platform {
         } else {
             data_size_in_dsk += sizeOccupiedInDsk(binary_size);
         }
-        if (config.use_rle_for_loading_screens) {
-            for(int i = 0;i<LOADING_SCREEN_SIZES_RLE256.size();i++) {
-                data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES_RLE256.get(i));
+        if (LOADING_SCREEN_SIZES != null) {
+            if (config.use_rle_for_loading_screens) {
+                for(int i = 0;i<LOADING_SCREEN_SIZES_RLE256.size();i++) {
+                    data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES_RLE256.get(i));
+                }
+            } else {
+                for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
+                    data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES.get(i));
+                }
             }
-        } else {
-            for(int i = 0;i<LOADING_SCREEN_SIZES.size();i++) {
-                data_size_in_dsk += sizeOccupiedInDsk(LOADING_SCREEN_SIZES.get(i));
+            if (data_size_in_dsk > MAX_AMSDOS_DISK_SIZE) {
+                int size_in_kb = (data_size_in_dsk + 1023) / 1024;
+                throw new Exception("AMSDOS disks can only store 178kb per side, and the game uses " + size_in_kb + "kb!");
             }
         }
-        if (data_size_in_dsk > MAX_AMSDOS_DISK_SIZE) {
-            int size_in_kb = (data_size_in_dsk + 1023) / 1024;
-            throw new Exception("AMSDOS disks can only store 178kb per side, and the game uses " + size_in_kb + "kb!");
-        }        
     }
     
     
