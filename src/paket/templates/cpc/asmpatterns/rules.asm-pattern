@@ -1432,8 +1432,8 @@ executeRuleScript_skippable_pause_redrawing_loop:
         call game_update_while_in_scripts
     pop bc
     pop hl
-    ld a, (keyboard_line_clicks)
-    bit 0, a
+    ld a, (keyboard_line_clicks+4)
+    bit 7, a
     jr nz, executeRuleScript_skippable_pause_redrawing_loop_end
     dec bc
     ld a, b
