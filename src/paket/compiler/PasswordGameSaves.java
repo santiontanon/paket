@@ -49,7 +49,11 @@ public class PasswordGameSaves {
     public void init() throws Exception
     {
         if (game.saveGameModeParams.size() != 6) {
-            throw new Exception("load-save-game-mode requires exactly 6 additional parameters when using 'password': save text, load text, accept, cancel, error message, and character set.");
+            if (game.saveGameModeParams.isEmpty()) {
+                throw new Exception("'load-save-game-mode' command is needed when the save game mode is 'password'. Please add a 'load-save-game-mode' command to your game script.");
+            } else {
+                throw new Exception("load-save-game-mode requires exactly 6 additional parameters when using 'password': save text, load text, accept, cancel, error message, and character set.");
+            }
         }
         
         int l = game.saveGameModeParams.get(5).length();
@@ -187,9 +191,9 @@ public class PasswordGameSaves {
                         }
                     }
                 }    
-//                config.info("Variable '"+ variable + "' possible values: " + possibleValues);
+                config.info("PasswordGameSaves: Variable '"+ variable + "' possible values: " + possibleValues);
                 int min_value = possibleValues.get(0);
-                int max_value = possibleValues.get(1);
+                int max_value = (possibleValues.size() > 1 ? possibleValues.get(1):possibleValues.get(0));
                 for(int v: possibleValues) {
                     if (v < min_value) min_value = v;
                     if (v > max_value) max_value = v;
