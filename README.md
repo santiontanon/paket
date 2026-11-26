@@ -13,3 +13,5 @@ Example screenshots of a game developed with PAKET are below (running on an Amst
 Please check the [wiki](https://github.com/santiontanon/paket/wiki) for more information. For example:
 * [Full PAKET Compiler Documentation](https://github.com/santiontanon/paket/wiki#outline)
 * [Tutorials](https://github.com/santiontanon/paket/wiki#tutorials)
+
+Want an IDE for creating PAKET games? Try the new PAKET Studio: https://github.com/santiontanon/paketstudio
