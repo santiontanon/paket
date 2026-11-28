@@ -194,7 +194,7 @@ public class PAKGame {
     }
 
 
-    public PAKSong getOrCreateSong(String fileName, int type)
+    public PAKSong getOrCreateSong(String fileName, int type, PAKETConfig config)
     {
         for(PAKSong song:songs) {
             if (song.fileName.equals(fileName)) {
@@ -204,6 +204,7 @@ public class PAKGame {
         
         PAKSong song = new PAKSong(fileName, type);
         songs.add(song);
+        config.info("New song found: " + fileName + " (for a total of " + songs.size() + ")");
         return song;
     }
     
@@ -235,11 +236,11 @@ public class PAKGame {
     }
     
     
-    public int getTotalRulesSize(Platform platform) throws Exception
+    public int getTotalRulesSize(Platform platform, PAKETConfig config) throws Exception
     {
         int n = 0;
         for(PAKRule r:getAllScriptsAndRules()) {
-            n += r.toBytesForAssembler(textIDHash, this, dialogues, frame_around_subrooms, frame_around_subrooms, platform).size();
+            n += r.toBytesForAssembler(textIDHash, this, dialogues, frame_around_subrooms, frame_around_subrooms, platform, config).size();
         }
         /*
         for(PAKRule r:itemRules) {

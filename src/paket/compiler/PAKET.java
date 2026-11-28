@@ -56,7 +56,7 @@ public class PAKET {
         PAKETConfig config = new PAKETConfig();
 
         if (args.length < 4) {
-            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.6");
+            config.info("PAKET (Point And Klick Engine Tool) Compiler v1.2.7");
             config.info("Santiago (Popolon) Ontañón (2019-2026)\n");
             config.info("Usage:");
             config.info("  java -jar PAKET.jar [game definition file] [platform] [language] [destination folder] [options]\n");
@@ -2472,7 +2472,7 @@ public class PAKET {
                     s.songTempo = Integer.parseInt(t3.value);
                     s.forceSongRestart = forceRestart;
                     scripts.add(s);
-                    game.getOrCreateSong(s.songToPlay, PAKSong.TYPE_TSV);
+                    game.getOrCreateSong(s.songToPlay, PAKSong.TYPE_TSV, config);
                     break;                    
                 }
 
@@ -2493,7 +2493,7 @@ public class PAKET {
                     s.songToPlay = t2.value;
                     s.forceSongRestart = forceRestart;
                     scripts.add(s);
-                    game.getOrCreateSong(s.songToPlay, PAKSong.TYPE_WYZ);
+                    game.getOrCreateSong(s.songToPlay, PAKSong.TYPE_WYZ, config);
                     break;                    
                 }
                                 

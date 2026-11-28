@@ -1665,9 +1665,9 @@ executeRuleScript_save_game:
         ld (de), a
         inc de
         ld hl, MUSIC_current_song
-        ld a, (hl)
-        ldi
-        ldi
+        ldi  ; song ID
+        inc hl  ; skip "MUSIC_muted"
+        ldi  ; tempo
 
         ; save data:
         ld ix, savegame_data_buffer
@@ -1743,17 +1743,35 @@ executeRuleScript_load_game_success_restore_game:
     or a
     jr z, executeRuleScript_load_game_no_music
     ld de, executeRuleScript_load_game_load_room_script
+IF MUSIC_TYPE_WYZ == 1
+    ; wyz music:
+    push af
+        ld a, SCRIPT_PLAY_WYZ_SONG
+        ld (de), a
+    pop af
+    inc de
+    dec a
+    ld (de), a  ; song ID
+    inc hl
+    inc de
+    ld a, 1
+    ld (de), a  ; force restart
+ELSE
+    ; tsv music:
     push af
         ld a, SCRIPT_PLAY_TSV_SONG
         ld (de), a
     pop af
     inc de
     dec a
-    ld (de), a
+    ld (de), a  ; song ID
     inc hl
     inc de
-    inc de  ; force restart does not matter
+    ld a, 1
+    ld (de), a  ; force restart
+    inc de
     ldi  ; song tempo
+ENDIF
     ld hl, executeRuleScript_load_game_load_room_script
     jr executeRuleScript_load_game_continue2
 executeRuleScript_load_game_no_music:

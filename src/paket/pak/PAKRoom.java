@@ -233,14 +233,14 @@ public class PAKRoom {
         }        
 
         // rules:
-        if (log) config.info("Room Rules: " + rules.size() + " (using: " + sizeOfRulesData(rules, game.textIDHash, game, dialogues, platform) + " bytes)");
-        int rules_size = sizeOfRulesData(rules, game.textIDHash, game, dialogues, platform);
+        if (log) config.info("Room Rules: " + rules.size() + " (using: " + sizeOfRulesData(rules, game.textIDHash, game, dialogues, platform, config) + " bytes)");
+        int rules_size = sizeOfRulesData(rules, game.textIDHash, game, dialogues, platform, config);
         bytes.add(rules_size%256);
         bytes.add(rules_size/256);
         bytes.add(rules.size());
         for(PAKRule r:rules) {
             r.checkValidity(this, objectTypes, game.textIDHash, true);
-            List<Integer> r_bytes = r.toBytesForAssembler(game.textIDHash, game, dialogues, true, true, platform);
+            List<Integer> r_bytes = r.toBytesForAssembler(game.textIDHash, game, dialogues, true, true, platform, config);
             if (log) config.info("    Room rule size: " + r_bytes.size() + " -> " + r_bytes);
             bytes.addAll(r_bytes);
         }        
@@ -253,8 +253,8 @@ public class PAKRoom {
         
         // on room load/start rules:
         {
-            int on_load_rules_size = sizeOfRulesData(onLoadRules, game.textIDHash, game, dialogues, platform);
-            int on_start_rules_size = sizeOfRulesData(onStartRules, game.textIDHash, game, dialogues, platform);
+            int on_load_rules_size = sizeOfRulesData(onLoadRules, game.textIDHash, game, dialogues, platform, config);
+            int on_start_rules_size = sizeOfRulesData(onStartRules, game.textIDHash, game, dialogues, platform, config);
             int total_size = on_load_rules_size + on_start_rules_size;
             if (log) config.info("On room load rules: " + onLoadRules.size() + " (using: " + on_load_rules_size + " bytes)");
             bytes.add(total_size%256);
@@ -262,7 +262,7 @@ public class PAKRoom {
             bytes.add(onLoadRules.size());
             for(PAKRule r:onLoadRules) {
                 r.checkValidity(this, objectTypes, game.textIDHash, true);
-                List<Integer> r_bytes = r.toBytesForAssembler(game.textIDHash, game, dialogues, true, true, platform);
+                List<Integer> r_bytes = r.toBytesForAssembler(game.textIDHash, game, dialogues, true, true, platform, config);
                 if (log) config.info("    On room load rule size: " + r_bytes.size() + " -> " + r_bytes);
                 bytes.addAll(r_bytes);
             }
@@ -270,7 +270,7 @@ public class PAKRoom {
             bytes.add(onStartRules.size());
             for(PAKRule r:onStartRules) {
                 r.checkValidity(this, objectTypes, game.textIDHash, true);
-                List<Integer> r_bytes = r.toBytesForAssembler(game.textIDHash, game, dialogues, true, true, platform);
+                List<Integer> r_bytes = r.toBytesForAssembler(game.textIDHash, game, dialogues, true, true, platform, config);
                 if (log) config.info("    On room start rule size: " + r_bytes.size() + " -> " + r_bytes);
                 bytes.addAll(r_bytes);
             }
@@ -317,11 +317,11 @@ public class PAKRoom {
     }
     
     
-    public int sizeOfRulesData(List<PAKRule> l, HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, Platform platform) throws Exception
+    public int sizeOfRulesData(List<PAKRule> l, HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, Platform platform, PAKETConfig config) throws Exception
     {
         int size = 1;   // # of rules
         for(PAKRule r:l) {
-            List<Integer> r_bytes = r.toBytesForAssembler(textIDHash, game, dialogues, true, true, platform);
+            List<Integer> r_bytes = r.toBytesForAssembler(textIDHash, game, dialogues, true, true, platform, config);
             size += r_bytes.size();
         }
         return size;

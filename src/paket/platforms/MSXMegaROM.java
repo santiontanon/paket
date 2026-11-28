@@ -182,7 +182,7 @@ public class MSXMegaROM extends MSX {
         rulesSize += (int) (new File(outputFolder + "data/onroomstartrules.bin")).length();
         rulesSize += game.scripts.size() * 2;  // pointers
         for (int i = 0; i < game.scripts.size(); i++) {
-            List<Integer> scriptBytes = game.scripts.get(i).m_b.toBytesForAssembler(game.textIDHash, game, game.dialogues, false, false, this);
+            List<Integer> scriptBytes = game.scripts.get(i).m_b.toBytesForAssembler(game.textIDHash, game, game.dialogues, false, false, this, config);
             rulesSize += scriptBytes.size();
         }
         blocksToAllocate.add(new SpaceAllocator.Block("rules/scripts data", rulesCode, "", rulesSize, "RULES_AND_SCRIPTS_DATA_PAGE"));

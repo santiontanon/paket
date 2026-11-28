@@ -190,8 +190,8 @@ public class PAKETCompiler {
             if (n_object_types > max_object_types_per_room) max_object_types_per_room = n_object_types;
             if (object_name_buffer_size > max_object_name_buffer_size) max_object_name_buffer_size = object_name_buffer_size;
             int roomSpecificOnLoadRulesSize = 
-                r.sizeOfRulesData(r.onLoadRules, game.textIDHash, game, game.dialogues, platform) +
-                r.sizeOfRulesData(r.onStartRules, game.textIDHash, game, game.dialogues, platform);
+                r.sizeOfRulesData(r.onLoadRules, game.textIDHash, game, game.dialogues, platform, config) +
+                r.sizeOfRulesData(r.onStartRules, game.textIDHash, game, game.dialogues, platform, config);
             if (roomSpecificOnLoadRulesSize > game.maxRoomSpecificOnLoadRulesSize) {
                 game.maxRoomSpecificOnLoadRulesSize = roomSpecificOnLoadRulesSize;
             }
@@ -395,7 +395,7 @@ public class PAKETCompiler {
         
         config.info("PAKETCompiler: rules size analysis:");
         config.info("    # rules: " + game.getTotalNumberOfRules());
-        config.info("    total rules size: " + game.getTotalRulesSize(platform));
+        config.info("    total rules size: " + game.getTotalRulesSize(platform, config));
         
         config.info("PAKETCompiler: generating binary...");
         platform.generateBinary(game, destinationFolder);        
@@ -854,7 +854,7 @@ public class PAKETCompiler {
         int maxDialgueSize = 0;
         for(int i = 0;i<dialogues.size();i++) {
             PAKDialogue dialogue = dialogues.get(i);
-            List<Integer> bytes = dialogue.toBytesForAssembler(textIDHash, game, dialogues, platform);
+            List<Integer> bytes = dialogue.toBytesForAssembler(textIDHash, game, dialogues, platform, config);
             
             FileWriter fw = new FileWriter(outputFolder + "data/dialogue" + i + ".asm");
             Z80Assembler.dataBlockToAssembler(bytes, "dialogue", fw, 16);
@@ -882,7 +882,7 @@ public class PAKETCompiler {
         
         int n_rules = 0;
         for(PAKRule rule:rules) {
-            List<Integer> ruleBytes = rule.toBytesForAssembler(textIDHash, game, dialogues, false, true, platform);
+            List<Integer> ruleBytes = rule.toBytesForAssembler(textIDHash, game, dialogues, false, true, platform, config);
             if (rulesBytes.contains(ruleBytes)) {
                 config.info("   (prevented adding a repeated global rule)");
             } else {
@@ -909,7 +909,7 @@ public class PAKETCompiler {
         String assembler2 = "";
         
         for(Pair<String, PAKRule> script:scripts) {
-            List<Integer> scriptBytes = script.m_b.toBytesForAssembler(textIDHash, game, dialogues, false, false, platform);
+            List<Integer> scriptBytes = script.m_b.toBytesForAssembler(textIDHash, game, dialogues, false, false, platform, config);
             config.info("   Global script "+script.m_a+" size: " + scriptBytes.size() + " -> " + scriptBytes);
             
             String assembler_name = PAKETCompiler.nameToAssemblerLabel(script.m_a);
@@ -1007,7 +1007,7 @@ public class PAKETCompiler {
                 n_rooms_in_current_bank = 0;
                 n_banks++;
             }
-            int rules_size = rooms.get(i).sizeOfRulesData(rooms.get(i).rules, textIDHash, game, dialogues, platform);
+            int rules_size = rooms.get(i).sizeOfRulesData(rooms.get(i).rules, textIDHash, game, dialogues, platform, config);
             if (rules_size > largest_rules_size) largest_rules_size = rules_size;
         }
         for(int i = 0;i<rooms.size();i++) {      
@@ -1015,7 +1015,7 @@ public class PAKETCompiler {
             config.info("Room " + room.ID + " size: " + roomsBytes.get(i).size() + 
                         " (# different tiles: " + room.getUsedTiles().size() +
                         ", object buffer size: " + numBytesForRoomObjectTypes(room, game.rooms, platform, config).m_a + 
-                        ", rules size: " + room.sizeOfRulesData(room.rules, textIDHash, game, dialogues, platform));
+                        ", rules size: " + room.sizeOfRulesData(room.rules, textIDHash, game, dialogues, platform, config));
         }        
 
         String roomBankPointersCode = "roomBankPointers:\n";
@@ -1390,7 +1390,7 @@ public class PAKETCompiler {
                 tsvSongs.add(tsvSong);
                 for(String songName:tsvSong.subSongsPlayed) {
                     if (!game.songExists(songName)) {
-                        nextBatch.add(game.getOrCreateSong(songName, PAKSong.TYPE_TSV));
+                        nextBatch.add(game.getOrCreateSong(songName, PAKSong.TYPE_TSV, config));
                     }
                 }
             }
@@ -1513,7 +1513,7 @@ public class PAKETCompiler {
         // Align the PAKSongs with the new optimally split songs:
         game.songs.clear();
         for(TSVSong s:tsvSongs) {
-            game.getOrCreateSong(s.fileName, PAKSong.TYPE_TSV);
+            game.getOrCreateSong(s.fileName, PAKSong.TYPE_TSV, config);
         }
         
         // Now that we have all the notes, convert to assembler:

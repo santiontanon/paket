@@ -221,8 +221,10 @@ public class PasswordGameSaves {
             }
         }
         n_bits_for_song = nBitsForValue(n_songs + 1);
-        n_bits_for_tempo = nBitsForValue(max_tempo);
+        n_bits_for_tempo = nBitsForValue(max_tempo + 1);
         n_bits += n_bits_for_song + n_bits_for_tempo;
+        config.info("PasswordGameSaves.n_songs, n_bits_for_song: " + n_songs + ", " + n_bits_for_song);
+        config.info("PasswordGameSaves.max_tempo, n_bits_for_tempo: " + max_tempo + ", " + n_bits_for_tempo);
         
         config.info("PasswordGameSaves.determineSizeInBits: " + n_bits +
                     " (player position: " + (player_x_bits + player_y_bits) +

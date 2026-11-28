@@ -6,6 +6,7 @@ package paket.pak;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import paket.compiler.PAKETConfig;
 import paket.platforms.Platform;
 import paket.util.Pair;
 
@@ -409,7 +410,7 @@ public class PAKRule {
         }        
                 
         
-        public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, List<List<Integer>> additionalBlocks, Platform platform) throws Exception
+        public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, List<List<Integer>> additionalBlocks, Platform platform, PAKETConfig config) throws Exception
         {
             List<PAKRoom> rooms = game.rooms;
             List<Integer> bytes = new ArrayList<>();
@@ -495,7 +496,7 @@ public class PAKRule {
                         for(int i = 0;i<then_scripts.size();i++) {
                             PAKScript s = then_scripts.get(i);
                             int tmp = additionalBlocks.size();
-                            List<Integer> scriptBytes = s.toBytesForAssembler(textIDHash, game, dialogues, additionalBlocks, platform);
+                            List<Integer> scriptBytes = s.toBytesForAssembler(textIDHash, game, dialogues, additionalBlocks, platform, config);
                             if (i == then_scripts.size() - 1) {
                                 // Indicate end of rule:
                                 scriptBytes.set(0, scriptBytes.get(0) | 0x80);
@@ -512,7 +513,7 @@ public class PAKRule {
                         for(int i = 0;i<else_scripts.size();i++) {
                             PAKScript s = else_scripts.get(i);
                             int tmp = additionalBlocks.size();
-                            List<Integer> scriptBytes = s.toBytesForAssembler(textIDHash, game, dialogues, additionalBlocks, platform);
+                            List<Integer> scriptBytes = s.toBytesForAssembler(textIDHash, game, dialogues, additionalBlocks, platform, config);
                             if (i == else_scripts.size() - 1) {
                                 // Indicate end of rule:
                                 scriptBytes.set(0, scriptBytes.get(0) | 0x80);
@@ -670,7 +671,7 @@ public class PAKRule {
                         }
                         throw new Exception("Cannot find song: " + songToPlay + ", existing ones are: " + existingSongNames);
                     }
-                    int songIndex = game.songs.indexOf(game.getOrCreateSong(songToPlay, PAKSong.TYPE_TSV));
+                    int songIndex = game.songs.indexOf(game.getOrCreateSong(songToPlay, PAKSong.TYPE_TSV, config));
                     bytes.add(songIndex*2);
                     if (forceSongRestart) {
                         bytes.add(1);
@@ -690,7 +691,7 @@ public class PAKRule {
                         }
                         throw new Exception("Cannot find song: " + songToPlay + ", existing ones are: " + existingSongNames);
                     }
-                    int songIndex = game.songs.indexOf(game.getOrCreateSong(songToPlay, PAKSong.TYPE_WYZ));
+                    int songIndex = game.songs.indexOf(game.getOrCreateSong(songToPlay, PAKSong.TYPE_WYZ, config));
                     bytes.add(songIndex);
                     if (forceSongRestart) {
                         bytes.add(1);
@@ -877,7 +878,7 @@ public class PAKRule {
     }
     
     
-    public static void toBytesForAssemblerBody(List<Integer> bytes, List<PAKScript> scripts, HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, boolean addSize, int triggerConnectiveUsed, boolean markAsRepeating, Platform platform) throws Exception
+    public static void toBytesForAssemblerBody(List<Integer> bytes, List<PAKScript> scripts, HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, boolean addSize, int triggerConnectiveUsed, boolean markAsRepeating, Platform platform, PAKETConfig config) throws Exception
     {
         List<Integer> pointerLocations = new ArrayList<>();
         List<List<Integer>> additionalBlocks = new ArrayList<>();
@@ -885,7 +886,7 @@ public class PAKRule {
         for(int i = 0;i<scripts.size();i++) {
             PAKScript s = scripts.get(i);
             int tmp = additionalBlocks.size();
-            List<Integer> scriptBytes = s.toBytesForAssembler(textIDHash, game, dialogues, additionalBlocks, platform);
+            List<Integer> scriptBytes = s.toBytesForAssembler(textIDHash, game, dialogues, additionalBlocks, platform, config);
             if (i == scripts.size() - 1) {
                 // Indicate end of rule:
                 if (markAsRepeating) {
@@ -923,7 +924,7 @@ public class PAKRule {
     }
     
     
-    public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, boolean firstMustBeEvent, boolean addSize, Platform platform) throws Exception
+    public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, boolean firstMustBeEvent, boolean addSize, Platform platform, PAKETConfig config) throws Exception
     {
         List<Integer> bytes = new ArrayList<>();
         
@@ -941,7 +942,7 @@ public class PAKRule {
             }
         }
 
-        PAKRule.toBytesForAssemblerBody(bytes, scripts, textIDHash, game, dialogues, addSize, triggerConnective, repeat, platform);
+        PAKRule.toBytesForAssemblerBody(bytes, scripts, textIDHash, game, dialogues, addSize, triggerConnective, repeat, platform, config);
         
         return bytes;
     }

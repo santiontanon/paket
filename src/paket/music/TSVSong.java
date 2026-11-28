@@ -164,7 +164,7 @@ public class TSVSong {
 //                            lines.add("  db MUSIC_CMD_TRANSPOSE_UP");
 //                            advanceTime = false;
                         } else if (note.absoluteNote == TSVNote.PLAY_SONG) {
-                            PAKSong song = game.getOrCreateSong(note.sfx, PAKSong.TYPE_TSV);
+                            PAKSong song = game.getOrCreateSong(note.sfx, PAKSong.TYPE_TSV, config);
                             int offset = game.songs.indexOf(song);
                             lines.add("  db MUSIC_CMD_PLAY_SONG, " + note.duration +", " + offset * 2);
                         } else if (note.absoluteNote == TSVNote.SET_VOLUME) {

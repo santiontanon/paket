@@ -6,6 +6,7 @@ package paket.pak;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import paket.compiler.PAKETConfig;
 import paket.pak.PAKRule.PAKScript;
 import paket.platforms.Platform;
 import paket.util.Pair;
@@ -53,10 +54,10 @@ public class PAKDialogue {
         }
         
         
-        public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, Platform platform) throws Exception
+        public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, Platform platform, PAKETConfig config) throws Exception
         {
             List<Integer> bytes = new ArrayList<>();
-            PAKRule.toBytesForAssemblerBody(bytes, scripts, textIDHash, game, dialogues, true, PAKRule.CONNECTIVE_AND, false, platform);
+            PAKRule.toBytesForAssemblerBody(bytes, scripts, textIDHash, game, dialogues, true, PAKRule.CONNECTIVE_AND, false, platform, config);
             
             bytes.add(0, ID);  // add the state ID#:
 
@@ -102,12 +103,12 @@ public class PAKDialogue {
     }
 
     
-    public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, Platform platform) throws Exception
+    public List<Integer> toBytesForAssembler(HashMap<String, Pair<Integer,Integer>> textIDHash, PAKGame game, List<PAKDialogue> dialogues, Platform platform, PAKETConfig config) throws Exception
     {
         List<Integer> bytes = new ArrayList<>();
         
         for(PAKDialogueState s:states) {
-            bytes.addAll(s.toBytesForAssembler(textIDHash, game, dialogues, platform));
+            bytes.addAll(s.toBytesForAssembler(textIDHash, game, dialogues, platform, config));
         }
         
         return bytes;
